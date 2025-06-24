@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "6.10.1",
     "@types/pg": "^8.15.4",
     "next": "15.3.4",
     "pg": "^8.16.2",

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FocalSpot",
-  description: "Let's share our passion!",
+  description: "Let's share our passion",
 };
 
 export default function RootLayout({

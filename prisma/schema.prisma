@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../app/generated/prisma"
@@ -15,29 +9,117 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  email      String   @unique
-  username   String   @unique
-  fullname   String?
-  bio        String?
-  avatar_url String?
-  spots      Spots[]
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique
+  username  String   @unique
+  fullName  String?  @map("full_name")
+  bio       String?
+  avatarUrl String?  @map("avatar_url")
+
+  // Relations
+  spots  Spot[]
+  photos Photo[]
+  votes  Vote[]
+
+  @@map("users")
 }
 
-model Spots {
+model Spot {
   id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updated_at  DateTime @default(now())
-  lattitude   Decimal
-  longitude   Decimal
-  description String
-  category_id Int
-  userId      Int?
-  User        User?    @relation(fields: [userId], references: [id])
-  tags        String[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  title       String
+  description String?
+  latitude    Decimal  @db.Decimal(10, 8)
+  longitude   Decimal  @db.Decimal(11, 8)
+
+  // Foreign Keys
+  userId     Int? @map("user_id")
+  categoryId Int  @map("category_id")
+
+  // Relations
+  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  category Category  @relation(fields: [categoryId], references: [id])
+  spotTags SpotTag[]
+  photos   Photo[]
+  votes    Vote[]
+
+  @@map("spots")
 }
 
-model Categories {
-  id Int @id @default(autoincrement())
+model Category {
+  id          Int     @id @default(autoincrement())
+  slug        String  @unique
+  name        String
+  description String?
+  icon        String?
+  // Relations
+  spots       Spot[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  color    String    @default("#3B82F6")
+  // Relations
+  spotTags SpotTag[]
+
+  @@map("tags")
+}
+
+// Junction table for many-to-many relationship between Spots and Tags
+model SpotTag {
+  spotId Int  @map("spot_id")
+  tagId  Int  @map("tag_id")
+  // Relations
+  spot   Spot @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([spotId, tagId])
+  @@map("spot_tags")
+}
+
+model Photo {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now()) @map("created_at")
+  url         String
+  description String?
+  isPrimary   Boolean  @default(false) @map("is_primary")
+
+  // Foreign Keys
+  spotId Int @map("spot_id")
+  userId Int @map("user_id")
+
+  // Relations
+  spot Spot  @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("photos")
+}
+
+// For future community features (upvotes/downvotes)
+model Vote {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  voteType  VoteType @map("vote_type")
+
+  // Foreign Keys
+  spotId Int  @map("spot_id")
+  userId Int? @map("user_id") // Make optional for deleted users
+
+  // Relations
+  spot Spot  @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Prevent duplicate votes from same user on same spot
+  @@unique([spotId, userId])
+  @@map("votes")
+}
+
+enum VoteType {
+  UP
+  DOWN
 }
