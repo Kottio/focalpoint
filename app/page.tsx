@@ -12,12 +12,13 @@ export default function Home() {
     password: ''
   });
 
+
+
   const handleSubmit = () => {
     console.log('Form submitted:', formData);
   };
 
-
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
