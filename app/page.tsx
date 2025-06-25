@@ -3,12 +3,24 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function Home() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: ''
   });
+
+  const handleSubmit = () => {
+    console.log('Form submitted:', formData);
+  };
+
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
 
   const imageUrl = [
     "/mainPhotos/film-5.jpg",
@@ -18,36 +30,34 @@ export default function Home() {
     "/mainPhotos/film-9.jpg",
     "/mainPhotos/film-10.jpg",
     "/mainPhotos/film-11.jpg",
+    "/mainPhotos/film-12.jpg",
   ];
 
-  // Function to generate grid layouts - removed unused totalImages parameter
-  const getGridLayout = (index: int) => {
+  // Function to generate grid layouts 
+  const getGridLayout = (index: number) => {
     const layouts = [
       { colSpan: 'col-span-2', rowSpan: 'row-span-2' }, // Large
       { colSpan: 'col-span-1', rowSpan: 'row-span-2' }, // Tall
       { colSpan: 'col-span-2', rowSpan: 'row-span-1' }, // Wide
       { colSpan: 'col-span-1', rowSpan: 'row-span-1' }, // Small
     ];
-
-    // Create a pattern that ensures good visual balance
-    const pattern = [0, 1, 1, 2, 3, 3, 0, 1, 2, 3];
+    const pattern = [0, 1, 1, 2, 3, 3, 0, 1, 2, 3]
     return layouts[pattern[index % pattern.length]];
   };
 
-  const handleSubmit = () => {
-    console.log('Form submitted:', formData);
-    // Handle your login/register logic here
-  };
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
 
   return (
     <div className="flex w-full">
-      <div className="w-1/3 bg-white">
+      <div className="w-1/3 bg-white ">
+        <div className="relative h-15 w-15 ">
+          <Image src={"/logo/logoSmall.png"} alt="logo" fill>
+          </Image></div>
         <div className="flex flex-col pt-30 items-center h-screen">
-          <span className="text-4xl font-light text-black rounded pb-1">FOCALPOINT</span>
+          <div className="flex flex-col items-center">
+            <span className="text-4xl font-light text-black rounded pb-1">Welcome to <span className="font-bold"> FocalPoint</span></span>
+            <span className="text-emerald-700/50">Explore, discover and share</span>
+          </div>
 
           <div className="bg-white w-100 p-5 rounded-xl text-black placeholder-neutral-300">
             {!isLogin && (
@@ -118,10 +128,14 @@ export default function Home() {
         </div>
       </div>
 
+
+      {/* PHOTO GRID */}
       <div className="w-2/3 h-screen  overflow-hidden">
-        <div className="grid grid-cols-3 auto-rows-[120px] gap-2 p-2 h-full">
+        <div className="grid grid-cols-3 auto-rows-[140px] gap-2 p-2 h-full">
           {imageUrl.map((src, index) => {
+
             const layout = getGridLayout(index);
+
             return (
               <div
                 key={index}
@@ -141,6 +155,6 @@ export default function Home() {
           })}
         </div>
       </div>
-    </div>
+    </div >
   );
 }
