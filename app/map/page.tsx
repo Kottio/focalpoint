@@ -29,7 +29,29 @@ export default function MapTest() {
       latitude: 48.8566,
       longitude: 2.3522,
       category: "Coastal"
+    },
+    {
+      id: 3,
+      title: "test 2",
+      latitude: 48.9566,
+      longitude: 2.3622,
+      category: "Coastal"
+    },
+    {
+      id: 4,
+      title: "test 2",
+      latitude: 48.8266,
+      longitude: 2.3622,
+      category: "Urban"
+    },
+    {
+      id: 5,
+      title: "test 5",
+      latitude: 48.8766,
+      longitude: 2.3622,
+      category: "Urban"
     }
+
   ];
 
   return (
@@ -56,7 +78,7 @@ export default function MapTest() {
 
       <div className="h-96 border rounded-lg ">
         <Map
-          onMapClick={handleMapClick}
+          // onMapClick={handleMapClick}
           spots={mockSpots}
           editMode={editMode}
         />
