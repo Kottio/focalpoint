@@ -43,6 +43,7 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
     setIsSelected(true);
 
     const spot = spots.find(s => s.id === spotId);
+    console.log(spot)
 
     if (spot && map.current) {
       map.current.flyTo({
@@ -157,6 +158,7 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
 
 
           {spots.map(spot => (
+
             <div
               key={spot.id}
               className={`w-100 min-h-[140px] bg-white  border-b-1  transition-all duration-200 cursor-pointer hover:shadow-md hover:bg-neutral-100 ${selectedLocId === spot.id
@@ -167,16 +169,25 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
             >
               <div className='p-4 h-full flex flex-col justify-between'>
                 <div>
-                  <h3 className='text-lg font-semibold text-gray-900 mb-2 line-clamp-2'>
-                    {spot.title}
-                  </h3>
                   <div className='flex items-center gap-2'>
                     <div
-                      className="w-4 h-4 rounded-full flex justify-center items-center text-xs"
+                      className="w-5 h-5 rounded-full flex justify-center items-center text-sm"
                       style={{ backgroundColor: CATEGORY_COLORS[spot.category] || '#666' }}
                     >{CATEGORY_ICONS[spot.category]}</div>
-                    <span className='text-sm text-gray-600'>{spot.category}</span>
+                    <h3 className='text-lg font-semibold text-gray-900  line-clamp-2'>
+                      {spot.title}
+                    </h3>
+
+                    {/* <span className='text-md text-gray-600' style={{ color: CATEGORY_COLORS[spot.category] || '#666' }}>{spot.category}</span> */}
+
                   </div>
+                  <div className="flex items-center mt-2 gap-2 text-black text-xs">
+                    {spot.tags.map((tag) => {
+                      return <div key={tag.id} className={` px-2 py-1 rounded  text-neutral-600`} style={{ backgroundColor: `${tag.color}60` }}> {tag.name} </div>
+
+                    })}
+                  </div>
+
                 </div>
                 {selectedLocId === spot.id && (
                   <div className='text-xs text-blue-600 font-medium mt-2'>
@@ -187,6 +198,7 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
             </div>
           ))}
         </div>
+
 
         {/* Detail Panel */}
         {isSelected && selectedLocation && (
@@ -243,7 +255,7 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
             </div>
           </div>
         )}
-      </div>
+      </div >
 
 
 
