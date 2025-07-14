@@ -6,7 +6,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface MapProps {
   onMapClick?: (lat: number, lng: number) => void;
-
   spots?: Array<{
     id: number;
     title: string;
@@ -14,14 +13,11 @@ interface MapProps {
     longitude: number;
     category: string;
   }>;
+  editMode: boolean
 
 }
 
-
-
-
-
-export default function Map({ onMapClick, spots = [] }: MapProps) {
+export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
 
   const colorTags = {
     'Urban': 'brown',
@@ -30,7 +26,9 @@ export default function Map({ onMapClick, spots = [] }: MapProps) {
 
 
   const mapContainer = useRef<HTMLDivElement>(null);
+
   const map = useRef<mapboxgl.Map | null>(null);
+
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -61,14 +59,16 @@ export default function Map({ onMapClick, spots = [] }: MapProps) {
 
 
 
+    if (editMode) {
+      if (onMapClick) {
+        map.current.on('click', (e) => {
+          const { lat, lng } = e.lngLat;
+          onMapClick(lat, lng);
+        });
+      }
+    }
 
-    // Handle map clicks for adding new spots
-    // if (onMapClick) {
-    //   map.current.on('click', (e) => {
-    //     const { lat, lng } = e.lngLat;
-    //     onMapClick(lat, lng);
-    //   });
-    // }
+
 
 
     // Add markers for existing spots

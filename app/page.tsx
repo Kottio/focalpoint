@@ -51,9 +51,7 @@ export default function Home() {
   return (
     <div className="flex w-full">
       <div className="w-1/3 bg-white ">
-        <div className="relative h-15 w-15 ">
-          <Image src={"/logo/logoSmall.png"} alt="logo" fill>
-          </Image></div>
+
         <div className="flex flex-col pt-30 items-center h-screen">
           <div className="flex flex-col items-center">
             <span className="text-4xl font-light text-black rounded pb-1">Welcome to <span className="font-bold"> FocalPoint</span></span>

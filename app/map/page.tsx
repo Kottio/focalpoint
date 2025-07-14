@@ -1,10 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+
 import Map from '@/components/map';
 
 export default function MapTest() {
   const [clickedLocation, setClickedLocation] = useState<{ lat: number, lng: number } | null>(null);
+  const [editMode, setEditMode] = useState(false)
+
 
   const handleMapClick = (lat: number, lng: number) => {
     setClickedLocation({ lat, lng });
@@ -32,12 +35,22 @@ export default function MapTest() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Map Test</h1>
+      <div>
+        <button className=" bg-white rounded cursor-pointer  text-black p-2 m-2 hover:bg-neutral-600 hover:text-white"
+          onClick={() => {
+            setEditMode(!editMode)
+          }}
+        >Add New location</button>
+        <span className='text-white'>{String(editMode)}</span>
+      </div>
 
-      {clickedLocation && (
-        <div className="mb-4 p-3 bg-blue-100 rounded text-black">
-          <p>Clicked at: {clickedLocation.lat.toFixed(6)}, {clickedLocation.lng.toFixed(6)}</p>
-        </div>
-      )}
+      {
+        clickedLocation && (
+          <div className="mb-4 p-3 bg-blue-100 rounded text-black">
+            <p>Clicked at: {clickedLocation.lat.toFixed(6)}, {clickedLocation.lng.toFixed(6)}</p>
+          </div>
+        )
+      }
 
 
 
@@ -45,11 +58,12 @@ export default function MapTest() {
         <Map
           onMapClick={handleMapClick}
           spots={mockSpots}
+          editMode={editMode}
         />
       </div>
 
 
 
-    </div>
+    </div >
   );
 }
