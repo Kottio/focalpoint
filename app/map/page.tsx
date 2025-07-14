@@ -55,9 +55,10 @@ export default function MapTest() {
   ];
 
   return (
-    <div className="p-4 bg-white h-screen text-black">
+    <div className=" bg-white h-screen text-black">
       {/* <h1 className="text-2xl font-bold mb-4">Map Test</h1> */}
-      <div>
+
+      <div className='absolute z-10 right-0'>
         <button className=" bg-blue-500 rounded cursor-pointer  text-white p-2 m-2 hover:bg-neutral-600 hover:text-white"
           onClick={() => {
             setEditMode(!editMode)
@@ -76,7 +77,7 @@ export default function MapTest() {
 
 
 
-      <div className="h-96  text-white ">
+      <div className="h-full  text-white ">
         <Map
           // onMapClick={handleMapClick}
           spots={mockSpots}

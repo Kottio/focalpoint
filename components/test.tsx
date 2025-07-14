@@ -33,6 +33,7 @@ const CATEGORY_ICONS = {
 export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const markers = useRef<Map<number, mapboxgl.Marker>>(new Map());
 
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
@@ -58,27 +59,38 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
     setIsSelected(false);
   };
 
+  const updateMarkerStyles = () => {
+    markers.current.forEach((marker, spotId) => {
+      const isSelected = spotId === selectedLocId;
+      const spot = spots.find(s => s.id === spotId);
+
+      if (spot) {
+        const el = marker.getElement();
+        el.style.cssText = `
+          width: ${isSelected ? '28px' : '24px'};
+          height: ${isSelected ? '28px' : '24px'};
+          background-color: ${isSelected ? '#FF6B6B' : CATEGORY_COLORS[spot.category] || '#666'};
+          border: 3px solid white;
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: ${isSelected ? '18px' : '16px'};
+          transition: all 0.2s ease;
+          transform: ${isSelected ? 'scale(1.1)' : 'scale(1)'};
+        `;
+        el.textContent = CATEGORY_ICONS[spot.category] || '📍';
+      }
+    });
+  };
+
   const createMarker = (spot: any) => {
     if (!map.current) return;
 
-    const isSelected = spot.id === selectedLocId;
-
     const el = document.createElement('div');
     el.className = 'custom-marker';
-    el.style.cssText = `
-      width: ${isSelected ? '24px' : '24px'};
-      height: ${isSelected ? '24px' : '24px'};
-      background-color: ${isSelected ? '#FF6B6B' : CATEGORY_COLORS[spot.category] || '#666'};
-      border: 3px solid white ;
-      border-radius: 50%;
-      cursor: pointer; ⛵︎
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      display: flex;
-      justify-content: center;
-      align-items:center;
-      font-size: 16px;
-    `;
-    el.textContent = CATEGORY_ICONS[spot.category]
 
     const marker = new mapboxgl.Marker(el)
       .setLngLat([spot.longitude, spot.latitude])
@@ -88,10 +100,45 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
       handleSpotSelect(spot.id);
     });
 
+    markers.current.set(spot.id, marker);
   };
 
+  const clearMarkers = () => {
+    markers.current.forEach(marker => marker.remove());
+    markers.current.clear();
+  };
+
+  const updateMarkers = () => {
+    if (editMode) {
+      clearMarkers();
+      return;
+    }
+
+    // Get current spot IDs
+    const currentSpotIds = new Set(spots.map(spot => spot.id));
+
+    // Remove markers for spots that no longer exist
+    markers.current.forEach((marker, spotId) => {
+      if (!currentSpotIds.has(spotId)) {
+        marker.remove();
+        markers.current.delete(spotId);
+      }
+    });
+
+    // Add markers for new spots
+    spots.forEach(spot => {
+      if (!markers.current.has(spot.id)) {
+        createMarker(spot);
+      }
+    });
+
+    // Update marker styles
+    updateMarkerStyles();
+  };
+
+  // Initialize map only once
   useEffect(() => {
-    if (!mapContainer.current) return;
+    if (!mapContainer.current || map.current) return;
 
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
@@ -114,26 +161,43 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
       'top-right'
     );
 
-    // Handle map clicks in edit mode
+    // Cleanup
+    return () => {
+      clearMarkers();
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, []);
+
+  // Update markers when spots change
+  useEffect(() => {
+    if (map.current) {
+      updateMarkers();
+    }
+  }, [spots, editMode]);
+
+  // Update marker styles when selection changes
+  useEffect(() => {
+    if (map.current && !editMode) {
+      updateMarkerStyles();
+    }
+  }, [selectedLocId]);
+
+  // Handle edit mode changes
+  useEffect(() => {
+    if (!map.current) return;
+
+    map.current.off('click');
+
     if (editMode && onMapClick) {
       map.current.on('click', (e) => {
         const { lat, lng } = e.lngLat;
         onMapClick(lat, lng);
       });
     }
-
-    // Add markers for existing spots (only in view mode)
-    if (!editMode) {
-      spots.forEach(createMarker);
-    }
-
-    // Cleanup
-    return () => {
-      if (map.current) {
-        map.current.remove();
-      }
-    };
-  }, [onMapClick, spots, editMode]); //Selected loc Id
+  }, [editMode, onMapClick]);
 
   if (editMode) {
     return (
@@ -146,20 +210,17 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
 
   return (
     <>
-      <div className='absolute z-10 flex h-screen gap-4  text-white bg-white'>
+      <div className='absolute z-10 flex h-screen gap-4 text-white bg-white'>
         {/* Spots List */}
-        <div className='flex flex-col   overflow-y-auto'>
-          {/* //TODO Filter and search here! */}
-
+        <div className='flex flex-col overflow-y-auto'>
           <div className='text-sm font-medium text-gray-600 px-2 bg-white rounded py-3'>
             Spots ({spots.length})
           </div>
 
-
           {spots.map(spot => (
             <div
               key={spot.id}
-              className={`w-100 min-h-[140px] bg-white  border-b-1  transition-all duration-200 cursor-pointer hover:shadow-md hover:bg-neutral-100 ${selectedLocId === spot.id
+              className={`w-100 min-h-[140px] bg-white border-b-1 transition-all duration-200 cursor-pointer hover:shadow-md hover:bg-neutral-100 ${selectedLocId === spot.id
                 ? 'border-blue-500 bg-blue-50'
                 : 'border-gray-200 hover:border-gray-300'
                 }`}
@@ -174,7 +235,9 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
                     <div
                       className="w-4 h-4 rounded-full flex justify-center items-center text-xs"
                       style={{ backgroundColor: CATEGORY_COLORS[spot.category] || '#666' }}
-                    >{CATEGORY_ICONS[spot.category]}</div>
+                    >
+                      {CATEGORY_ICONS[spot.category]}
+                    </div>
                     <span className='text-sm text-gray-600'>{spot.category}</span>
                   </div>
                 </div>
@@ -199,18 +262,16 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
                   </h2>
 
                   <div className='flex items-center gap-2 mb-4'>
-
                     <div
                       className="w-5 h-5 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: CATEGORY_COLORS[selectedLocation.category] || '#666' }}
-                    > {CATEGORY_ICONS[selectedLocation.category]}
+                    >
+                      {CATEGORY_ICONS[selectedLocation.category]}
                     </div>
                     <span className='text-sm font-medium text-gray-600'>
                       {selectedLocation.category}
                     </span>
                   </div>
-
-
                 </div>
                 <button
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400 hover:text-gray-600"
@@ -244,8 +305,6 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
           </div>
         )}
       </div>
-
-
 
       <div
         ref={mapContainer}
