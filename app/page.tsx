@@ -5,14 +5,11 @@ import { useState } from "react";
 export default function Home() {
   const [isLogin, setIsLogin] = useState(true);
 
-
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: ''
   });
-
-
 
   const handleSubmit = () => {
     console.log('Form submitted:', formData);

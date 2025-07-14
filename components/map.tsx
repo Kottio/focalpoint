@@ -23,6 +23,13 @@ const CATEGORY_COLORS = {
   'Forest': '#006400'
 } as const;
 
+const CATEGORY_ICONS = {
+  'Urban': '⛪︎',
+  'Coastal': '⛵︎',
+  'Mountain': '⛰',
+  'Forest': '𐂷'
+} as const;
+
 export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -47,7 +54,7 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
   };
 
   const handleCloseSelection = () => {
-    // setSelectedLocId(null);
+    setSelectedLocId(null);
     setIsSelected(false);
   };
 
@@ -59,14 +66,19 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
     const el = document.createElement('div');
     el.className = 'custom-marker';
     el.style.cssText = `
-      width: ${isSelected ? '24px' : '20px'};
-      height: ${isSelected ? '24px' : '20px'};
+      width: ${isSelected ? '24px' : '24px'};
+      height: ${isSelected ? '24px' : '24px'};
       background-color: ${isSelected ? '#FF6B6B' : CATEGORY_COLORS[spot.category] || '#666'};
-      border: 3px solid white;
+      border: 3px solid white ;
       border-radius: 50%;
-      cursor: pointer;
+      cursor: pointer; ⛵︎
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: center;
+      align-items:center;
+      font-size: 16px;
     `;
+    el.textContent = CATEGORY_ICONS[spot.category]
 
     const marker = new mapboxgl.Marker(el)
       .setLngLat([spot.longitude, spot.latitude])
@@ -134,13 +146,15 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
 
   return (
     <>
-      <div className='absolute z-10 flex bg-white gap-4 p-4 '>
+      <div className='absolute z-10 flex  gap-4 p-4 text-white'>
         {/* Spots List */}
         <div className='flex flex-col gap-3 max-h-[670px] overflow-y-auto'>
           {/* //TODO Filter and search here! */}
-          <div className='text-sm font-medium text-gray-600 px-2'>
+          {/* <div className='text-sm font-medium text-gray-600 px-2 bg-white rounded py-3'>
             Spots ({spots.length})
-          </div>
+          </div> */}
+
+
           {spots.map(spot => (
             <div
               key={spot.id}
@@ -186,9 +200,10 @@ export default function Map({ onMapClick, spots = [], editMode }: MapProps) {
                   <div className='flex items-center gap-2 mb-4'>
 
                     <div
-                      className="w-4 h-4 rounded-full"
+                      className="w-5 h-5 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: CATEGORY_COLORS[selectedLocation.category] || '#666' }}
-                    />
+                    > {CATEGORY_ICONS[selectedLocation.category]}
+                    </div>
                     <span className='text-sm font-medium text-gray-600'>
                       {selectedLocation.category}
                     </span>
