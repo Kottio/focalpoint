@@ -23,8 +23,9 @@ export default function Map({ spots = [], editMode }: MapProps) {
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const selectedLocation = spots.find(spot => spot.id === selectedLocId);
-
   const [filteredSpots, setFilteteredSpots] = useState(spots)
+  const [showFilter, setShowfilter] = useState(true)
+
   useEffect(() => {
     setFilteteredSpots(spots);
   }, [spots]);
@@ -143,20 +144,21 @@ export default function Map({ spots = [], editMode }: MapProps) {
     <>
       <div className='  absolute z-10 flex h-screen gap-4  text-white bg-white'>
 
-        <div className='flex flex-col  overflow-y-auto max-w-100 '>
+        <div className='flex flex-col  max-w-100 '>
 
-          <div className='bg-neutral-100 border-b-2 border-dotted p-3 flex flex-col gap-2 text-neutral-400'>
-
+          <div className={`overflow-hidden transition-all duration-300 ease-in-out bg-neutral-100 border-b-2 border-dotted flex flex-col gap-2 text-neutral-400 ${showFilter ? 'max-h-96 p-3' : 'max-h-0 p-0'
+            }`}>
             <Filter spots={spots} setFilteteredSpots={setFilteteredSpots} ></Filter>
-
-
-
             Spots ({filteredSpots.length})
           </div>
 
 
+          <button className='text-neutral-500 border px-10 py-1  hover:bg-neutral-400' onClick={() => (setShowfilter(!showFilter))}>Filters</button>
+
           {/* Spots List */}
-          <SpotList spots={filteredSpots} selectedLocId={selectedLocId} handleSpotSelect={handleSpotSelect} ></SpotList>
+          <div className='overflow-y-auto'>
+            <SpotList spots={filteredSpots} selectedLocId={selectedLocId} handleSpotSelect={handleSpotSelect} ></SpotList>
+          </div>
         </div>
 
 

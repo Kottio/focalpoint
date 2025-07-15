@@ -56,29 +56,31 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full h-[200] z-10">
 
-      <div className="text-black flex gap-1 ">
-        {categories.map(cat => {
-          return <div
-            className={`px-3 py-1 rounded hover:bg-neutral-200 hover:scale-105 cursor-pointer flex items-center`}
+      <div className="text-black flex gap-1  ">
+        {
+          categories.map(cat => {
+            return <div
+              className={`px-3 py-1 rounded  hover:my-1 cursor-pointer flex items-center`}
 
-            style={{
-              backgroundColor: ` ${selectedCategory.includes(cat) ? `${getCategoryColor(cat)}90` : `${getCategoryColor(cat)}30 `}`,
-              color: ` ${selectedCategory.includes(cat) ? `white` : `${getCategoryColor(cat)} `}`
-            }}
+              style={{
+                backgroundColor: ` ${selectedCategory.includes(cat) ? `${getCategoryColor(cat)}90` : `${getCategoryColor(cat)}30 `}`,
+                color: ` ${selectedCategory.includes(cat) ? `white` : `${getCategoryColor(cat)} `}`
+              }}
 
 
-            onClick={() => { handleSelectionCategory(cat) }}
-            key={cat}
-          >{getCategoryIcon(cat)} {cat}
+              onClick={() => { handleSelectionCategory(cat) }}
+              key={cat}
+            >{getCategoryIcon(cat)} {cat}
 
-          </div>
-        })}
+            </div>
+          })
+        }
       </div >
 
 
-      <div className="flex flex-wrap gap-1  ">
+      <div className="flex flex-wrap gap-1   ">
         {
           uniqueTags.map(tag => {
             return <div
