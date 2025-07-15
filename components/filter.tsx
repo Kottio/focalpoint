@@ -1,6 +1,7 @@
 'use client'
 import { Spot } from "@/types/spot";
 import { useEffect, useState } from "react";
+import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 
 interface FilterProps {
   spots: Spot[],
@@ -30,6 +31,8 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
       return categoryMatch && tagMatch;
     });
     setFilteteredSpots(filtered);
+
+
   }, [selectedCategory, selectedTags, spots]);
 
 
@@ -58,11 +61,19 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
       <div className="text-black flex gap-1 ">
         {categories.map(cat => {
           return <div
-            className={`border-1 px-3 py-1 rounded hover:bg-neutral-200 hover:border-none cursor-pointer
-            ${selectedCategory.includes(cat) ? 'bg-red-200' : 'bg-gray-100'}`}
+            className={`px-3 py-1 rounded hover:bg-neutral-200 hover:scale-105 cursor-pointer flex items-center`}
+
+            style={{
+              backgroundColor: ` ${selectedCategory.includes(cat) ? `${getCategoryColor(cat)}90` : `${getCategoryColor(cat)}30 `}`,
+              color: ` ${selectedCategory.includes(cat) ? `white` : `${getCategoryColor(cat)} `}`
+            }}
+
+
             onClick={() => { handleSelectionCategory(cat) }}
             key={cat}
-          >{cat}</div>
+          >{getCategoryIcon(cat)} {cat}
+
+          </div>
         })}
       </div >
 
@@ -71,11 +82,11 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
         {
           uniqueTags.map(tag => {
             return <div
-              className={` px-3 py-1 text-xs   rounded hover:bg-neutral-200 hover:border-none cursor-pointer`}
+              className={` px-3 py-1 text-xs  border rounded hover:scale-105 cursor-pointer`}
 
               style={{
-                backgroundColor: `${selectedTags.some(t => t.id === tag.id) ? `${tag.color}70` : `${tag.color}10`}`,
-                color: `${tag.color}`
+                backgroundColor: `${selectedTags.some(t => t.id === tag.id) ? `${tag.color}` : `${tag.color}10`}`,
+                color: `${selectedTags.some(t => t.id === tag.id) ? `white` : `${tag.color}`}`
               }}
 
               onClick={() => { handleSelectionTags(tag) }}
@@ -84,7 +95,7 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
           })
         }
       </div>
-    </div>
+    </div >
 
 
   )

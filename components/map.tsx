@@ -141,9 +141,9 @@ export default function Map({ spots = [], editMode }: MapProps) {
 
   return (
     <>
-      <div className='  absolute z-10 flex h-screen gap-4  text-white bg-white max-w-100'>
+      <div className='  absolute z-10 flex h-screen gap-4  text-white bg-white'>
 
-        <div className='flex flex-col  overflow-y-auto  '>
+        <div className='flex flex-col  overflow-y-auto max-w-100 '>
 
           <div className='bg-neutral-100 border-b-2 border-dotted p-3 flex flex-col gap-2 text-neutral-400'>
 
@@ -158,6 +158,7 @@ export default function Map({ spots = [], editMode }: MapProps) {
           {/* Spots List */}
           <SpotList spots={filteredSpots} selectedLocId={selectedLocId} handleSpotSelect={handleSpotSelect} ></SpotList>
         </div>
+
 
         {/* Detail Panel */}
         {isSelected && selectedLocation && (
