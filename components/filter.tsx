@@ -1,5 +1,5 @@
 'use client'
-import { Spot } from "@/types/spot";
+import { Spot, Tag } from "@/types/spot";
 import { useEffect, useState } from "react";
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 
@@ -16,8 +16,8 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
     index === self.findIndex(t => t.id === tag.id))
 
 
-  const [selectedCategory, setSelectedCategory] = useState([])
-  const [selectedTags, setSelectedTags] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState<string[]>([])
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
     }
   }
 
-  const handleSelectionTags = (tag) => {
+  const handleSelectionTags = (tag: Tag) => {
     if (selectedTags.some(t => t.id === tag.id)) {
       const newTags = selectedTags.filter(t => t.id !== tag.id)
       setSelectedTags(newTags)
