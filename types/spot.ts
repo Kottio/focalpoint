@@ -6,6 +6,7 @@ export interface Tag {
 export interface User {
   id: number;
   username: string;
+  1;
   fullName: string;
 }
 

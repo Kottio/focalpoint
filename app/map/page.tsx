@@ -24,51 +24,6 @@ export default function MapTest() {
   }, [])
   3
 
-  // const handleMapClick = (lat: number, lng: number) => {
-  //   setClickedLocation({ lat, lng });
-  //   console.log('Clicked at:', lat, lng);
-  // };
-
-  // Mock spots data for testing
-  // const mockSpots = [
-  //   {
-  //     id: 1,
-  //     title: "Eiffel Tower Viewpoint",
-  //     latitude: 48.8584,
-  //     longitude: 2.2945,
-  //     category: "Urban"
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Seine River Sunset",
-  //     latitude: 48.8566,
-  //     longitude: 2.3522,
-  //     category: "Coastal"
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "test 2",
-  //     latitude: 48.9566,
-  //     longitude: 2.3622,
-  //     category: "Coastal"
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "test 2",
-  //     latitude: 48.8266,
-  //     longitude: 2.3622,
-  //     category: "Urban"
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "test 5",
-  //     latitude: 48.8766,
-  //     longitude: 2.3622,
-  //     category: "Urban"
-  //   }
-
-  // ];
-
   return (
     <div className=" bg-white h-screen text-black">
 
@@ -78,7 +33,6 @@ export default function MapTest() {
             setEditMode(!editMode)
           }}
         >Add New location</button>
-        {/* <span className='text-white'>{String(editMode)}</span> */}
       </div>
 
 
@@ -86,7 +40,7 @@ export default function MapTest() {
 
       <div className="h-full  text-white ">
         <Map
-          // onMapClick={handleMapClick}
+
           spots={spots}
           editMode={editMode}
         />
