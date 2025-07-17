@@ -54,15 +54,16 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
       setSelectedTags([...selectedTags, tag])
     }
   }
-
+  //TODO: making the Tag AND filter
   return (
-    <div className="flex flex-col gap-2 w-full h-[200] z-10">
+    <div className="flex flex-col  w-full ">
+      Categories
+      <div className=" flex gap-2  border-neutral-200 border-b-1 pb-2 mb-2 ">
 
-      <div className="text-black flex gap-1  ">
         {
           categories.map(cat => {
             return <div
-              className={`px-3 py-1 rounded  hover:my-1 cursor-pointer flex items-center`}
+              className={`px-3 py-1 rounded cursor-pointer flex items-center`}
 
               style={{
                 backgroundColor: ` ${selectedCategory.includes(cat) ? `${getCategoryColor(cat)}90` : `${getCategoryColor(cat)}30 `}`,
@@ -79,12 +80,12 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
         }
       </div >
 
-
-      <div className="flex flex-wrap gap-1   ">
+      Tags
+      <div className="flex flex-wrap gap-1 border-neutral-200   ">
         {
           uniqueTags.map(tag => {
             return <div
-              className={` px-3 py-1 text-xs  border rounded hover:scale-105 cursor-pointer`}
+              className={` px-3 py-1 text-xs  border rounded cursor-pointer`}
 
               style={{
                 backgroundColor: `${selectedTags.some(t => t.id === tag.id) ? `${tag.color}` : `${tag.color}10`}`,
@@ -97,6 +98,7 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
           })
         }
       </div>
+
     </div >
 
 
