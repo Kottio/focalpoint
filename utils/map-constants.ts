@@ -1,15 +1,31 @@
 export const CATEGORY_COLORS = {
-  Urban: "#8B4513",
-  Coastal: "#4A90E2",
-  Mountain: "#228B22",
   Forest: "#006400",
+  "River/Lake": "#4A90E2",
+  "Beach/Coast": "#20B2AA",
+  "Mountain/Hill": "#8B4513",
+  "Garden/Park": "#32CD32",
+  Structure: "#696969",
+  Underground: "#2F4F4F",
+  Urban: "#FF6347",
+  Cave: "#8B4513",
+  Desert: "#DEB887",
+  "Religious Site": "#9370DB",
+  Bridges: "#708090",
 } as const;
 
 export const CATEGORY_ICONS = {
-  Urban: "⛪︎",
-  Coastal: "⛵︎",
-  Mountain: "⛰",
-  Forest: "𐂷",
+  Forest: "🌲",
+  "River/Lake": "💦",
+  "Beach/Coast": "🌊",
+  "Mountain/Hill": "⛰️",
+  "Garden/Park": "🌳",
+  Structure: "🏛️",
+  Underground: "☠️",
+  Urban: "🏙️",
+  Cave: "🔦",
+  Desert: "🏜️",
+  "Religious Site": "⛪",
+  Bridges: "🌉",
 } as const;
 
 export type CategoryType = keyof typeof CATEGORY_COLORS;

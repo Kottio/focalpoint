@@ -63,11 +63,14 @@ export default function Map({
 
     const el = document.createElement('div');
     el.className = 'custom-marker';
+    // background - color: ${ isSelected ? '#FF6B6B' : getCategoryColor(spot.category) };
+
     el.style.cssText = `
-      width: ${isSelected ? '32px' : '24px'};
-      height: ${isSelected ? '32px' : '24px'};
-      background-color: ${isSelected ? '#FF6B6B' : getCategoryColor(spot.category)};
-      border: 3px solid white ;
+      width: ${isSelected ? '45px' : '28px'};
+      height: ${isSelected ? '45px' : '28px'};
+      background-color: white;
+      border: 3px solid  ;
+      border-color: ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}80`};
       border-radius: 50%;
       cursor: pointer;  
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -75,6 +78,7 @@ export default function Map({
       justify-content: center;
       align-items:center;
       font-size: 16px;
+    
     `;
     el.textContent = getCategoryIcon(spot.category)
     const marker = new mapboxgl.Marker(el)
@@ -89,12 +93,12 @@ export default function Map({
   };
 
 
-
-
   //RENDERING OF THE MAP! 
   useEffect(() => {
     if (!mapContainer.current) return;
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
+
+    //TODO:Need to calculate zoom based on cooridnates
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/outdoors-v12',
@@ -102,7 +106,7 @@ export default function Map({
       (initialBounds.north + initialBounds.south) / 2],
       zoom: 10,
     });
-    // Add geolocate control
+
     map.current.addControl(
       new mapboxgl.GeolocateControl({
         positionOptions: {
@@ -119,7 +123,7 @@ export default function Map({
         map.current.remove();
       }
     };
-  }, [spots]);
+  }, []);
 
 
   //Every time the filter change or a location is selected clear the marker and recreat them.
@@ -128,6 +132,9 @@ export default function Map({
     filteredSpots.forEach(createMarker);
   }, [filteredSpots, selectedLocId])
 
+
+
+  //TODO: if too zoomed out, block or focus? 
   const handleUpdateMapBound = () => {
     if (!map.current) return
     const bounds = map.current.getBounds()

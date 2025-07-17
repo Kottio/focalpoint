@@ -57,12 +57,12 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
   return (
     <div className="flex flex-col  w-full text-neutral-500">
       Categories
-      <div className=" flex gap-2  border-neutral-200 border-b-1 pb-2 mb-2 ">
+      <div className=" flex flex-wrap gap-2  border-neutral-200 border-b-1 pb-2 mb-2 ">
 
         {
           categories.map(cat => {
             return <div
-              className={`px-3 py-1 rounded cursor-pointer flex items-center`}
+              className={`px-3 py-1 rounded cursor-pointer flex flex-col justify-center text-sm`}
 
               style={{
                 backgroundColor: ` ${selectedCategory.includes(cat) ? `${getCategoryColor(cat)}90` : `${getCategoryColor(cat)}30 `}`,

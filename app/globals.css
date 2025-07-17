@@ -24,3 +24,9 @@ body {
   color: var(--foreground);
   font-family: Helvetica, Arial, sans-serif;
 }
+custom-marker {
+  transition: all 0.4s ease !important;
+}
+.custom-marker:hover {
+  border-color: red !important;
+}

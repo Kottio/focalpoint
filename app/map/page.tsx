@@ -47,7 +47,6 @@ export default function MapPage() {
   }, [mapBounds]);
 
 
-
   //Only within Detail page. 
   const handleCloseSelection = () => {
     setSelectedLocId(null);
@@ -69,7 +68,7 @@ export default function MapPage() {
     <div className="bg-white h-screen text-white">
       <div className="absolute z-10 flex h-screen gap-4 text-white bg-white">
         <div className="flex flex-col max-w-100">
-          <div className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400 ${showFilter ? 'max-h-96 p-5' : 'overflow-hidden max-h-0 p-0'
+          <div className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400 ${showFilter ? 'max-h-100 p-5' : 'overflow-hidden max-h-0 p-0'
             }`}>
 
             <Filter spots={spots} setFilteredSpots={setFilteredSpots} />
