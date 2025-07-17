@@ -1,41 +1,37 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Spot } from '@/types/spot';
-import SpotList from './spotList';
-import SpotDetails from './spotDetails';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
-import Filter from './filter';
 
 interface MapProps {
-  spots?: Spot[];
-  filteredSpots?: Spot[];
-  setFilteredSpots: (spots: Spot[]) => void
+  spots: Spot[];
+  filteredSpots: Spot[];
+  selectedLocId: number | null;
+  onSpotSelect: (spotId: number) => void;
 }
 
 
-export default function Map({ spots = [], filteredSpots = [], setFilteredSpots }: MapProps) {
+export default function Map({
+  spots,
+  filteredSpots,
+  selectedLocId,
+  onSpotSelect
+}: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
-  const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
-  const [isSelected, setIsSelected] = useState(false);
-  const selectedLocation = spots.find(spot => spot.id === selectedLocId);
-
-  const [showFilter, setShowfilter] = useState(true)
-
 
   //Every time new spots are created or deleted Set filtered spot
-  useEffect(() => {
-    setFilteredSpots(spots);
-  }, [spots]);
+  // useEffect(() => {
+  //   setFilteredSpots(spots);
+  // }, [spots]);
 
-  //Function when selecting maker on the map or the spotlist 
+  //Function when selecting marker on the map
   const handleSpotSelect = (spotId: number) => {
-    setSelectedLocId(spotId);
-    setIsSelected(true);
+    onSpotSelect(spotId);
     const spot = spots.find(s => s.id === spotId);
     if (spot && map.current) {
       map.current.flyTo({
@@ -46,11 +42,6 @@ export default function Map({ spots = [], filteredSpots = [], setFilteredSpots }
     }
   };
 
-  //Closing the detail page 
-  const handleCloseSelection = () => {
-    setSelectedLocId(null);
-    setIsSelected(false);
-  };
 
   // For the filtering function on the map, we recreate the marker but there is a need to remove them before
   const clearMarkers = () => {
@@ -133,40 +124,9 @@ export default function Map({ spots = [], filteredSpots = [], setFilteredSpots }
 
 
   return (
-    <>
-      <div className='  absolute z-10 flex h-screen gap-4  text-white bg-white'>
-
-        <div className='flex flex-col max-w-100 '>
-          {/* 
-          <div className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400  ${showFilter ? 'max-h-77 p-5' : ' overflow-hidden  max-h-0 p-0'
-            }`}>
-            <Filter spots={spots} setFilteredSpots={setFilteredSpots} ></Filter>
-            <span>Spots({filteredSpots.length})</span>
-
-          </div> */}
-
-
-          <button className='text-neutral-500 border px-10 py-1 border-neutral-200  hover:bg-neutral-300' onClick={() => (setShowfilter(!showFilter))}>Filters</button>
-
-          {/* Spots List */}
-          <div className='overflow-y-auto'>
-            <SpotList spots={filteredSpots} selectedLocId={selectedLocId} handleSpotSelect={handleSpotSelect} ></SpotList>
-          </div>
-        </div>
-
-
-        {/* Detail Panel */}
-        {isSelected && selectedLocation && (
-          <SpotDetails selectedLocation={selectedLocation} handleCloseSelection={handleCloseSelection}></SpotDetails>
-        )}
-      </div >
-
-
-
-      <div
-        ref={mapContainer}
-        className="w-full h-full min-h-[700px] rounded-lg"
-      />
-    </>
+    <div
+      ref={mapContainer}
+      className="w-full h-full min-h-[700px] rounded-lg"
+    />
   );
 }
