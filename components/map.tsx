@@ -24,23 +24,19 @@ export default function Map({
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
 
-  //Every time new spots are created or deleted Set filtered spot
-  // useEffect(() => {
-  //   setFilteredSpots(spots);
-  // }, [spots]);
-
-  //Function when selecting marker on the map
-  const handleSpotSelect = (spotId: number) => {
-    onSpotSelect(spotId);
-    const spot = spots.find(s => s.id === spotId);
-    if (spot && map.current) {
-      map.current.flyTo({
-        center: [spot.longitude - 0.025, spot.latitude],
-        zoom: 13,
-        duration: 1000
-      });
+  //Fly to selected spot when selectedLocId changes
+  useEffect(() => {
+    if (selectedLocId && map.current) {
+      const spot = spots.find(s => s.id === selectedLocId);
+      if (spot) {
+        map.current.flyTo({
+          center: [spot.longitude - 0.025, spot.latitude],
+          zoom: 13,
+          duration: 1000
+        });
+      }
     }
-  };
+  }, [selectedLocId, spots]);
 
 
   // For the filtering function on the map, we recreate the marker but there is a need to remove them before
@@ -75,7 +71,7 @@ export default function Map({
       .addTo(map.current);
 
     marker.getElement().addEventListener('click', () => {
-      handleSpotSelect(spot.id);
+      onSpotSelect(spot.id);
     });
 
     markersRef.current.push(marker);
@@ -119,7 +115,6 @@ export default function Map({
     clearMarkers();
     filteredSpots.forEach(createMarker);
   }, [filteredSpots, selectedLocId])
-
 
 
 

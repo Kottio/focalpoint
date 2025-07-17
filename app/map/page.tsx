@@ -1,19 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Spot } from '@/types/spot';
 import Map from '@/components/map';
 import Filter from '@/components/filter';
 import SpotList from '@/components/spotList';
 import SpotDetails from '@/components/spotDetails';
-import { Spot } from '@/types/spot';
 
 export default function MapPage() {
+
+  //Call Spot SpotBounded. 
   const [spots, setSpots] = useState<Spot[]>([]);
   const [filteredSpots, setFilteredSpots] = useState<Spot[]>([]);
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [showFilter, setShowFilter] = useState(true);
 
+  //Fetch the initial spot to be shown on the map. Theses need be boundede to map. With default boundaries or filtered boundaries.  Pass down a boundaries state.
   async function fetchInitialSpots() {
     try {
       const response = await fetch('/api/spots');
@@ -24,21 +27,27 @@ export default function MapPage() {
     }
   }
 
+  //This will need to be done everytime boundary filter is changed
   useEffect(() => {
     fetchInitialSpots();
   }, []);
 
+  //Only within Detail page. 
   const handleCloseSelection = () => {
     setSelectedLocId(null);
     setIsSelected(false);
   };
 
+  //Passed down to both Spotlist and map
   const handleSpotSelect = (spotId: number) => {
     setSelectedLocId(spotId);
     setIsSelected(true);
   };
 
+  //When a spot is selected only for details. Map and spot list rely only on selectedLocId
   const selectedLocation = spots.find(spot => spot.id === selectedLocId);
+
+
 
   return (
     <div className="bg-white h-screen text-white">
@@ -46,7 +55,9 @@ export default function MapPage() {
         <div className="flex flex-col max-w-100">
           <div className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400 ${showFilter ? 'max-h-96 p-5' : 'overflow-hidden max-h-0 p-0'
             }`}>
+
             <Filter spots={spots} setFilteredSpots={setFilteredSpots} />
+
             <span>Spots({filteredSpots.length})</span>
           </div>
 
