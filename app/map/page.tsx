@@ -15,22 +15,38 @@ export default function MapPage() {
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [showFilter, setShowFilter] = useState(true);
+  const [mapBounds, setMapBounds] = useState({
+    north: 48.9,
+    south: 48.8,
+    east: 2.4,
+    west: 2.1
+  })
 
-  //Fetch the initial spot to be shown on the map. Theses need be boundede to map. With default boundaries or filtered boundaries.  Pass down a boundaries state.
-  async function fetchInitialSpots() {
+
+  async function fetchSpots() {
     try {
-      const response = await fetch('/api/spots');
-      const data = await response.json();
-      setSpots(data);
-    } catch (error) {
-      console.error("Could not fetch initial data");
+      const params = new URLSearchParams({
+        north: mapBounds.north.toString(),
+        south: mapBounds.south.toString(),
+        east: mapBounds.east.toString(),
+        west: mapBounds.west.toString()
+      })
+      const response = await fetch(`api/spots?${params}`);
+      const data = await response.json()
+      setSpots(data)
+
+    }
+    catch (error) {
+      console.error("Could not fetch bounded spots");
     }
   }
 
-  //This will need to be done everytime boundary filter is changed
+  //This will refresh the map so be carfeful
   useEffect(() => {
-    fetchInitialSpots();
-  }, []);
+    fetchSpots();
+  }, [mapBounds]);
+
+
 
   //Only within Detail page. 
   const handleCloseSelection = () => {
@@ -70,7 +86,7 @@ export default function MapPage() {
           <div className="overflow-y-auto">
 
             <SpotList
-              spots={filteredSpots}
+              filteredSpots={filteredSpots}
               selectedLocId={selectedLocId}
               handleSpotSelect={handleSpotSelect}
             />
@@ -91,6 +107,8 @@ export default function MapPage() {
         filteredSpots={filteredSpots}
         selectedLocId={selectedLocId}
         onSpotSelect={handleSpotSelect}
+        initialBounds={mapBounds}
+        setMapBounds={setMapBounds}
       />
     </div>
   );

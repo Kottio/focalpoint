@@ -2,14 +2,14 @@ import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants"
 import { Spot } from "@/types/spot"
 
 interface SpotsListProps {
-  spots: Spot[];
+  filteredSpots: Spot[];
   selectedLocId: number | null;
   handleSpotSelect: (spotId: number) => void
 }
 
-export default function SpotList({ spots, selectedLocId, handleSpotSelect }: SpotsListProps) {
+export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelect }: SpotsListProps) {
   return (
-    spots.map(spot => (<div
+    filteredSpots.map(spot => (<div
       key={spot.id}
       className={`w-100 min-h-[140px] bg-white  border-b-1  transition-all duration-200 cursor-pointer hover:shadow-md hover:bg-neutral-100 ${selectedLocId === spot.id
         ? 'border-blue-500 bg-blue-50'

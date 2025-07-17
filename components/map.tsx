@@ -5,11 +5,20 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Spot } from '@/types/spot';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 
+interface mapBounds {
+  north: number
+  south: number,
+  east: number,
+  west: number
+};
+
 interface MapProps {
   spots: Spot[];
   filteredSpots: Spot[];
   selectedLocId: number | null;
   onSpotSelect: (spotId: number) => void;
+  initialBounds: mapBounds
+  setMapBounds: (mapBounds: mapBounds) => (void)
 }
 
 
@@ -17,7 +26,9 @@ export default function Map({
   spots,
   filteredSpots,
   selectedLocId,
-  onSpotSelect
+  onSpotSelect,
+  initialBounds,
+  setMapBounds
 }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -36,7 +47,7 @@ export default function Map({
         });
       }
     }
-  }, [selectedLocId, spots]);
+  }, [selectedLocId]);
 
 
   // For the filtering function on the map, we recreate the marker but there is a need to remove them before
@@ -77,17 +88,20 @@ export default function Map({
     markersRef.current.push(marker);
   };
 
-  //Create the map
+
+
+
+  //RENDERING OF THE MAP! 
   useEffect(() => {
     if (!mapContainer.current) return;
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/outdoors-v12',
-      center: [2.2945, 48.8584],
-      zoom: 9,
+      center: [(initialBounds.east + initialBounds.west) / 2,
+      (initialBounds.north + initialBounds.south) / 2],
+      zoom: 10,
     });
-
     // Add geolocate control
     map.current.addControl(
       new mapboxgl.GeolocateControl({
@@ -100,8 +114,6 @@ export default function Map({
       'bottom-right'
     );
 
-
-
     return () => {
       if (map.current) {
         map.current.remove();
@@ -110,18 +122,33 @@ export default function Map({
   }, [spots]);
 
 
-  //Every time the filter change clear the marker and recreat them.
+  //Every time the filter change or a location is selected clear the marker and recreat them.
   useEffect(() => {
     clearMarkers();
     filteredSpots.forEach(createMarker);
   }, [filteredSpots, selectedLocId])
 
+  const handleUpdateMapBound = () => {
+    if (!map.current) return
+    const bounds = map.current.getBounds()
+    if (bounds) {
+      const newBounds = {
+        north: bounds.getNorth(),
+        south: bounds.getSouth(),
+        east: bounds.getEast(),
+        west: bounds.getWest()
+      }
+      setMapBounds(newBounds)
+    }
+  }
 
 
-  return (
+  return (<>
+    <button className='bg-white text-black p-3 z-30 absolute right-5 top-5 rounded hover:bg-blue-400 hover:text-white cursor-pointer' onClick={handleUpdateMapBound}>Refresh Map Boundaries</button>
     <div
       ref={mapContainer}
       className="w-full h-full min-h-[700px] rounded-lg"
     />
+  </>
   );
 }
