@@ -10,11 +10,12 @@ import Filter from './filter';
 
 interface MapProps {
   spots?: Spot[];
-  editMode: boolean;
+  filteredSpots?: Spot[];
+  setFilteredSpots: (spots: Spot[]) => void
 }
 
 
-export default function Map({ spots = [], editMode }: MapProps) {
+export default function Map({ spots = [], filteredSpots = [], setFilteredSpots }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
@@ -22,13 +23,13 @@ export default function Map({ spots = [], editMode }: MapProps) {
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const selectedLocation = spots.find(spot => spot.id === selectedLocId);
-  const [filteredSpots, setFilteteredSpots] = useState(spots)
+
   const [showFilter, setShowfilter] = useState(true)
 
 
   //Every time new spots are created or deleted Set filtered spot
   useEffect(() => {
-    setFilteteredSpots(spots);
+    setFilteredSpots(spots);
   }, [spots]);
 
   //Function when selecting maker on the map or the spotlist 
@@ -112,51 +113,37 @@ export default function Map({ spots = [], editMode }: MapProps) {
       'bottom-right'
     );
 
-    if (!editMode) {
-      spots.forEach(createMarker);
-    }
+
 
     return () => {
       if (map.current) {
         map.current.remove();
       }
     };
-  }, [spots, editMode]);
+  }, [spots]);
 
 
   //Every time the filter change clear the marker and recreat them.
   useEffect(() => {
-    if (!editMode) {
-      clearMarkers();
-      filteredSpots.forEach(createMarker);
-    }
+    clearMarkers();
+    filteredSpots.forEach(createMarker);
   }, [filteredSpots, selectedLocId])
 
 
 
-
-
-  if (editMode) {
-    return (
-      <div
-        ref={mapContainer}
-        className="w-full h-full min-h-[700px] rounded-lg"
-      />
-    );
-  }
 
   return (
     <>
       <div className='  absolute z-10 flex h-screen gap-4  text-white bg-white'>
 
         <div className='flex flex-col max-w-100 '>
-
+          {/* 
           <div className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400  ${showFilter ? 'max-h-77 p-5' : ' overflow-hidden  max-h-0 p-0'
             }`}>
-            <Filter spots={spots} setFilteteredSpots={setFilteteredSpots} ></Filter>
+            <Filter spots={spots} setFilteredSpots={setFilteredSpots} ></Filter>
             <span>Spots({filteredSpots.length})</span>
 
-          </div>
+          </div> */}
 
 
           <button className='text-neutral-500 border px-10 py-1 border-neutral-200  hover:bg-neutral-300' onClick={() => (setShowfilter(!showFilter))}>Filters</button>

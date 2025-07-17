@@ -5,11 +5,10 @@ import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 
 interface FilterProps {
   spots: Spot[],
-  setFilteteredSpots: (spots: Spot[]) => void
+  setFilteredSpots: (spots: Spot[]) => void
 }
 
-
-export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
+export default function Filter({ spots, setFilteredSpots }: FilterProps) {
   const categories = [... new Set(spots.map(spot => spot.category))]
   const allTags = spots.flatMap(spot => spot.tags);
   const uniqueTags = allTags.filter((tag, index, self) =>
@@ -30,7 +29,7 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
 
       return categoryMatch && tagMatch;
     });
-    setFilteteredSpots(filtered);
+    setFilteredSpots(filtered);
 
 
   }, [selectedCategory, selectedTags, spots]);
@@ -56,7 +55,7 @@ export default function Filter({ spots, setFilteteredSpots }: FilterProps) {
   }
   //TODO: making the Tag AND filter
   return (
-    <div className="flex flex-col  w-full ">
+    <div className="flex flex-col  w-full text-neutral-500">
       Categories
       <div className=" flex gap-2  border-neutral-200 border-b-1 pb-2 mb-2 ">
 
