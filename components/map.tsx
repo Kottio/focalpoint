@@ -65,22 +65,35 @@ export default function Map({
     el.className = 'custom-marker';
     // background - color: ${ isSelected ? '#FF6B6B' : getCategoryColor(spot.category) };
 
-    el.style.cssText = `
-      width: ${isSelected ? '45px' : '28px'};
-      height: ${isSelected ? '45px' : '28px'};
-      background-color: white;
-      border: 3px solid  ;
-      border-color: ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}80`};
-      border-radius: 50%;
-      cursor: pointer;  
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      display: flex;
-      justify-content: center;
-      align-items:center;
-      font-size: 16px;
-    
-    `;
-    el.textContent = getCategoryIcon(spot.category)
+    // el.style.cssText = `
+    //   width: ${isSelected ? '45px' : '35px'};
+    //   height: ${isSelected ? '45px' : '32px'};
+    //   background-color: white;
+    //   border: 2px solid  ;
+    //   border-color: ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}80`};
+    //   border-radius: 50%;
+    //   cursor: pointer;  
+    //   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items:center;
+    //   font-size: 16px;
+
+    // `;
+    el.innerHTML = `
+    <img
+      src="${spot.primaryPhoto || '/placeholder-spot.jpg'}"
+      alt="${spot.title}"
+      style="
+        width: ${isSelected ? '45px' : '35px'};
+        height: ${isSelected ? '45px' : '35px'};
+        border: 3px solid ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}95`};
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+      "
+    />
+  `;
     const marker = new mapboxgl.Marker(el)
       .setLngLat([spot.longitude, spot.latitude])
       .addTo(map.current);
