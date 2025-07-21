@@ -8,7 +8,7 @@ export interface User {
   username: string;
   fullName: string;
 }
-
+export interface primaryPhoto {}
 export interface Spot {
   id: number;
   title: string;

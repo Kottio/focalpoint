@@ -80,7 +80,6 @@ export async function GET(request: NextRequest) {
         },
         photos: {
           where: { isPrimary: true },
-          take: 1,
         },
         user: {
           select: {
@@ -113,7 +112,13 @@ export async function GET(request: NextRequest) {
         name: st.tag.name,
         color: st.tag.color,
       })),
-      primaryPhoto: spot.photos[0]?.url || null,
+      primaryPhoto: spot.photos[0] ? {
+        id: spot.photos[0].id,
+        thumbnail: spot.photos[0].thumbnailUrl,
+        medium: spot.photos[0].mediumUrl,
+        original: spot.photos[0].originalUrl,
+        likes: spot.photos[0].likes
+      } : null,
       user: spot.user,
       upvotes: spot.votes.length,
       createdAt: spot.createdAt,

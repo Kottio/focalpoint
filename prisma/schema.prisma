@@ -83,11 +83,19 @@ model SpotTag {
 }
 
 model Photo {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now()) @map("created_at")
-  url         String
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  title       String?
   description String?
-  isPrimary   Boolean  @default(false) @map("is_primary")
+  isPrimary   Boolean @default(false) @map("is_primary")
+  likes       Int     @default(0)
+
+  // Urls
+  originalUrl  String
+  publicId     String
+  thumbnailUrl String?
+  mediumUrl    String?
 
   // Foreign Keys
   spotId Int @map("spot_id")

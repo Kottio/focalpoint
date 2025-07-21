@@ -82,7 +82,7 @@ export default function Map({
     // `;
     el.innerHTML = `
     <img
-      src="${spot.primaryPhoto || '/placeholder-spot.jpg'}"
+      src="${spot.primaryPhoto?.thumbnail || '/placeholder-spot.jpg'}"
       alt="${spot.title}"
       style="
         width: ${isSelected ? '45px' : '35px'};
