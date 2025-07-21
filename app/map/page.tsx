@@ -1,18 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Spot } from '@/types/spot';
+import { useState } from 'react';
 import Map from '@/components/map';
 import Filter from '@/components/filter';
 import SpotList from '@/components/spotList';
 import SpotDetails from '@/components/spotDetails';
-import { SpotDetailsType } from '@/types/spot-details';
+import { useSpots } from '@/hooks/useSpots';
+import useSpotDetails from '@/hooks/useSpotDetails';
 
 export default function MapPage() {
-
-  //Call Spot SpotBounded. 
-  const [spots, setSpots] = useState<Spot[]>([]);
-  const [filteredSpots, setFilteredSpots] = useState<Spot[]>([]);
+  // UI State
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [showFilter, setShowFilter] = useState(true);
@@ -21,72 +18,22 @@ export default function MapPage() {
     south: 48.8,
     east: 2.4,
     west: 2.1
-  })
+  });
 
-  //When a spot is selected only for details. Map and spot list rely only on selectedLocId
-  // const selectedLocation = spots.find(spot => spot.id === selectedLocId);
-  const [selectedLocation, setSelectedLocation] = useState<SpotDetailsType | null>(null)
+  // Data from custom hooks
+  const { spots, filteredSpots, setFilteredSpots, isLoading } = useSpots(mapBounds);
+  const { selectedLocation } = useSpotDetails(selectedLocId);
 
-
-  async function fetchSpots() {
-    try {
-      const params = new URLSearchParams({
-        north: mapBounds.north.toString(),
-        south: mapBounds.south.toString(),
-        east: mapBounds.east.toString(),
-        west: mapBounds.west.toString()
-      })
-      const response = await fetch(`api/spots?${params}`);
-      const data = await response.json()
-      setSpots(data)
-
-    }
-    catch (error) {
-      console.error("Could not fetch bounded spots");
-    }
-  }
-
-
-  useEffect(() => {
-    fetchSpots();
-  }, [mapBounds]);
-
-
-
-
-  //Only within Detail page. 
+  // Event handlers
   const handleCloseSelection = () => {
     setSelectedLocId(null);
     setIsSelected(false);
   };
 
-  //Passed down to both Spotlist and map
   const handleSpotSelect = (spotId: number) => {
     setSelectedLocId(spotId);
     setIsSelected(true);
   };
-
-
-
-
-
-
-  //Fectch Details of a Spot
-  async function getSpotDetails(id: number | null) {
-    try {
-      const response = await fetch(`api/spots/${id}`)
-      const spotDetails = await response.json()
-      setSelectedLocation(spotDetails)
-    } catch (error) {
-      console.error('Could not get the Details')
-    }
-  }
-  useEffect(() => {
-    if (selectedLocId) { getSpotDetails(selectedLocId) }
-  }, [selectedLocId])
-
-
-  //use Effec selectedlocId
 
   return (
     <div className="bg-white h-screen text-white">
