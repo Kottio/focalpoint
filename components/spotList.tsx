@@ -32,6 +32,9 @@ export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelec
 
 
           </div>
+          {spot.mediumPhotos && spot.mediumPhotos[0] && <>
+            <img className=" w-30 object-cover rounded " src={spot.mediumPhotos[0].url} alt={spot.title} />
+          </>}
           <div className="flex items-center mt-2 gap-2 text-black text-xs">
             {spot.tags.map((tag) => {
               return <div key={tag.id} className={` px-2 py-1 rounded  text-neutral-600`}
@@ -44,6 +47,8 @@ export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelec
 
             })}
           </div>
+
+
 
         </div>
         {selectedLocId === spot.id && (

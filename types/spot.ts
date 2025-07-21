@@ -8,7 +8,13 @@ export interface User {
   username: string;
   fullName: string;
 }
-export interface primaryPhoto {}
+export interface mediumPhotos {
+  id: number;
+  url: string;
+  title: string;
+  likes: number;
+}
+
 export interface Spot {
   id: number;
   title: string;
@@ -18,7 +24,9 @@ export interface Spot {
   category: string;
   categoryId: number;
   tags: Tag[];
-  primaryPhoto: string | null;
+  // primaryPhoto: string | null;
+  thumbnailPhoto: string;
+  mediumPhotos: mediumPhotos[];
   user: User;
   upvotes: number;
   createdAt: string;

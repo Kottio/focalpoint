@@ -80,19 +80,25 @@ export default function Map({
     //   font-size: 16px;
 
     // `;
+    //     <span
+    // style="color:${getCategoryColor(spot.category)}; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; font-size: 12px"
+    // >${spot.title}</span>
     el.innerHTML = `
+    <div >
     <img
-      src="${spot.primaryPhoto?.thumbnail || '/placeholder-spot.jpg'}"
+      src="${spot.thumbnailPhoto || '/placeholder-spot.jpg'}"
       alt="${spot.title}"
       style="
         width: ${isSelected ? '45px' : '35px'};
         height: ${isSelected ? '45px' : '35px'};
-        border: 3px solid ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}95`};
+        border: 3px solid ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}`};
         border-radius: 50%;
         object-fit: cover;
         cursor: pointer;
       "
     />
+
+    </div>
   `;
     const marker = new mapboxgl.Marker(el)
       .setLngLat([spot.longitude, spot.latitude])

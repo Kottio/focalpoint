@@ -112,13 +112,19 @@ export async function GET(request: NextRequest) {
         name: st.tag.name,
         color: st.tag.color,
       })),
-      primaryPhoto: spot.photos[0] ? {
-        id: spot.photos[0].id,
-        thumbnail: spot.photos[0].thumbnailUrl,
-        medium: spot.photos[0].mediumUrl,
-        original: spot.photos[0].originalUrl,
-        likes: spot.photos[0].likes
-      } : null,
+
+      thumbnailPhoto: spot.photos[0] ? spot.photos[0].thumbnailUrl : null,
+      mediumPhotos: spot.photos[0]
+        ? spot.photos.map((p) => {
+            return {
+              id: p.id,
+              url: p.mediumUrl,
+              title: p.title,
+              likes: p.likes,
+            };
+          })
+        : null,
+
       user: spot.user,
       upvotes: spot.votes.length,
       createdAt: spot.createdAt,
