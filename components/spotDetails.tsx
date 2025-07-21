@@ -1,12 +1,13 @@
-import { Spot } from '@/types/spot';
+import { SpotDetailsType } from '@/types/spot-details';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 
 interface SpotDetailsProps {
-  selectedLocation: Spot,
+  selectedLocation: SpotDetailsType,
   handleCloseSelection: () => void
 }
 
 export default function SpotDetails({ selectedLocation, handleCloseSelection }: SpotDetailsProps) {
+  console.log(selectedLocation)
   return (
     <div className='w-96 flex flex-col  bg-white text-neutral-700  shadow-lg border border-gray-200 overflow-hidden'>
       <div className='p-6'>
@@ -21,7 +22,6 @@ export default function SpotDetails({ selectedLocation, handleCloseSelection }: 
 
             <div> {selectedLocation.upvotes} 👍 </div>
 
-
             <div className='flex items-center gap-2 mb-4'>
 
               <div
@@ -34,7 +34,7 @@ export default function SpotDetails({ selectedLocation, handleCloseSelection }: 
               </span>
             </div>
 
-            <div> {selectedLocation.user.fullName} </div>
+            <div>{selectedLocation.user.fullName}</div>
 
           </div>
           <button
@@ -68,7 +68,22 @@ export default function SpotDetails({ selectedLocation, handleCloseSelection }: 
 
             </span>
           </div>
-
+          <ul className="grid grid-cols-1 gap-4 mt-4">
+            {selectedLocation.fullPhotos.map(p => (
+              <li key={p.id} className="bg-gray-50 rounded-lg overflow-hidden">
+                <img
+                  src={p.originalUrl}
+                  alt={p.title}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-3">
+                  <span className="font-medium">{p.title}</span>
+                  <span className="text-sm text-gray-600">{p.user.fullName}</span>
+                  <span className="text-sm text-gray-500">❤️ {p.likes}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
 
         </div>
       </div>

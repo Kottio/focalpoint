@@ -1,4 +1,4 @@
-import { Tag, User } from './spot';
+import { Tag, User } from "./spot";
 
 export interface FullPhoto {
   id: number;
@@ -10,7 +10,7 @@ export interface FullPhoto {
   createdAt: string;
 }
 
-export interface SpotDetails {
+export interface SpotDetailsType {
   id: number;
   title: string;
   description: string | null;
@@ -25,6 +25,6 @@ export interface SpotDetails {
 
 // For API responses
 export interface SpotDetailsResponse {
-  data?: SpotDetails;
+  data?: SpotDetailsType;
   error?: string;
 }

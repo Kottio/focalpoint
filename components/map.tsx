@@ -63,26 +63,8 @@ export default function Map({
 
     const el = document.createElement('div');
     el.className = 'custom-marker';
-    // background - color: ${ isSelected ? '#FF6B6B' : getCategoryColor(spot.category) };
 
-    // el.style.cssText = `
-    //   width: ${isSelected ? '45px' : '35px'};
-    //   height: ${isSelected ? '45px' : '32px'};
-    //   background-color: white;
-    //   border: 2px solid  ;
-    //   border-color: ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}80`};
-    //   border-radius: 50%;
-    //   cursor: pointer;  
-    //   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    //   display: flex;
-    //   justify-content: center;
-    //   align-items:center;
-    //   font-size: 16px;
 
-    // `;
-    //     <span
-    // style="color:${getCategoryColor(spot.category)}; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; font-size: 12px"
-    // >${spot.title}</span>
     el.innerHTML = `
     <div >
     <img
@@ -113,6 +95,7 @@ export default function Map({
 
 
   //RENDERING OF THE MAP! 
+
   useEffect(() => {
     if (!mapContainer.current) return;
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;

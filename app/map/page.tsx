@@ -6,6 +6,7 @@ import Map from '@/components/map';
 import Filter from '@/components/filter';
 import SpotList from '@/components/spotList';
 import SpotDetails from '@/components/spotDetails';
+import { SpotDetailsType } from '@/types/spot-details';
 
 export default function MapPage() {
 
@@ -21,6 +22,10 @@ export default function MapPage() {
     east: 2.4,
     west: 2.1
   })
+
+  //When a spot is selected only for details. Map and spot list rely only on selectedLocId
+  // const selectedLocation = spots.find(spot => spot.id === selectedLocId);
+  const [selectedLocation, setSelectedLocation] = useState<SpotDetailsType | null>(null)
 
 
   async function fetchSpots() {
@@ -41,10 +46,12 @@ export default function MapPage() {
     }
   }
 
-  //This will refresh the map so be carfeful
+
   useEffect(() => {
     fetchSpots();
   }, [mapBounds]);
+
+
 
 
   //Only within Detail page. 
@@ -59,10 +66,27 @@ export default function MapPage() {
     setIsSelected(true);
   };
 
-  //When a spot is selected only for details. Map and spot list rely only on selectedLocId
-  const selectedLocation = spots.find(spot => spot.id === selectedLocId);
 
 
+
+
+
+  //Fectch Details of a Spot
+  async function getSpotDetails(id: number | null) {
+    try {
+      const response = await fetch(`api/spots/${id}`)
+      const spotDetails = await response.json()
+      setSelectedLocation(spotDetails)
+    } catch (error) {
+      console.error('Could not get the Details')
+    }
+  }
+  useEffect(() => {
+    if (selectedLocId) { getSpotDetails(selectedLocId) }
+  }, [selectedLocId])
+
+
+  //use Effec selectedlocId
 
   return (
     <div className="bg-white h-screen text-white">
@@ -89,6 +113,7 @@ export default function MapPage() {
               selectedLocId={selectedLocId}
               handleSpotSelect={handleSpotSelect}
             />
+
           </div>
         </div>
 
