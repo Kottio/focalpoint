@@ -22,6 +22,7 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
   const isMobile = useIsMobile()
 
 
+
   useEffect(() => {
     const filtered = spots.filter(spot => {
       // Category filter: if no categories selected, show all categories
