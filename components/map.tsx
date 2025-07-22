@@ -1,11 +1,10 @@
 'use client';
-import { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { Spot } from '@/types/spot';
-import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
+import { useMapBox } from '../hooks/useMapBox';
+import { useMapMarker } from '@/hooks/useMapMarker';
+import { useEffect, useRef } from 'react';
 
-interface mapBounds {
+export interface mapBounds {
   north: number
   south: number,
   east: number,
@@ -21,7 +20,6 @@ interface MapProps {
   setMapBounds: (mapBounds: mapBounds) => (void)
 }
 
-
 export default function Map({
   spots,
   filteredSpots,
@@ -30,109 +28,13 @@ export default function Map({
   initialBounds,
   setMapBounds
 }: MapProps) {
+
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const { map } = useMapBox({ initialBounds, mapContainer })
+  useMapMarker({ map, selectedLocId, onSpotSelect, filteredSpots })
 
 
-  //Fly to selected spot when selectedLocId changes
-  useEffect(() => {
-    if (selectedLocId && map.current) {
-      const spot = spots.find(s => s.id === selectedLocId);
-      if (spot) {
-        map.current.flyTo({
-          center: [spot.longitude - 0.025, spot.latitude],
-          zoom: 13,
-          duration: 1000
-        });
-      }
-    }
-  }, [selectedLocId]);
 
-
-  // For the filtering function on the map, we recreate the marker but there is a need to remove them before
-  const clearMarkers = () => {
-    markersRef.current.forEach(marker => marker.remove());
-    markersRef.current = [];
-  };
-
-  //Create the markers on the map with selected ui 
-  const createMarker = (spot: any) => {
-    if (!map.current) return;
-    const isSelected = spot.id === selectedLocId;
-
-    const el = document.createElement('div');
-    el.className = 'custom-marker';
-
-
-    el.innerHTML = `
-    <div >
-    <img
-      src="${spot.thumbnailPhoto || '/placeholder-spot.jpg'}"
-      alt="${spot.title}"
-      style="
-        width: ${isSelected ? '45px' : '35px'};
-        height: ${isSelected ? '45px' : '35px'};
-        border: 3px solid ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}`};
-        border-radius: 50%;
-        object-fit: cover;
-        cursor: pointer;
-      "
-    />
-
-    </div>
-  `;
-    const marker = new mapboxgl.Marker(el)
-      .setLngLat([spot.longitude, spot.latitude])
-      .addTo(map.current);
-
-    marker.getElement().addEventListener('click', () => {
-      onSpotSelect(spot.id);
-    });
-
-    markersRef.current.push(marker);
-  };
-
-
-  //RENDERING OF THE MAP! 
-
-  useEffect(() => {
-    if (!mapContainer.current) return;
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
-
-    //TODO:Need to calculate zoom based on cooridnates
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/outdoors-v12',
-      center: [(initialBounds.east + initialBounds.west) / 2,
-      (initialBounds.north + initialBounds.south) / 2],
-      zoom: 10,
-    });
-
-    map.current.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        trackUserLocation: true,
-        showUserHeading: true
-      }),
-      'bottom-right'
-    );
-
-    return () => {
-      if (map.current) {
-        map.current.remove();
-      }
-    };
-  }, []);
-
-
-  //Every time the filter change or a location is selected clear the marker and recreat them.
-  useEffect(() => {
-    clearMarkers();
-    filteredSpots.forEach(createMarker);
-  }, [filteredSpots, selectedLocId])
 
 
 
@@ -150,6 +52,21 @@ export default function Map({
       setMapBounds(newBounds)
     }
   }
+
+  //Fly to selected spot when selectedLocId changes
+  useEffect(() => {
+    if (selectedLocId && map.current) {
+      const spot = spots.find(s => s.id === selectedLocId);
+      if (spot) {
+        map.current.flyTo({
+          center: [spot.longitude - 0.025, spot.latitude],
+          zoom: 13,
+          duration: 1000
+        });
+      }
+    }
+  }, [selectedLocId]);
+
 
 
   return (<>

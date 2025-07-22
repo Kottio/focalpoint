@@ -73,7 +73,7 @@ export default function SpotDetails({ selectedLocation, handleCloseSelection }: 
               <li key={p.id} className="bg-gray-50 rounded-lg overflow-hidden">
                 <img
                   src={p.originalUrl}
-                  alt={p.title}
+                  // alt={p.title}
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-3">
