@@ -68,8 +68,6 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
                 backgroundColor: ` ${selectedCategory.includes(cat) ? `${getCategoryColor(cat)}90` : `${getCategoryColor(cat)}30 `}`,
                 color: ` ${selectedCategory.includes(cat) ? `white` : `${getCategoryColor(cat)} `}`
               }}
-
-
               onClick={() => { handleSelectionCategory(cat) }}
               key={cat}
             >{getCategoryIcon(cat)} {cat}
