@@ -2,6 +2,9 @@
 import { Spot, Tag } from "@/types/spot";
 import { useEffect, useState } from "react";
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { spawn } from "child_process";
+import { Span } from "next/dist/trace";
 
 interface FilterProps {
   spots: Spot[],
@@ -13,10 +16,10 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
   const allTags = spots.flatMap(spot => spot.tags);
   const uniqueTags = allTags.filter((tag, index, self) =>
     index === self.findIndex(t => t.id === tag.id))
-
-
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+
+  const isMobile = useIsMobile()
 
 
   useEffect(() => {
@@ -54,8 +57,8 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
     }
   }
   //TODO: making the Tag AND filter
-  return (
-    <div className="flex flex-col  w-full text-neutral-500">
+  return (<>
+    {!isMobile && <div className="flex flex-col  w-full text-neutral-500">
       Categories
       <div className=" flex flex-wrap gap-2  border-neutral-200 border-b-1 pb-2 mb-2 ">
 
@@ -97,7 +100,62 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
       </div>
 
     </div >
+    }
+    {isMobile && <>
+      <div className="absolute z-20 ">
+
+        <div className=" overflow-x-auto w-screen">
+          <div className=" flex  p-2 gap-2 ">
+            {
+              categories.map(cat => {
+                return <div
+                  className={`px-2 py-0 rounded cursor-pointer flex gap-1 items-center justify-center text-md bg-white  `}
+
+                  style={{
+                    color: ` ${selectedCategory.includes(cat) ? `white` : `${getCategoryColor(cat)} `}`,
+                    border: ` 1px solid ${selectedCategory.includes(cat) ? `white` : `${getCategoryColor(cat)} `}`,
+                    background: ` ${selectedCategory.includes(cat) ? `${getCategoryColor(cat)}` : 'white'}`,
+
+                  }}
+
+                  onClick={() => { handleSelectionCategory(cat) }}
+                  key={cat}
+                >
+                  {getCategoryIcon(cat)}
+                  <span>{cat}</span>
+
+                </div>
+              })
+            }
+          </div >
+        </div>
+        <div className=" overflow-x-auto w-screen ">
+
+          <div className="flex flex-col flex-wrap gap-1  max-h-30  p-2    ">
+            {
+              uniqueTags.map(tag => {
+                return <div
+                  className={` px-2 py-2 text-md border rounded cursor-pointer flex items-center justify-center`}
+
+                  style={{
+                    backgroundColor: `${selectedTags.some(t => t.id === tag.id) ? `${tag.color}` : `white`}`,
+                    color: `${selectedTags.some(t => t.id === tag.id) ? `white` : `${tag.color}`}`
+                  }}
+
+                  onClick={() => { handleSelectionTags(tag) }}
+                  key={tag.name}
+                >{tag.name}</div>
+              })
+            }
+          </div>
+
+        </div>
 
 
-  )
+
+
+      </div>
+    </>}
+
+  </>)
 }

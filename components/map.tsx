@@ -34,10 +34,6 @@ export default function Map({
   useMapMarker({ map, selectedLocId, onSpotSelect, filteredSpots })
 
 
-
-
-
-
   //TODO: if too zoomed out, block or focus? 
   const handleUpdateMapBound = () => {
     if (!map.current) return
@@ -68,9 +64,10 @@ export default function Map({
   }, [selectedLocId]);
 
 
-
   return (<>
-    <button className='bg-white text-black p-3 z-30 absolute right-5 top-5 rounded hover:bg-blue-400 hover:text-white cursor-pointer' onClick={handleUpdateMapBound}>Refresh Map Boundaries</button>
+
+    {/* <button className='bg-white text-black p-3 z-30 absolute right-5 top-5 rounded hover:bg-blue-400 hover:text-white cursor-pointer' onClick={handleUpdateMapBound}>Refresh Map Boundaries</button> */}
+
     <div
       ref={mapContainer}
       className="w-full h-full min-h-[700px] rounded-lg"
