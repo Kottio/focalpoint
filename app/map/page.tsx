@@ -96,7 +96,15 @@ export default function MapPage() {
     {isMobile && <>
 
       <Filter spots={spots} setFilteredSpots={setFilteredSpots}></Filter>
+      <div className="overflow-x-auto absolute z-20 flex w-screen bottom-0">
 
+        <SpotList
+          filteredSpots={filteredSpots}
+          selectedLocId={selectedLocId}
+          handleSpotSelect={handleSpotSelect}
+        />
+
+      </div>
       <Map
         spots={spots}
         filteredSpots={filteredSpots}

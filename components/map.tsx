@@ -55,12 +55,13 @@ export default function Map({
       const spot = spots.find(s => s.id === selectedLocId);
       if (spot) {
         map.current.flyTo({
-          center: [spot.longitude - 0.025, spot.latitude],
+          center: [spot.longitude, spot.latitude],
           zoom: 13,
           duration: 1000
         });
       }
     }
+    // - 0.025
   }, [selectedLocId]);
 
 
@@ -70,7 +71,7 @@ export default function Map({
 
     <div
       ref={mapContainer}
-      className="w-full h-full min-h-[700px] rounded-lg"
+      className="w-full h-screen rounded-lg"
     />
   </>
   );

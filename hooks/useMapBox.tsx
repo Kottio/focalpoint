@@ -30,7 +30,7 @@ export function useMapBox({ mapContainer, initialBounds }: mapBoxProp) {
         trackUserLocation: true,
         showUserHeading: true
       }),
-      'bottom-right'
+      'top-right'
     );
 
     return () => {
