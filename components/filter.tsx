@@ -3,8 +3,7 @@ import { Spot, Tag } from "@/types/spot";
 import { useEffect, useState } from "react";
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { spawn } from "child_process";
-import { Span } from "next/dist/trace";
+
 
 interface FilterProps {
   spots: Spot[],
@@ -18,6 +17,10 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
     index === self.findIndex(t => t.id === tag.id))
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+
+  // Mobile filter toggle states
+  const [showCategories, setShowCategories] = useState(false)
+  const [showTags, setShowTags] = useState(false)
 
   const isMobile = useIsMobile()
 
@@ -103,59 +106,83 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
     </div >
     }
     {isMobile && <>
-      <div className="absolute z-20 ">
+      {/* Vertical toggle buttons - glued to left edge */}
+      <div className="fixed left-0 top-1/3 z-30 flex flex-col">
+        <button
+          onClick={() => setShowCategories(!showCategories)}
+          className={`
+            w-9 h-26 rounded-r-lg shadow-md text-xs font-medium transition-all duration-200
+            flex flex-col items-center justify-center gap-1
+            ${showCategories ? 'bg-cyan-500 text-white translate-x-0' : 'bg-white/90 text-gray-700 -translate-x-2 hover:translate-x-0'}
+          `}
+        >
+          <span className="transform -rotate-90 whitespace-nowrap text-xs">CATEGORIES</span>
+          {selectedCategory.length > 0 && (
+            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+          )}
+        </button>
 
-        <div className=" overflow-x-auto w-screen">
-          <div className=" flex  p-2 gap-2 ">
-            {
-              categories.map(cat => {
-                return <div
-                  className={`px-2 py-0 rounded cursor-pointer flex gap-1 items-center justify-center text-md bg-white  `}
-
-                  style={{
-                    color: ` ${selectedCategory.includes(cat) ? `white` : `${getCategoryColor(cat)} `}`,
-                    border: ` 1px solid ${selectedCategory.includes(cat) ? `white` : `${getCategoryColor(cat)} `}`,
-                    background: ` ${selectedCategory.includes(cat) ? `${getCategoryColor(cat)}` : 'white'}`,
-
-                  }}
-
-                  onClick={() => { handleSelectionCategory(cat) }}
-                  key={cat}
-                >
-                  {getCategoryIcon(cat)}
-                  <span>{cat}</span>
-
-                </div>
-              })
-            }
-          </div >
-        </div>
-        <div className=" overflow-x-auto w-screen ">
-
-          <div className="flex flex-col flex-wrap gap-1  max-h-30  p-2    ">
-            {
-              uniqueTags.map(tag => {
-                return <div
-                  className={` px-2 py-2 text-md border rounded cursor-pointer flex items-center justify-center`}
-
-                  style={{
-                    backgroundColor: `${selectedTags.some(t => t.id === tag.id) ? `${tag.color}` : `white`}`,
-                    color: `${selectedTags.some(t => t.id === tag.id) ? `white` : `${tag.color}`}`
-                  }}
-
-                  onClick={() => { handleSelectionTags(tag) }}
-                  key={tag.name}
-                >{tag.name}</div>
-              })
-            }
-          </div>
-
-        </div>
-
-
-
-
+        <button
+          onClick={() => setShowTags(!showTags)}
+          className={`
+            w-9 h-16 rounded-r-lg shadow-md text-xs font-medium transition-all duration-200
+            flex flex-col items-center justify-center gap-1 mt-1
+            ${showTags ? 'bg-green-500 text-white translate-x-0' : 'bg-white/90 text-gray-700 -translate-x-2 hover:translate-x-0'}
+          `}
+        >
+          <span className="transform -rotate-90 whitespace-nowrap">TAGS</span>
+          {selectedTags.length > 0 && (
+            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+          )}
+        </button>
       </div>
+
+      {/* Filter panels - your original styling */}
+      {(showCategories || showTags) && (
+        <div className="absolute z-20">
+          {showCategories && (
+            <div className="overflow-x-auto w-screen">
+              <div className="flex p-2 gap-2">
+                {categories.map(cat => (
+                  <div
+                    className="px-2 py-0 rounded cursor-pointer flex gap-1 items-center justify-center text-md bg-white"
+                    style={{
+                      color: selectedCategory.includes(cat) ? 'white' : getCategoryColor(cat),
+                      border: `1px solid ${selectedCategory.includes(cat) ? 'white' : getCategoryColor(cat)}`,
+                      background: selectedCategory.includes(cat) ? getCategoryColor(cat) : 'white',
+                    }}
+                    onClick={() => handleSelectionCategory(cat)}
+                    key={cat}
+                  >
+                    {getCategoryIcon(cat)}
+                    <span>{cat}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {showTags && (
+            <div className="overflow-x-auto w-screen">
+              <div className="flex flex-col flex-wrap gap-1 max-h-30 p-2">
+                {uniqueTags.map(tag => (
+                  <div
+                    className="px-2 py-2 text-md border rounded cursor-pointer flex items-center justify-center"
+                    style={{
+                      backgroundColor: selectedTags.some(t => t.id === tag.id) ? tag.color : 'white',
+                      color: selectedTags.some(t => t.id === tag.id) ? 'white' : tag.color
+                    }}
+                    onClick={() => handleSelectionTags(tag)}
+                    key={tag.name}
+                  >
+                    {tag.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </>}
 
   </>)
