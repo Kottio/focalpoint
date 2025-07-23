@@ -1,5 +1,5 @@
 'use client';
-
+import { DrawerTest } from '@/components/testDrawer';
 import { useState } from 'react';
 import Map from '@/components/map';
 import Filter from '@/components/filter';
@@ -8,7 +8,7 @@ import SpotDetails from '@/components/spotDetails';
 import { useSpots } from '@/hooks/useSpots';
 import useSpotDetails from '@/hooks/useSpotDetails';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { Span } from 'next/dist/trace';
+
 
 export default function MapPage() {
   // UI State
@@ -40,7 +40,10 @@ export default function MapPage() {
   };
 
   return (<>
+
+
     {!isMobile &&
+
       <div className="bg-white h-screen text-white">
         < div className="absolute z-10 flex h-screen gap-4 text-white bg-white" >
           <div className="flex flex-col max-w-100">
@@ -94,17 +97,26 @@ export default function MapPage() {
     }
 
     {isMobile && <>
+      {/* <DrawerTest
+        filteredSpots={filteredSpots}
+        selectedLocId={selectedLocId}
+        handleSpotSelect={handleSpotSelect}
+      /> */}
 
       <Filter spots={spots} setFilteredSpots={setFilteredSpots}></Filter>
-      <div className="overflow-x-auto absolute z-20 flex w-screen bottom-0">
-
-        <SpotList
+      <div className="overflow-x-auto absolute  flex w-screen bottom-0">
+        {/* <SpotList
+          filteredSpots={filteredSpots}
+          selectedLocId={selectedLocId}
+          handleSpotSelect={handleSpotSelect}
+        /> */}
+        <DrawerTest
           filteredSpots={filteredSpots}
           selectedLocId={selectedLocId}
           handleSpotSelect={handleSpotSelect}
         />
-
       </div>
+
       <Map
         spots={spots}
         filteredSpots={filteredSpots}
@@ -112,7 +124,8 @@ export default function MapPage() {
         onSpotSelect={handleSpotSelect}
         initialBounds={mapBounds}
         setMapBounds={setMapBounds}></Map>
-    </>}
+    </>
+    }
   </>
   )
 }

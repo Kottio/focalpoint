@@ -133,7 +133,7 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
             relative  h-16 rounded-r-xl shadow-xl text-xs  duration-300  mt-2
             flex flex-col items-center justify-center gap-1 backdrop-blur-md border border-l-0
             ${showTags
-              ? 'bg-emerald-500 text-white w-10  shadow-green-500/30'
+              ? 'bg-emerald-500 text-white w-10 shadow-green-500/30'
               : 'bg-white/80 text-gray-700 w-7 border-gray-200/50'
             }
           `}
