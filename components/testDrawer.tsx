@@ -43,14 +43,14 @@ export function DrawerTest({ filteredSpots, selectedLocId, handleSpotSelect }: D
       snapPoints={nestedOpen ? [snapPoints[1]] : snapPoints}
       activeSnapPoint={snap}
       setActiveSnapPoint={setSnap}
-      dismissible={true}
+      dismissible={false}
     >
 
 
       <Drawer.Portal>
         <Drawer.Content
           data-testid="content"
-          className="fixed z-100 flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[95%] mx-[-1px]">
+          className={`${nestedOpen ? 'h-0' : 'h-full'} z-100 fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 max-h-[95%] mx-[-1px]`}>
           <div aria-hidden className="mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-4" />
 
           <div
