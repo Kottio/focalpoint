@@ -7,7 +7,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const spotId = parseInt(params.id);
+  const para = await params;
+  const spotId = parseInt(para.id);
 
   try {
     const spot = await prisma.spot.findUnique({
