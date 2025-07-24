@@ -1,20 +1,22 @@
 'use client'
 import { Drawer } from 'vaul';
 import { useState, useEffect } from 'react';
-import { clsx } from 'clsx';
 import { Spot } from '@/types/spot';
-import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
+import SpotDetails from './spotDetails';
+import useSpotDetails from '@/hooks/useSpotDetails';
 
 interface DrawerTestProps {
   filteredSpots: Spot[];
   selectedLocId: number | null;
   handleSpotSelect: (spotId: number) => void;
+  handleCloseSelection: () => void;
 }
 
 const snapPoints = ['148px', '300px', 1];
 const snapPointsDetails = ['300px', 1]
 
-export function DrawerTest({ filteredSpots, selectedLocId, handleSpotSelect }: DrawerTestProps) {
+export function DrawerTest({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection }: DrawerTestProps) {
+  const { selectedLocation, isLoading } = useSpotDetails(selectedLocId)
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPointsDetails[0]);
 
@@ -115,11 +117,8 @@ export function DrawerTest({ filteredSpots, selectedLocId, handleSpotSelect }: D
                   <div aria-hidden className="mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-4" />
                   <div className="px-4">
                     <Drawer.Title className="text-xl font-bold">Spot Details</Drawer.Title>
-                    {selectedLocId && (
-                      <div className="mt-4">
-                        <p>Selected spot ID: {selectedLocId}</p>
-                        {/* Add your spot details content here */}
-                      </div>
+                    {selectedLocation && (
+                      <SpotDetails selectedLocation={selectedLocation} handleCloseSelection={handleCloseSelection}></SpotDetails>
                     )}
                   </div>
                 </Drawer.Content>

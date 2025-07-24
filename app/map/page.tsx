@@ -114,6 +114,8 @@ export default function MapPage() {
           filteredSpots={filteredSpots}
           selectedLocId={selectedLocId}
           handleSpotSelect={handleSpotSelect}
+          handleCloseSelection={handleCloseSelection}
+
         />
       </div>
 
