@@ -1,5 +1,5 @@
 'use client';
-import { DrawerTest } from '@/components/testDrawer';
+import { MainDrawer } from '@/components/mainDrawer';
 import { useState } from 'react';
 import Map from '@/components/map';
 import Filter from '@/components/filter';
@@ -26,7 +26,7 @@ export default function MapPage() {
   const { spots, filteredSpots, setFilteredSpots, isLoading } = useSpots(mapBounds);
   const { selectedLocation } = useSpotDetails(selectedLocId);
   const isMobile = useIsMobile()
-  console.log(isMobile)
+
 
   // Event handlers
   const handleCloseSelection = () => {
@@ -38,6 +38,9 @@ export default function MapPage() {
     setSelectedLocId(spotId);
     setIsSelected(true);
   };
+
+
+  console.log("Filtered Spoot", filteredSpots)
 
   return (<>
 
@@ -97,26 +100,16 @@ export default function MapPage() {
     }
 
     {isMobile && <>
-      {/* <DrawerTest
-        filteredSpots={filteredSpots}
-        selectedLocId={selectedLocId}
-        handleSpotSelect={handleSpotSelect}
-      /> */}
+
 
       <Filter spots={spots} setFilteredSpots={setFilteredSpots}></Filter>
       <div className="overflow-x-auto absolute  flex w-screen bottom-0">
-        {/* <SpotList
-          filteredSpots={filteredSpots}
-          selectedLocId={selectedLocId}
-          handleSpotSelect={handleSpotSelect}
-        /> */}
-        <DrawerTest
-          filteredSpots={filteredSpots}
-          selectedLocId={selectedLocId}
-          handleSpotSelect={handleSpotSelect}
-          handleCloseSelection={handleCloseSelection}
 
-        />
+        <MainDrawer
+          filteredSpots={filteredSpots}
+          selectedLocId={selectedLocId}
+          handleSpotSelect={handleSpotSelect}
+          handleCloseSelection={handleCloseSelection} />
       </div>
 
       <Map
@@ -127,6 +120,8 @@ export default function MapPage() {
         initialBounds={mapBounds}
         setMapBounds={setMapBounds}></Map>
     </>
+
+
     }
   </>
   )

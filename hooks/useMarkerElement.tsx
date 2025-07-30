@@ -15,12 +15,12 @@ export function createMarkerElement({ selectedLocId, spot, onSpotSelect }: MapMa
   markerEl.innerHTML = `
   <div >
   <img
-    src="${spot.thumbnailPhoto || '/placeholder-spot.jpg'}"
+    src="${spot.thumbnailPhoto || '/mainPhotos/65060003.jpg'}"
     alt="${spot.title}"
     style="
-      width: ${isSelected ? '45px' : '35px'};
-      height: ${isSelected ? '45px' : '35px'};
-      border: 3px solid ${isSelected ? '#FF6B6B' : `${getCategoryColor(spot.category)}`};
+      width: ${isSelected ? '55px' : '35px'};
+      height: ${isSelected ? '55px' : '35px'};
+      border: 3px solid ${isSelected ? 'blue' : `${getCategoryColor(spot.category)}`};
       border-radius: 50%;
       object-fit: cover;
       cursor: pointer;

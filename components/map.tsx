@@ -55,7 +55,7 @@ export default function Map({
       const spot = spots.find(s => s.id === selectedLocId);
       if (spot) {
         map.current.flyTo({
-          center: [spot.longitude, spot.latitude],
+          center: [spot.longitude, spot.latitude - 0.002],
           zoom: 13,
           duration: 1000
         });

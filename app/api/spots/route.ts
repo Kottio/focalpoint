@@ -113,7 +113,9 @@ export async function GET(request: NextRequest) {
         color: st.tag.color,
       })),
 
-      thumbnailPhoto: spot.photos[0] ? spot.photos[0].thumbnailUrl : null,
+      thumbnailPhoto: spot.photos[0]
+        ? spot.photos[0].thumbnailUrl
+        : "/mainPhotos/65030013.jpg",
       mediumPhotos: spot.photos[0]
         ? spot.photos.map((p) => {
             return {
@@ -123,7 +125,7 @@ export async function GET(request: NextRequest) {
               likes: p.likes,
             };
           })
-        : null,
+        : [{ url: "/mainPhotos/65030013.jpg" }],
 
       user: spot.user,
       upvotes: spot.votes.length,

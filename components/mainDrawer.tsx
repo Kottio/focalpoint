@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { Spot } from '@/types/spot';
 import SpotDetails from './spotDetails';
 import useSpotDetails from '@/hooks/useSpotDetails';
+import SpotList from './spotList';
 
-interface DrawerTestProps {
+interface MainDrawerProps {
   filteredSpots: Spot[];
   selectedLocId: number | null;
   handleSpotSelect: (spotId: number) => void;
@@ -15,7 +16,7 @@ interface DrawerTestProps {
 const snapPoints = ['148px', '300px', 1];
 const snapPointsDetails = ['300px', 1]
 
-export function DrawerTest({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection }: DrawerTestProps) {
+export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection }: MainDrawerProps) {
   const { selectedLocation, isLoading } = useSpotDetails(selectedLocId)
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPointsDetails[0]);
@@ -51,13 +52,12 @@ export function DrawerTest({ filteredSpots, selectedLocId, handleSpotSelect, han
 
       <Drawer.Portal>
         <Drawer.Content
-          data-testid="content"
+
           className={`${nestedOpen ? 'h-0' : 'h-full'} z-100 fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 max-h-[95%] mx-[-1px]`}>
-          <div aria-hidden className="mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-4" />
+          <div aria-hidden className="  mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-4" />
 
           <div
-            className={'flex flex-col w-full px-4 '}
-          >
+            className={'flex flex-col w-full px-4'}>
 
             {/* Header */}
             <Drawer.Title className="text-2xl font-medium text-gray-900">Photography Spots</Drawer.Title>
@@ -74,6 +74,7 @@ export function DrawerTest({ filteredSpots, selectedLocId, handleSpotSelect, han
               {snap == snapPoints[1] && (
                 <div className="flex gap-3 overflow-x-auto pb-2">
                   {filteredSpots.slice(0, 6).map((spot) => (
+
                     <div
                       key={spot.id}
                       className={`flex-shrink-0  h-30 w-40 cursor-pointer transition-all duration-200 `}
@@ -107,7 +108,10 @@ export function DrawerTest({ filteredSpots, selectedLocId, handleSpotSelect, han
 
               {/* FULL OPEN SPOTLIST */}
               {(snap === snapPoints[2]) && (
-                <div className="space-y-3"></div>)}
+                <div className='h-screen  w-full'>
+                  <SpotList filteredSpots={filteredSpots} selectedLocId={selectedLocId} handleSpotSelect={handleSpotSelect} ></SpotList>
+                </div>
+              )}
 
 
 
