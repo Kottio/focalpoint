@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Funnel, CircleX } from "lucide-react";
-import { flightRouterStateSchema } from "next/dist/server/app-render/types";
-
+import { BrushCleaning } from "lucide-react";
 interface FilterProps {
   spots: Spot[],
   setFilteredSpots: (spots: Spot[]) => void
@@ -74,109 +73,155 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
 
   if (isMobile) {
     return <>
-      <Funnel className="absolute z-20 top-0 left-0 p-2 border-1 border-black rounded-2xl m-2 bg-white" size={45} color='black' fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel>
+      <div className=" absolute z-20 top-0 left-0  flex items-center   ">
+        <Funnel className="p-2  rounded m-2 bg-white" size={45} color='black' fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel>
+
+        <div className="flex gap-2 h-10  ">
+          {selectedCategory.map(cat => (
+            <div
+              key={cat}
+              className="px-3 py-3  h-10 rounded-3xl cursor-pointer flex items-center gap-2 
+                                 transition-all duration-200 transform hover:scale-105 shadow-md"
+              style={{
+                color: `white`,
+                background: `${getCategoryColor(cat)}`
+              }}
+              onClick={() => handleSelectionCategory(cat)}
+            >
+              {getCategoryIcon(cat)}
+
+            </div>
+          ))}
+        </div>
+      </div>
+
+
       {showFilter &&
-        <div className="absolute bg-white z-30 w-screen">
-          <CircleX onClick={() => { setShowFilter(false) }}></CircleX>
-          <div className={`transition-all duration-500 ease-out `}>
-            <div className="w-screen  ">
-              <span className="px-2 pb-1 text-xl">Categories</span>
-              <div>
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-wrap border-b-1 px-3 gap-2 bg-white ">
-                    {selectedCategory.map(cat => (
+        <div className="fixed inset-0 bg-black/20 z-30 flex items-start justify-center pt-2">
+
+          <div className="bg-white rounded-2xl shadow-2xl w-[95vw] max-w-md max-h-[80vh] overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <h2 className="text-2xl font-bold text-gray-900">Filters</h2>
+              <CircleX
+                onClick={() => setShowFilter(false)}
+                className="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
+              />
+            </div>
+
+            <div className="overflow-y-auto max-h-[calc(80vh-80px)]">
+              {/* Categories Section */}
+              <div className="p-6 border-b border-gray-50">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800">Categories</h3>
+
+                  {/* {selectedCategory.length > 0 && (
+                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-xl">
+                      {selectedCategory.length} selected
+                    </span>
+                  )} */}
+                  {selectedCategory.length > 0 && (
+                    <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedCategory([]) }}></BrushCleaning>)}
+                </div>
+
+                {/* Selected Categories */}
+                {selectedCategory.length > 0 && (
+                  <div className="flex items-center">
+                    <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
+                      {selectedCategory.map(cat => (
+                        <div
+                          key={cat}
+                          className="px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 font-medium 
+                                 transition-all duration-200 transform hover:scale-105 shadow-md"
+                          style={{
+                            color: 'white',
+                            background: `linear-gradient(135deg, ${getCategoryColor(cat)}, ${getCategoryColor(cat)}DD)`,
+                            boxShadow: `0 4px 12px ${getCategoryColor(cat)}30`
+                          }}
+                          onClick={() => handleSelectionCategory(cat)}
+                        >
+                          {getCategoryIcon(cat)}
+                          <span className="text-sm">{cat}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                  </div>
+
+                )}
+
+                {/* Available Categories */}
+                <div className="flex flex-wrap gap-2">
+                  {categories.filter(cat => !selectedCategory.includes(cat)).map(cat => (
+                    <div
+                      key={cat}
+                      className="px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 font-medium
+                               transition-all duration-200 transform hover:scale-105 hover:shadow-md
+                               border-2 bg-white"
+                      style={{
+                        color: getCategoryColor(cat),
+                        borderColor: `${getCategoryColor(cat)}30`,
+                      }}
+                      onClick={() => handleSelectionCategory(cat)}
+                    >
+                      {getCategoryIcon(cat)}
+                      <span className="text-sm">{cat}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tags Section */}
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800">Tags</h3>
+                  {selectedTags.length > 0 && (
+                    <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedTags([]) }}></BrushCleaning>)}
+                </div>
+
+                {/* Selected Tags */}
+                {selectedTags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
+                    {selectedTags.map(tag => (
                       <div
-                        className={`px-2 py-1  rounded-xl cursor-pointer flex gap-2 items-center justify-center  font-medium backdrop-blur-sm transition-all duration-300 ease-out transform hover:scale-105 border whitespace-nowrap      shadow-lg scale-105`}
+                        key={tag.id}
+                        className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium
+                                 transition-all duration-200 transform hover:scale-105"
                         style={{
-                          color: 'white',
-                          border: `2px solid ${getCategoryColor(cat)}40`,
-                          background: `linear-gradient(135deg, ${getCategoryColor(cat)}, ${getCategoryColor(cat)}CC)`,
-                          boxShadow: `0 8px 32px ${getCategoryColor(cat)}40`
+                          backgroundColor: tag.color,
+                          color: 'white'
                         }}
-                        onClick={() => handleSelectionCategory(cat)}
-                        key={cat}
+                        onClick={() => handleSelectionTags(tag)}
                       >
-                        <span className="text-lg">{getCategoryIcon(cat)}</span>
-                        <span>{cat}</span>
+                        {tag.name}
                       </div>
                     ))}
                   </div>
+                )}
 
-
-                  <div className="flex p-2 w-full flex-wrap gap-1 bg-white  ">
-                    {categories.filter(cat => !selectedCategory.includes(cat)).map(cat => (
-                      <div
-                        className={`
-                        px-2 py-1 rounded-xl cursor-pointer flex gap-2 items-center justify-center text-sm font-medium
-                        backdrop-blur-sm transition-all duration-300 ease-out transform hover:scale-105
-                         border whitespace-nowrap
-                     
-                            'hover:shadow-md'
-                        
-                      `}
-                        style={{
-                          color: getCategoryColor(cat),
-                          border: `2px solid ${getCategoryColor(cat)}40`,
-                          background: 'rgba(255,255,255,0.8)',
-                          boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
-                        }}
-                        onClick={() => handleSelectionCategory(cat)}
-                        key={cat}
-                      >
-                        <span className="text-lg">{getCategoryIcon(cat)}</span>
-                        <span>{cat}</span>
-                      </div>
-                    ))}
-                  </div>
+                {/* Available Tags */}
+                <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                  {uniqueTags.filter(tag => !selectedTags.some(t => t.id === tag.id)).map(tag => (
+                    <div
+                      key={tag.id}
+                      className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium
+                               transition-all duration-200 transform hover:scale-105 border-2"
+                      style={{
+                        backgroundColor: `${tag.color}10`,
+                        color: tag.color,
+                        borderColor: `${tag.color}30`
+                      }}
+                      onClick={() => handleSelectionTags(tag)}
+                    >
+                      {tag.name}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-          <span className="px-2  pb-3 text-xl">Tags</span>
-
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-2 px-1 border-neutral-200 overflow-x-auto border-b-1 py-2 ">
-              {
-                selectedTags.map(tag => {
-                  return <div
-                    className={` px-2 py-2 text-xs  flex items-center justify-center rounded-xl cursor-pointer`}
-
-                    style={{
-                      backgroundColor: `${selectedTags.some(t => t.id === tag.id) ? `${tag.color}` : `${tag.color}20`}`,
-                      color: `${selectedTags.some(t => t.id === tag.id) ? `white` : `${tag.color}`}`
-                    }}
-
-                    onClick={() => { handleSelectionTags(tag) }}
-                    key={tag.name}
-                  >{tag.name}</div>
-                })
-              }
-            </div>
-
-            <div className="flex flex-col flex-wrap h-30  gap-2 border-neutral-200 overflow-x-auto  ">
-
-
-
-              {
-                uniqueTags.map(tag => {
-                  return <div
-                    className={` px-2 py-2 text-xs  flex items-center justify-center rounded-xl cursor-pointer`}
-
-                    style={{
-                      backgroundColor: `${selectedTags.some(t => t.id === tag.id) ? `${tag.color}` : `${tag.color}20`}`,
-                      color: `${selectedTags.some(t => t.id === tag.id) ? `white` : `${tag.color}`}`
-                    }}
-
-                    onClick={() => { handleSelectionTags(tag) }}
-                    key={tag.name}
-                  >{tag.name}</div>
-                })
-              }
-            </div>
-          </div>
-
-
-        </div >}
+        </div>
+      }
 
     </>
   }
