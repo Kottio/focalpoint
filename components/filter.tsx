@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Funnel, CircleX } from "lucide-react";
-import { BrushCleaning } from "lucide-react";
+import { BrushCleaning, ChevronDown, ChevronUp } from "lucide-react";
 interface FilterProps {
   spots: Spot[],
   setFilteredSpots: (spots: Spot[]) => void
@@ -80,8 +80,7 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
           {selectedCategory.map(cat => (
             <div
               key={cat}
-              className="px-3 py-3  h-10 rounded-3xl cursor-pointer flex items-center gap-2 
-                                 transition-all duration-200 transform hover:scale-105 shadow-md"
+              className="px-3 py-3  h-10 rounded-3xl cursor-pointer flex items-center gap-2 transition-all duration-200 transform hover:scale-105 shadow-md"
               style={{
                 color: `white`,
                 background: `${getCategoryColor(cat)}`
@@ -113,15 +112,18 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
               {/* Categories Section */}
               <div className="p-6 border-b border-gray-50">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Categories</h3>
+                  <div className="flex gap-2">
+                    <h3 className="text-lg font-semibold text-gray-800">Categories</h3>
+                    {selectedCategory.length > 0 && (
+                      <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedCategory([]) }}></BrushCleaning>)}
+                  </div>
 
                   {/* {selectedCategory.length > 0 && (
                     <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-xl">
                       {selectedCategory.length} selected
                     </span>
                   )} */}
-                  {selectedCategory.length > 0 && (
-                    <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedCategory([]) }}></BrushCleaning>)}
+
                 </div>
 
                 {/* Selected Categories */}
@@ -155,9 +157,7 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
                   {categories.filter(cat => !selectedCategory.includes(cat)).map(cat => (
                     <div
                       key={cat}
-                      className="px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 font-medium
-                               transition-all duration-200 transform hover:scale-105 hover:shadow-md
-                               border-2 bg-white"
+                      className="px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 font-medium transition-all duration-200 transform hover:scale-105 hover:shadow-md border-2 bg-white"
                       style={{
                         color: getCategoryColor(cat),
                         borderColor: `${getCategoryColor(cat)}30`,
@@ -174,49 +174,58 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
               {/* Tags Section */}
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Tags</h3>
-                  {selectedTags.length > 0 && (
-                    <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedTags([]) }}></BrushCleaning>)}
+                  <div className="flex gap-2">
+                    <h3 className="text-lg font-semibold text-gray-800">Tags</h3>
+                    {selectedTags.length > 0 && (
+                      <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedTags([]) }}></BrushCleaning>)}
+                  </div>
+
+
+
+                  {!showTags ? <ChevronDown onClick={() => { setShowTags(true) }}></ChevronDown> : <ChevronUp onClick={() => { setShowTags(false) }}></ChevronUp>}
+
+
                 </div>
 
-                {/* Selected Tags */}
-                {selectedTags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
-                    {selectedTags.map(tag => (
+                {
+                  selectedTags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
+                      {selectedTags.map(tag => (
+                        <div
+                          key={tag.id}
+                          className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium transition-all duration-200 transform hover:scale-105"
+                          style={{
+                            backgroundColor: tag.color,
+                            color: 'white'
+                          }}
+                          onClick={() => handleSelectionTags(tag)}
+                        >
+                          {tag.name}
+                        </div>
+                      ))}
+                    </div>
+                  )
+                }
+                {showTags && <div>
+
+                  {/* Available Tags */}
+                  <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                    {uniqueTags.filter(tag => !selectedTags.some(t => t.id === tag.id)).map(tag => (
                       <div
                         key={tag.id}
-                        className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium
-                                 transition-all duration-200 transform hover:scale-105"
+                        className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium transition-all duration-200 transform hover:scale-105 border-2"
                         style={{
-                          backgroundColor: tag.color,
-                          color: 'white'
+                          backgroundColor: `${tag.color}10`,
+                          color: tag.color,
+                          borderColor: `${tag.color}30`
                         }}
-                        onClick={() => handleSelectionTags(tag)}
-                      >
+                        onClick={() => handleSelectionTags(tag)}>
                         {tag.name}
                       </div>
                     ))}
                   </div>
-                )}
 
-                {/* Available Tags */}
-                <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
-                  {uniqueTags.filter(tag => !selectedTags.some(t => t.id === tag.id)).map(tag => (
-                    <div
-                      key={tag.id}
-                      className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium
-                               transition-all duration-200 transform hover:scale-105 border-2"
-                      style={{
-                        backgroundColor: `${tag.color}10`,
-                        color: tag.color,
-                        borderColor: `${tag.color}30`
-                      }}
-                      onClick={() => handleSelectionTags(tag)}
-                    >
-                      {tag.name}
-                    </div>
-                  ))}
-                </div>
+                </div>}
               </div>
             </div>
           </div>
