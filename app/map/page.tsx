@@ -1,6 +1,6 @@
 'use client';
 import { MainDrawer } from '@/components/mainDrawer';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Map from '@/components/map';
 import Filter from '@/components/filter';
 import SpotList from '@/components/spotList';
@@ -8,7 +8,7 @@ import SpotDetails from '@/components/spotDetails';
 import { useSpots } from '@/hooks/useSpots';
 import useSpotDetails from '@/hooks/useSpotDetails';
 import { useIsMobile } from '@/hooks/useIsMobile';
-
+import { Tag } from '@/types/spot';
 
 export default function MapPage() {
   // UI State
@@ -21,6 +21,13 @@ export default function MapPage() {
     east: 2.4,
     west: 2.1
   });
+
+  const [selectedCategory, setSelectedCategory] = useState<string[]>([])
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+
+
+
+
 
   // Data from custom hooks
   const { spots, filteredSpots, setFilteredSpots, isLoading } = useSpots(mapBounds);
@@ -40,8 +47,6 @@ export default function MapPage() {
   };
 
 
-  console.log("Filtered Spoot", filteredSpots)
-
   return (<>
 
 
@@ -53,7 +58,7 @@ export default function MapPage() {
             <div className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400 ${showFilter ? 'max-h-100 p-5' : 'overflow-hidden max-h-0 p-0'
               }`}>
 
-              <Filter spots={spots} setFilteredSpots={setFilteredSpots} />
+              {/* <Filter spots={spots} setFilteredSpots={setFilteredSpots} /> */}
 
               <span>Spots({filteredSpots.length})</span>
             </div>
@@ -102,8 +107,9 @@ export default function MapPage() {
     {isMobile && <>
 
 
-      <Filter spots={spots} setFilteredSpots={setFilteredSpots}></Filter>
-      <div className="overflow-x-auto absolute  flex w-screen bottom-0">
+      <Filter spots={spots} setFilteredSpots={setFilteredSpots} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} selectedTags={selectedTags} setSelectedTags={setSelectedTags}></Filter>
+
+      <div className=" absolute   w-screen bottom-0">
 
         <MainDrawer
           filteredSpots={filteredSpots}

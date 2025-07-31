@@ -5,12 +5,22 @@ import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Funnel, CircleX } from "lucide-react";
 import { BrushCleaning, ChevronDown, ChevronUp } from "lucide-react";
+
+
 interface FilterProps {
   spots: Spot[],
-  setFilteredSpots: (spots: Spot[]) => void
+  setFilteredSpots: (spots: Spot[]) => void,
+  selectedCategory: string[],
+  setSelectedCategory: (cat: string[]) => void
+  selectedTags: Tag[],
+  setSelectedTags: (tag: Tag[]) => void
 }
 
-export default function Filter({ spots, setFilteredSpots }: FilterProps) {
+
+
+
+
+export default function Filter({ spots, setFilteredSpots, selectedCategory, setSelectedCategory, selectedTags, setSelectedTags }: FilterProps) {
 
   const categories = [... new Set(spots.map(spot => spot.category))]
   const allTags = spots.flatMap(spot => spot.tags);
@@ -19,8 +29,8 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
     index === self.findIndex(t => t.id === tag.id))
 
 
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([])
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+  // const [selectedCategory, setSelectedCategory] = useState<string[]>([])
+  // const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 
 
   // Mobile filter toggle states
@@ -96,7 +106,7 @@ export default function Filter({ spots, setFilteredSpots }: FilterProps) {
 
 
       {showFilter &&
-        <div className="fixed inset-0 bg-black/20 z-30 flex items-start justify-center pt-2">
+        <div className="fixed inset-0 bg-black/20 z-300 flex items-start justify-center pt-2">
 
           <div className="bg-white rounded-2xl shadow-2xl w-[95vw] max-w-md max-h-[80vh] overflow-hidden">
             {/* Header */}
