@@ -28,7 +28,6 @@ export default function MapPage() {
 
 
 
-
   // Data from custom hooks
   const { spots, filteredSpots, setFilteredSpots, isLoading } = useSpots(mapBounds);
   const { selectedLocation } = useSpotDetails(selectedLocId);
@@ -115,7 +114,10 @@ export default function MapPage() {
           filteredSpots={filteredSpots}
           selectedLocId={selectedLocId}
           handleSpotSelect={handleSpotSelect}
-          handleCloseSelection={handleCloseSelection} />
+          handleCloseSelection={handleCloseSelection}
+          selectedCategory={selectedCategory}
+          selectedTags={selectedTags}
+        />
       </div>
 
       <Map

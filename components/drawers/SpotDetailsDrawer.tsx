@@ -13,21 +13,21 @@ interface SpotDetailsDrawerProps {
 
 const snapPoints = ['300px', 1];
 
-export function SpotDetailsDrawer({ 
-  isOpen, 
-  onOpenChange, 
-  selectedLocation, 
-  handleCloseSelection 
+export function SpotDetailsDrawer({
+  isOpen,
+  onOpenChange,
+  selectedLocation,
+  handleCloseSelection
 }: SpotDetailsDrawerProps) {
   const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[0]);
 
   return (
-    <Drawer.NestedRoot 
-      open={isOpen} 
-      onOpenChange={onOpenChange} 
-      modal={false} 
-      snapPoints={snapPoints} 
-      activeSnapPoint={snapDetails} 
+    <Drawer.NestedRoot
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      modal={false}
+      snapPoints={snapPoints}
+      activeSnapPoint={snapDetails}
       setActiveSnapPoint={setSnapDetails}
     >
       <Drawer.Portal>
@@ -37,8 +37,9 @@ export function SpotDetailsDrawer({
           <div className="px-4">
             <Drawer.Title className="text-xl font-bold"></Drawer.Title>
             {selectedLocation && (
-              <SpotDetails 
-                selectedLocation={selectedLocation} 
+
+              <SpotDetails
+                selectedLocation={selectedLocation}
                 handleCloseSelection={handleCloseSelection}
               />
             )}

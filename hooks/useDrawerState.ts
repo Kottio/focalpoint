@@ -1,7 +1,7 @@
-'use client'
-import { useState, useEffect } from 'react';
+"use client";
+import { useState, useEffect } from "react";
 
-const SNAP_POINTS = ['148px', '300px', 1];
+const SNAP_POINTS = ["165px", "300px", 1];
 
 export function useDrawerState(selectedLocId: number | null) {
   const [snap, setSnap] = useState<number | string | null>(SNAP_POINTS[0]);
@@ -30,6 +30,6 @@ export function useDrawerState(selectedLocId: number | null) {
     nestedOpen,
     handleNestedChange,
     currentSnapPoints,
-    snapPoints: SNAP_POINTS
+    snapPoints: SNAP_POINTS,
   };
 }

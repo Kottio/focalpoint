@@ -8,7 +8,7 @@ interface SpotPreviewGridProps {
   maxItems?: number;
 }
 
-export function SpotPreviewGrid({ spots, onSpotSelect, maxItems = 6 }: SpotPreviewGridProps) {
+export function SpotPreviewGrid({ spots, onSpotSelect, maxItems = 15 }: SpotPreviewGridProps) {
   const displaySpots = spots.slice(0, maxItems);
   const remainingCount = spots.length - maxItems;
 
@@ -21,7 +21,7 @@ export function SpotPreviewGrid({ spots, onSpotSelect, maxItems = 6 }: SpotPrevi
           onSelect={onSpotSelect}
         />
       ))}
-      
+
       {remainingCount > 0 && (
         <div className="flex-shrink-0 w-28 h-20 rounded-xl bg-gray-100 flex items-center justify-center">
           <div className="text-center">

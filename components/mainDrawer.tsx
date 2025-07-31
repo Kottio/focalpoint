@@ -1,6 +1,7 @@
 'use client'
 import { Drawer } from 'vaul';
 import { Spot } from '@/types/spot';
+import { Tag } from '@/types/spot';
 import useSpotDetails from '@/hooks/useSpotDetails';
 import SpotList from './spotList';
 import { useDrawerState } from '@/hooks/useDrawerState';
@@ -13,9 +14,11 @@ interface MainDrawerProps {
   selectedLocId: number | null;
   handleSpotSelect: (spotId: number) => void;
   handleCloseSelection: () => void;
+  selectedCategory: string[],
+  selectedTags: Tag[]
 }
 
-export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection }: MainDrawerProps) {
+export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedCategory, selectedTags }: MainDrawerProps) {
   const { selectedLocation } = useSpotDetails(selectedLocId);
 
   const { snap, setSnap, nestedOpen, handleNestedChange, currentSnapPoints, snapPoints } = useDrawerState(selectedLocId);
@@ -36,6 +39,8 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
           <DrawerHeader
             title="Photography Spots"
             spotCount={filteredSpots.length}
+            selectedCategory={selectedCategory}
+            selectedTags={selectedTags}
           />
 
           {/* Peek view - empty for now */}
@@ -46,7 +51,7 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
 
           {/* Medium view - photo grid */}
           {snap === snapPoints[1] && (
-            <div className="px-4">
+            <div className="px-4 border-none">
               <SpotPreviewGrid
                 spots={filteredSpots}
                 onSpotSelect={handleSpotSelect}
