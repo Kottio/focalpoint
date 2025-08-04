@@ -9,12 +9,14 @@ import { useSpots } from '@/hooks/useSpots';
 import useSpotDetails from '@/hooks/useSpotDetails';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { Tag } from '@/types/spot';
+import { Funnel } from 'lucide-react';
+import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 
 export default function MapPage() {
   // UI State
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
-  const [showFilter, setShowFilter] = useState(true);
+  const [showFilter, setShowFilter] = useState<boolean>(false);
   const [mapBounds, setMapBounds] = useState({
     north: 48.9,
     south: 48.8,
@@ -27,14 +29,16 @@ export default function MapPage() {
 
 
 
-
   // Data from custom hooks
   const { spots, filteredSpots, setFilteredSpots, isLoading } = useSpots(mapBounds);
   const { selectedLocation } = useSpotDetails(selectedLocId);
   const isMobile = useIsMobile()
 
 
+
+
   // Event handlers
+
   const handleCloseSelection = () => {
     setSelectedLocId(null);
     setIsSelected(false);
@@ -103,10 +107,33 @@ export default function MapPage() {
       </div >
     }
 
+
+
     {isMobile && <>
 
+      <div className=" absolute z-20 top-2 left-2  flex items-center   ">
+        {/* <Funnel className="p-2  rounded m-2 bg-white" size={45} color='black' fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel> */}
 
-      <Filter spots={spots} setFilteredSpots={setFilteredSpots} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} selectedTags={selectedTags} setSelectedTags={setSelectedTags}></Filter>
+        <div className="flex gap-2 h-10  ">
+          {selectedCategory.map(cat => (
+            <div
+              key={cat}
+              className="px-3 py-3  h-10 rounded-3xl cursor-pointer flex items-center gap-2 transition-all duration-200 transform hover:scale-105 shadow-md"
+              style={{
+                color: `white`,
+                background: `${getCategoryColor(cat)}`
+              }}>
+              {getCategoryIcon(cat)}
+
+            </div>
+          ))}
+        </div>
+      </div>
+      {showFilter && <Filter spots={spots} setFilteredSpots={setFilteredSpots} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} selectedTags={selectedTags} setSelectedTags={setSelectedTags} setShowFilter={setShowFilter}></Filter>}
+
+
+
+
 
       <div className=" absolute   w-screen bottom-0">
 
@@ -117,6 +144,7 @@ export default function MapPage() {
           handleCloseSelection={handleCloseSelection}
           selectedCategory={selectedCategory}
           selectedTags={selectedTags}
+          setShowFilter={setShowFilter}
         />
       </div>
 

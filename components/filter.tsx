@@ -13,14 +13,15 @@ interface FilterProps {
   selectedCategory: string[],
   setSelectedCategory: (cat: string[]) => void
   selectedTags: Tag[],
-  setSelectedTags: (tag: Tag[]) => void
+  setSelectedTags: (tag: Tag[]) => void,
+  setShowFilter: (version: boolean) => void
 }
 
 
 
 
 
-export default function Filter({ spots, setFilteredSpots, selectedCategory, setSelectedCategory, selectedTags, setSelectedTags }: FilterProps) {
+export default function Filter({ spots, setFilteredSpots, selectedCategory, setSelectedCategory, selectedTags, setSelectedTags, setShowFilter }: FilterProps) {
 
   const categories = [... new Set(spots.map(spot => spot.category))]
   const allTags = spots.flatMap(spot => spot.tags);
@@ -28,9 +29,6 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
   const uniqueTags = allTags.filter((tag, index, self) =>
     index === self.findIndex(t => t.id === tag.id))
 
-
-  // const [selectedCategory, setSelectedCategory] = useState<string[]>([])
-  // const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 
 
   // Mobile filter toggle states
@@ -40,7 +38,7 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
 
   //Final states
   const isMobile = useIsMobile()
-  const [showFilter, setShowFilter] = useState(false)
+
 
 
 
@@ -83,164 +81,144 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
 
   if (isMobile) {
     return <>
-      <div className=" absolute z-20 top-0 left-0  flex items-center   ">
-        <Funnel className="p-2  rounded m-2 bg-white" size={45} color='black' fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel>
-
-        <div className="flex gap-2 h-10  ">
-          {selectedCategory.map(cat => (
-            <div
-              key={cat}
-              className="px-3 py-3  h-10 rounded-3xl cursor-pointer flex items-center gap-2 transition-all duration-200 transform hover:scale-105 shadow-md"
-              style={{
-                color: `white`,
-                background: `${getCategoryColor(cat)}`
-              }}
-              onClick={() => handleSelectionCategory(cat)}
-            >
-              {getCategoryIcon(cat)}
-
-            </div>
-          ))}
-        </div>
-      </div>
 
 
-      {showFilter &&
-        <div className="fixed inset-0 bg-black/20 z-300 flex items-start justify-center pt-2">
 
-          <div className="bg-white rounded-2xl shadow-2xl w-[95vw] max-w-md max-h-[80vh] overflow-hidden">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900">Filters</h2>
-              <CircleX
-                onClick={() => setShowFilter(false)}
-                className="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
-              />
-            </div>
+      <div className="fixed inset-0 bg-black/20 z-300 flex items-start justify-center pt-2">
 
-            <div className="overflow-y-auto max-h-[calc(80vh-80px)]">
-              {/* Categories Section */}
-              <div className="p-6 border-b border-gray-50">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex gap-2">
-                    <h3 className="text-lg font-semibold text-gray-800">Categories</h3>
-                    {selectedCategory.length > 0 && (
-                      <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedCategory([]) }}></BrushCleaning>)}
-                  </div>
+        <div className="bg-white rounded-2xl shadow-2xl w-[95vw] max-w-md max-h-[80vh] overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-100">
+            <h2 className="text-2xl font-bold text-gray-900">Filters</h2>
+            <CircleX
+              onClick={() => setShowFilter(false)}
+              className="w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
+            />
+          </div>
 
-                  {/* {selectedCategory.length > 0 && (
+          <div className="overflow-y-auto max-h-[calc(80vh-80px)]">
+            {/* Categories Section */}
+            <div className="p-6 border-b border-gray-50">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex gap-2">
+                  <h3 className="text-lg font-semibold text-gray-800">Categories</h3>
+                  {selectedCategory.length > 0 && (
+                    <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedCategory([]) }}></BrushCleaning>)}
+                </div>
+
+                {/* {selectedCategory.length > 0 && (
                     <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-xl">
                       {selectedCategory.length} selected
                     </span>
                   )} */}
 
-                </div>
-
-                {/* Selected Categories */}
-                {selectedCategory.length > 0 && (
-                  <div className="flex items-center">
-                    <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
-                      {selectedCategory.map(cat => (
-                        <div
-                          key={cat}
-                          className="px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 font-medium 
-                                 transition-all duration-200 transform hover:scale-105 shadow-md"
-                          style={{
-                            color: 'white',
-                            background: `linear-gradient(135deg, ${getCategoryColor(cat)}, ${getCategoryColor(cat)}DD)`,
-                            boxShadow: `0 4px 12px ${getCategoryColor(cat)}30`
-                          }}
-                          onClick={() => handleSelectionCategory(cat)}
-                        >
-                          {getCategoryIcon(cat)}
-                          <span className="text-sm">{cat}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                  </div>
-
-                )}
-
-                {/* Available Categories */}
-                <div className="flex flex-wrap gap-2">
-                  {categories.filter(cat => !selectedCategory.includes(cat)).map(cat => (
-                    <div
-                      key={cat}
-                      className="px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 font-medium transition-all duration-200 transform hover:scale-105 hover:shadow-md border-2 bg-white"
-                      style={{
-                        color: getCategoryColor(cat),
-                        borderColor: `${getCategoryColor(cat)}30`,
-                      }}
-                      onClick={() => handleSelectionCategory(cat)}
-                    >
-                      {getCategoryIcon(cat)}
-                      <span className="text-sm">{cat}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
 
-              {/* Tags Section */}
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex gap-2">
-                    <h3 className="text-lg font-semibold text-gray-800">Tags</h3>
-                    {selectedTags.length > 0 && (
-                      <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedTags([]) }}></BrushCleaning>)}
-                  </div>
-
-
-
-                  {!showTags ? <ChevronDown onClick={() => { setShowTags(true) }}></ChevronDown> : <ChevronUp onClick={() => { setShowTags(false) }}></ChevronUp>}
-
-
-                </div>
-
-                {
-                  selectedTags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
-                      {selectedTags.map(tag => (
-                        <div
-                          key={tag.id}
-                          className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium transition-all duration-200 transform hover:scale-105"
-                          style={{
-                            backgroundColor: tag.color,
-                            color: 'white'
-                          }}
-                          onClick={() => handleSelectionTags(tag)}
-                        >
-                          {tag.name}
-                        </div>
-                      ))}
-                    </div>
-                  )
-                }
-                {showTags && <div>
-
-                  {/* Available Tags */}
-                  <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
-                    {uniqueTags.filter(tag => !selectedTags.some(t => t.id === tag.id)).map(tag => (
+              {/* Selected Categories */}
+              {selectedCategory.length > 0 && (
+                <div className="flex items-center">
+                  <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
+                    {selectedCategory.map(cat => (
                       <div
-                        key={tag.id}
-                        className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium transition-all duration-200 transform hover:scale-105 border-2"
+                        key={cat}
+                        className="px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 font-medium 
+                                 transition-all duration-200 transform hover:scale-105 shadow-md"
                         style={{
-                          backgroundColor: `${tag.color}10`,
-                          color: tag.color,
-                          borderColor: `${tag.color}30`
+                          color: 'white',
+                          background: `linear-gradient(135deg, ${getCategoryColor(cat)}, ${getCategoryColor(cat)}DD)`,
+                          boxShadow: `0 4px 12px ${getCategoryColor(cat)}30`
                         }}
-                        onClick={() => handleSelectionTags(tag)}>
-                        {tag.name}
+                        onClick={() => handleSelectionCategory(cat)}
+                      >
+                        {getCategoryIcon(cat)}
+                        <span className="text-sm">{cat}</span>
                       </div>
                     ))}
                   </div>
 
-                </div>}
+                </div>
+
+              )}
+
+              {/* Available Categories */}
+              <div className="flex flex-wrap gap-2">
+                {categories.filter(cat => !selectedCategory.includes(cat)).map(cat => (
+                  <div
+                    key={cat}
+                    className="px-3 py-2 rounded-lg cursor-pointer flex items-center gap-2 font-medium transition-all duration-200 transform hover:scale-105 hover:shadow-md border-2 bg-white"
+                    style={{
+                      color: getCategoryColor(cat),
+                      borderColor: `${getCategoryColor(cat)}30`,
+                    }}
+                    onClick={() => handleSelectionCategory(cat)}
+                  >
+                    {getCategoryIcon(cat)}
+                    <span className="text-sm">{cat}</span>
+                  </div>
+                ))}
               </div>
+            </div>
+
+            {/* Tags Section */}
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex gap-2">
+                  <h3 className="text-lg font-semibold text-gray-800">Tags</h3>
+                  {selectedTags.length > 0 && (
+                    <BrushCleaning strokeWidth={1.5} onClick={() => { setSelectedTags([]) }}></BrushCleaning>)}
+                </div>
+
+
+
+                {!showTags ? <ChevronDown onClick={() => { setShowTags(true) }}></ChevronDown> : <ChevronUp onClick={() => { setShowTags(false) }}></ChevronUp>}
+
+
+              </div>
+
+              {
+                selectedTags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
+                    {selectedTags.map(tag => (
+                      <div
+                        key={tag.id}
+                        className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium transition-all duration-200 transform hover:scale-105"
+                        style={{
+                          backgroundColor: tag.color,
+                          color: 'white'
+                        }}
+                        onClick={() => handleSelectionTags(tag)}
+                      >
+                        {tag.name}
+                      </div>
+                    ))}
+                  </div>
+                )
+              }
+              {showTags && <div>
+
+                {/* Available Tags */}
+                <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                  {uniqueTags.filter(tag => !selectedTags.some(t => t.id === tag.id)).map(tag => (
+                    <div
+                      key={tag.id}
+                      className="px-3 py-1 text-sm rounded-full cursor-pointer font-medium transition-all duration-200 transform hover:scale-105 border-2"
+                      style={{
+                        backgroundColor: `${tag.color}10`,
+                        color: tag.color,
+                        borderColor: `${tag.color}30`
+                      }}
+                      onClick={() => handleSelectionTags(tag)}>
+                      {tag.name}
+                    </div>
+                  ))}
+                </div>
+
+              </div>}
             </div>
           </div>
         </div>
-      }
+      </div>
+
 
     </>
   }
@@ -251,6 +229,9 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
 
 
 
+
+
+  //////////////////
 
   return (<>
     {!isMobile && <div className="flex flex-col w-full text-neutral-500">

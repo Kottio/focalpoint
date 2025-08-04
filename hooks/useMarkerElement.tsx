@@ -14,16 +14,18 @@ export function createMarkerElement({ selectedLocId, spot, onSpotSelect }: MapMa
   markerEl.className = 'custom-marker';
   markerEl.innerHTML = `
   <div >
-  <img
+  <img 
     src="${spot.thumbnailPhoto || '/mainPhotos/65060003.jpg'}"
     alt="${spot.title}"
     style="
       width: ${isSelected ? '55px' : '35px'};
       height: ${isSelected ? '55px' : '35px'};
-      border: 3px solid ${isSelected ? 'blue' : `${getCategoryColor(spot.category)}`};
+      border:  ${isSelected ? ' 5px solid white' : ` 3px solid ${getCategoryColor(spot.category)}`};
       border-radius: 50%;
       object-fit: cover;
       cursor: pointer;
+            z-index: ${isSelected ? '50' : '10'};
+
     "/>
     </div>`;
   markerEl.addEventListener('click', () => {

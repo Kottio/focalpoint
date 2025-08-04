@@ -12,10 +12,8 @@ export function useSpots(mapBounds: MapBounds) {
   const [spots, setSpots] = useState<Spot[]>([]);
   const [filteredSpots, setFilteredSpots] = useState<Spot[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
   async function fetchSpots() {
     setIsLoading(true);
-
     try {
       const params = new URLSearchParams({
         north: mapBounds.north.toString(),
@@ -32,6 +30,7 @@ export function useSpots(mapBounds: MapBounds) {
 
       const data = await response.json();
       setSpots(data);
+      setFilteredSpots(data);
     } catch (err) {
       console.error("Could not fetch bounded spots:", err);
     } finally {
