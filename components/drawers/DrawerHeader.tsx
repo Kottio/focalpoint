@@ -24,10 +24,14 @@ export function DrawerHeader({ title, spotCount, selectedCategory, selectedTags 
           </ul>
         </div>
         <ul className='flex gap-2 mb-3' >
-          {selectedTags.length > 0 && selectedTags.map(tag => { return <div className='text-xs rounded-2xl px-1' style={{ color: tag.color, border: `solid 1px ${tag.color}90` }} key={tag.name}> {tag.name}</div> })}
+          {selectedTags.length > 0 && selectedTags.map(tag => {
+
+            return <div className='text-xs rounded px-2' style={{ color: tag.color, border: `solid 1px ${tag.color}90` }} key={tag.name}> {tag.name}</div>
+          })}
         </ul>
 
       </div >
     </>
   );
 }
+
