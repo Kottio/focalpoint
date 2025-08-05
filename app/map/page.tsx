@@ -35,8 +35,6 @@ export default function MapPage() {
   const isMobile = useIsMobile()
 
 
-
-
   // Event handlers
 
   const handleCloseSelection = () => {
@@ -130,8 +128,6 @@ export default function MapPage() {
         </div>
       </div>
       {showFilter && <Filter spots={spots} setFilteredSpots={setFilteredSpots} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} selectedTags={selectedTags} setSelectedTags={setSelectedTags} setShowFilter={setShowFilter}></Filter>}
-
-
 
 
 

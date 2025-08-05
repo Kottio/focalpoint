@@ -40,9 +40,6 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
   const isMobile = useIsMobile()
 
 
-
-
-
   //Filter all the spot based on the categories
   useEffect(() => {
     const filtered = spots.filter(spot => {
