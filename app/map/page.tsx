@@ -9,8 +9,9 @@ import { useSpots } from '@/hooks/useSpots';
 import useSpotDetails from '@/hooks/useSpotDetails';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { Tag } from '@/types/spot';
-import { Funnel } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
+import { CreationDrawer } from '@/components/creationDrawer';
 
 export default function MapPage() {
   // UI State
@@ -27,10 +28,13 @@ export default function MapPage() {
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 
-
+  // Creation mode state
+  const [isCreationMode, setIsCreationMode] = useState<boolean>(false);
+  const [newSpotLocation, setNewSpotLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
   // Data from custom hooks
-  const { spots, filteredSpots, setFilteredSpots, isLoading } = useSpots(mapBounds);
+  const { spots, filteredSpots, setFilteredSpots, isLoading, refetchSpots } = useSpots(mapBounds);
   const { selectedLocation } = useSpotDetails(selectedLocId);
   const isMobile = useIsMobile()
 
@@ -48,11 +52,31 @@ export default function MapPage() {
   };
 
 
+
+
+  // Creation mode handlers
+  const handleStartCreation = () => {
+    setIsCreationMode(true);
+    setIsSelected(false);
+    setSelectedLocId(null);
+    // Set initial marker position to map center
+    const centerLat = (mapBounds.north + mapBounds.south) / 2;
+    const centerLng = (mapBounds.east + mapBounds.west) / 2;
+    setNewSpotLocation({ lat: centerLat, lng: centerLng });
+  };
+  const handleCancelCreation = () => {
+    setIsCreationMode(false);
+    setNewSpotLocation(null);
+    setShowCreateForm(false);
+  };
+  const handleConfirmLocation = () => {
+    setShowCreateForm(true);
+  };
+
   return (<>
 
 
     {!isMobile &&
-
       <div className="bg-white h-screen text-white">
         < div className="absolute z-10 flex h-screen gap-4 text-white bg-white" >
           <div className="flex flex-col max-w-100">
@@ -99,6 +123,9 @@ export default function MapPage() {
           onSpotSelect={handleSpotSelect}
           initialBounds={mapBounds}
           setMapBounds={setMapBounds}
+          isCreationMode={isCreationMode}
+          newSpotLocation={newSpotLocation}
+          setNewSpotLocation={setNewSpotLocation}
         />
 
 
@@ -108,6 +135,29 @@ export default function MapPage() {
 
 
     {isMobile && <>
+      {/* Creation Mode Controls */}
+      {!isCreationMode ? (
+        <div className="absolute z-20 top-2 right-12 flex items-center">
+          <button
+            onClick={handleStartCreation}
+            className='bg-white p-1 rounded shadow-lg border-2 border-neutral-300 hover:bg-emerald-700 transition'>
+            <Plus size={20} />
+          </button>
+        </div>
+      ) : (
+        <div className="absolute z-20 top-2 right-2 flex gap-2">
+          <button
+            onClick={handleCancelCreation}
+            className='bg-red-400 text-white px-4 py-2 rounded shadow-lg hover:bg-red-600 transition'>
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirmLocation}
+            className='bg-emerald-600 text-white px-4 py-2 rounded shadow-lg hover:bg-emerald-700 transition'>
+            Confirm
+          </button>
+        </div>
+      )}
 
       <div className=" absolute z-20 top-2 left-2  flex items-center   ">
         {/* <Funnel className="p-2  rounded m-2 bg-white" size={45} color='black' fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel> */}
@@ -132,16 +182,25 @@ export default function MapPage() {
 
 
       <div className=" absolute   w-screen bottom-0">
+        {!isCreationMode &&
+          <MainDrawer
+            filteredSpots={filteredSpots}
+            selectedLocId={selectedLocId}
+            handleSpotSelect={handleSpotSelect}
+            handleCloseSelection={handleCloseSelection}
+            selectedCategory={selectedCategory}
+            selectedTags={selectedTags}
+            setShowFilter={setShowFilter}
+          />}
 
-        <MainDrawer
-          filteredSpots={filteredSpots}
-          selectedLocId={selectedLocId}
-          handleSpotSelect={handleSpotSelect}
-          handleCloseSelection={handleCloseSelection}
-          selectedCategory={selectedCategory}
-          selectedTags={selectedTags}
-          setShowFilter={setShowFilter}
-        />
+        {showCreateForm && isCreationMode &&
+          <CreationDrawer
+            location={newSpotLocation}
+            closeDrawer={handleCancelCreation}
+            spots={spots}
+            onSpotCreated={refetchSpots}
+          />
+        }
       </div>
 
       <Map
@@ -150,7 +209,11 @@ export default function MapPage() {
         selectedLocId={selectedLocId}
         onSpotSelect={handleSpotSelect}
         initialBounds={mapBounds}
-        setMapBounds={setMapBounds}></Map>
+        setMapBounds={setMapBounds}
+        isCreationMode={isCreationMode}
+        newSpotLocation={newSpotLocation}
+        setNewSpotLocation={setNewSpotLocation}
+      ></Map>
     </>
 
 

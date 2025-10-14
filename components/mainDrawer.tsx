@@ -35,7 +35,7 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
     >
       <Drawer.Portal>
         <Drawer.Content
-          className={`${nestedOpen ? 'h-0' : 'h-full'} z-100 fixed flex flex-col bg-white  rounded-t-[10px] bottom-0 left-0 right-0 max-h-[95%] mx-[-1px]`}
+          className={`${nestedOpen ? 'h-0' : 'h-full'} z-100 fixed flex flex-col bg-neutral-100 text-white   rounded-t-[10px] bottom-0 left-0 right-0 max-h-[95%] mx-[-1px]`}
         >
           <DrawerHeader
             title="Photography Spots"

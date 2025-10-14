@@ -17,7 +17,7 @@ export function DrawerHeader({ title, spotCount, selectedCategory, selectedTags,
       <div className="flex flex-col w-full px-4 gap-1 border-b-1 mb-2 ">
         <Drawer.Title className="text-2xl font-medium text-gray-900  flex  items-center justify-between">{title}
 
-          <Funnel size={25} strokeWidth={1.5} onClick={() => { setShowFilter(true) }} ></Funnel>
+          <Funnel size={35} strokeWidth={1.5} onClick={() => { setShowFilter(true) }} className='border-1 p-1 text-indigo-800 border-neutral-300'></Funnel>
         </Drawer.Title>
         <div className='flex justify-between items-start ' >
           {spotCount !== undefined && (

@@ -47,5 +47,6 @@ export function useSpots(mapBounds: MapBounds) {
     filteredSpots,
     setFilteredSpots,
     isLoading,
+    refetchSpots: fetchSpots,
   };
 }

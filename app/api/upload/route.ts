@@ -1,12 +1,11 @@
-import { writeFile, mkdir } from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
-import path from 'path';
-import { existsSync } from 'fs';
+import cloudinary from '@/lib/cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.formData();
     const file: File | null = data.get('photo') as unknown as File;
+    const spotId = data.get('spotId') as string;
 
     if (!file) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
@@ -25,45 +24,57 @@ export async function POST(request: NextRequest) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    
-    // Create unique filename
+
+    // Convert buffer to base64 for Cloudinary
+    const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`;
+
+    // Generate unique public_id
     const timestamp = Date.now();
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_'); // Sanitize filename
-    const filename = `spot_${timestamp}_${originalName}`;
-    
-    // Ensure upload directories exist
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'spots');
-    const fullDir = path.join(uploadDir, 'full');
-    const thumbnailDir = path.join(uploadDir, 'thumbnails');
-    
-    if (!existsSync(fullDir)) {
-      await mkdir(fullDir, { recursive: true });
-    }
-    if (!existsSync(thumbnailDir)) {
-      await mkdir(thumbnailDir, { recursive: true });
-    }
-    
-    // Save full size image
-    const fullPath = path.join(fullDir, filename);
-    await writeFile(fullPath, buffer);
-    
-    // TODO: Generate thumbnail (40x40) for map markers
-    // This would be replaced by Cloudinary's automatic resizing later
-    
-    const publicUrl = `/uploads/spots/full/${filename}`;
-    
-    return NextResponse.json({ 
+    const publicId = `focal-point/spots/${spotId}/photo_${timestamp}`;
+
+    // Upload original to Cloudinary
+    const originalUpload = await cloudinary.uploader.upload(base64Image, {
+      public_id: publicId,
+      folder: 'focal-point/spots/original',
+      resource_type: 'image',
+      overwrite: false
+    });
+
+    // Generate thumbnail (40x40 for map markers)
+    const thumbnailUpload = await cloudinary.uploader.upload(base64Image, {
+      public_id: `${publicId}_thumb`,
+      folder: 'focal-point/spots/thumbnails',
+      transformation: [
+        { width: 40, height: 40, crop: 'fill', gravity: 'center' }
+      ],
+      resource_type: 'image',
+      overwrite: false
+    });
+
+    // Generate medium size (300x200 for cards)
+    const mediumUpload = await cloudinary.uploader.upload(base64Image, {
+      public_id: `${publicId}_medium`,
+      folder: 'focal-point/spots/medium',
+      transformation: [
+        { width: 300, height: 200, crop: 'fill', gravity: 'center' }
+      ],
+      resource_type: 'image',
+      overwrite: false
+    });
+
+    return NextResponse.json({
       success: true,
-      url: publicUrl,
-      filename,
-      size: file.size,
-      type: file.type
+      originalUrl: originalUpload.secure_url,
+      thumbnailUrl: thumbnailUpload.secure_url,
+      mediumUrl: mediumUpload.secure_url,
+      publicId: publicId
     });
 
   } catch (error) {
     console.error('Upload error:', error);
-    return NextResponse.json({ 
-      error: "Upload failed" 
+    return NextResponse.json({
+      error: "Upload failed",
+      details: error instanceof Error ? error.message : "Unknown error"
     }, { status: 500 });
   }
 }

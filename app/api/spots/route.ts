@@ -141,3 +141,115 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    console.log("Creating spot with data:", body);
+
+    // Validate required fields
+    if (!body.title || !body.latitude || !body.longitude || !body.category) {
+      return NextResponse.json(
+        {
+          error:
+            "Missing required fields: title, latitude, longitude, category",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Find category by name (since we're sending the name, not the ID)
+    const category = await prisma.category.findFirst({
+      where: { name: body.category },
+    });
+
+    if (!category) {
+      return NextResponse.json(
+        { error: `Category '${body.category}' not found` },
+        { status: 404 }
+      );
+    }
+
+    // Create the spot with tags and photos
+    const newSpot = await prisma.spot.create({
+      data: {
+        title: body.title,
+        description: body.description || null,
+        latitude: body.latitude,
+        longitude: body.longitude,
+        categoryId: category.id,
+        userId: 1, // For now, no user authentication
+        // Create spotTags relations if tags are provided
+        spotTags:
+          body.tags && body.tags.length > 0
+            ? {
+                create: body.tags.map((tagId: number) => ({
+                  tag: {
+                    connect: { id: tagId },
+                  },
+                })),
+              }
+            : undefined,
+        // Create photos if provided
+        photos:
+          body.photos && body.photos.length > 0
+            ? {
+                create: body.photos.map((photo: any, index: number) => ({
+                  originalUrl: photo.originalUrl,
+                  thumbnailUrl: photo.thumbnailUrl,
+                  mediumUrl: photo.mediumUrl,
+                  publicId: photo.publicId,
+                  isPrimary: index === 0, // First photo is primary
+                  title: ``,
+                  likes: 0,
+                  userId: 1,
+                })),
+              }
+            : undefined,
+      },
+      include: {
+        category: true,
+        photos: true,
+        spotTags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+
+    console.log("Spot created successfully:", newSpot.id);
+
+    // Transform response to match frontend format
+    const transformedSpot = {
+      id: newSpot.id,
+      title: newSpot.title,
+      description: newSpot.description,
+      latitude: parseFloat(newSpot.latitude.toString()),
+      longitude: parseFloat(newSpot.longitude.toString()),
+      category: newSpot.category.name,
+      categoryId: newSpot.categoryId,
+      tags: newSpot.spotTags.map((st) => ({
+        id: st.tag.id,
+        name: st.tag.name,
+        color: st.tag.color,
+      })),
+      thumbnailPhoto:
+        newSpot.photos.length > 0
+          ? newSpot.photos[0].thumbnailUrl
+          : "/mainPhotos/65030013.jpg",
+      createdAt: newSpot.createdAt,
+    };
+
+    return NextResponse.json(transformedSpot, { status: 201 });
+  } catch (error) {
+    console.error("Error creating spot:", error);
+    return NextResponse.json(
+      {
+        error: "Failed to create spot",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
+  }
+}

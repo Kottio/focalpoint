@@ -2,6 +2,7 @@
 import { Spot } from '@/types/spot';
 import { useMapBox } from '../hooks/useMapBox';
 import { useMapMarker } from '@/hooks/useMapMarker';
+import { useCreationMarker } from '@/hooks/useCreationMarker';
 import { useEffect, useRef } from 'react';
 
 export interface mapBounds {
@@ -18,6 +19,9 @@ interface MapProps {
   onSpotSelect: (spotId: number) => void;
   initialBounds: mapBounds
   setMapBounds: (mapBounds: mapBounds) => (void)
+  isCreationMode: boolean
+  newSpotLocation: { lat: number; lng: number } | null
+  setNewSpotLocation: (location: { lat: number; lng: number }) => void
 }
 
 export default function Map({
@@ -26,12 +30,31 @@ export default function Map({
   selectedLocId,
   onSpotSelect,
   initialBounds,
-  setMapBounds
+  setMapBounds,
+  isCreationMode,
+  newSpotLocation,
+  setNewSpotLocation
 }: MapProps) {
 
   const mapContainer = useRef<HTMLDivElement>(null);
   const { map } = useMapBox({ initialBounds, mapContainer })
-  useMapMarker({ map, selectedLocId, onSpotSelect, filteredSpots })
+
+  // Use appropriate hook based on mode
+
+  useMapMarker({
+    map,
+    selectedLocId,
+    onSpotSelect,
+    filteredSpots: isCreationMode ? [] : filteredSpots // Hide spots in creation mode
+  })
+
+  useCreationMarker({
+    map,
+    isCreationMode,
+    initialPosition: newSpotLocation,
+    onPositionChange: setNewSpotLocation
+  })
+
 
 
   //TODO: if too zoomed out, block or focus? 

@@ -33,9 +33,6 @@ export function useMapMarker({ map, selectedLocId, onSpotSelect, filteredSpots }
     filteredSpots.forEach(createMarker);
   }, [filteredSpots, selectedLocId])
 
-  // useEffect(() => {
-  //   return () => clearMarkers();
-  // }, [clearMarkers]);
 
 }
 
