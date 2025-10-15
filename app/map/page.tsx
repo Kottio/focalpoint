@@ -25,6 +25,11 @@ export default function MapPage() {
     west: 2.1
   });
 
+
+
+
+
+
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 
@@ -40,7 +45,6 @@ export default function MapPage() {
 
 
   // Event handlers
-
   const handleCloseSelection = () => {
     setSelectedLocId(null);
     setIsSelected(false);
@@ -50,7 +54,6 @@ export default function MapPage() {
     setSelectedLocId(spotId);
     setIsSelected(true);
   };
-
 
 
 
@@ -121,7 +124,7 @@ export default function MapPage() {
           filteredSpots={filteredSpots}
           selectedLocId={selectedLocId}
           onSpotSelect={handleSpotSelect}
-          initialBounds={mapBounds}
+          mapBounds={mapBounds}
           setMapBounds={setMapBounds}
           isCreationMode={isCreationMode}
           newSpotLocation={newSpotLocation}
@@ -137,10 +140,10 @@ export default function MapPage() {
     {isMobile && <>
       {/* Creation Mode Controls */}
       {!isCreationMode ? (
-        <div className="absolute z-20 top-2 right-12 flex items-center">
+        <div className="absolute z-20 top-0 right-0 m-1 flex items-center">
           <button
             onClick={handleStartCreation}
-            className='bg-white p-1 rounded shadow-lg border-2 border-neutral-300 hover:bg-emerald-700 transition'>
+            className='bg-gray-800  p-2 rounded shadow-lg border-2 flex items-center gap-1 border-neutral-300 hover:bg-emerald-700 transition text-white'>
             <Plus size={20} />
           </button>
         </div>
@@ -208,7 +211,7 @@ export default function MapPage() {
         filteredSpots={filteredSpots}
         selectedLocId={selectedLocId}
         onSpotSelect={handleSpotSelect}
-        initialBounds={mapBounds}
+        mapBounds={mapBounds}
         setMapBounds={setMapBounds}
         isCreationMode={isCreationMode}
         newSpotLocation={newSpotLocation}

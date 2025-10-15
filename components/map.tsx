@@ -17,7 +17,7 @@ interface MapProps {
   filteredSpots: Spot[];
   selectedLocId: number | null;
   onSpotSelect: (spotId: number) => void;
-  initialBounds: mapBounds
+  mapBounds: mapBounds
   setMapBounds: (mapBounds: mapBounds) => (void)
   isCreationMode: boolean
   newSpotLocation: { lat: number; lng: number } | null
@@ -29,7 +29,7 @@ export default function Map({
   filteredSpots,
   selectedLocId,
   onSpotSelect,
-  initialBounds,
+  mapBounds,
   setMapBounds,
   isCreationMode,
   newSpotLocation,
@@ -37,10 +37,12 @@ export default function Map({
 }: MapProps) {
 
   const mapContainer = useRef<HTMLDivElement>(null);
-  const { map } = useMapBox({ initialBounds, mapContainer })
+  const { map } = useMapBox({ mapBounds, mapContainer })
+
+  //show Refresh Boundaries
+
 
   // Use appropriate hook based on mode
-
   useMapMarker({
     map,
     selectedLocId,
@@ -72,6 +74,7 @@ export default function Map({
     }
   }
 
+
   //Fly to selected spot when selectedLocId changes
   useEffect(() => {
     if (selectedLocId && map.current) {
@@ -85,7 +88,7 @@ export default function Map({
       }
     }
     // - 0.025
-  }, [selectedLocId]);
+  }, [selectedLocId, map, spots]);
 
 
   return (<>
@@ -96,6 +99,10 @@ export default function Map({
       ref={mapContainer}
       className="w-full h-screen rounded-lg"
     />
+    {!isCreationMode && <button className='text-black text-sm z-30 absolute top-0 p-2 m-1 rounded bg-white border-1 shadow-lg border-neutral-300' onClick={() => {
+      handleUpdateMapBound()
+    }}>Refresh Boundaries</button>}
+
   </>
   );
 }

@@ -6,10 +6,10 @@ import { RefObject } from "react";
 
 interface mapBoxProp {
   mapContainer: RefObject<HTMLDivElement | null>
-  initialBounds: mapBounds
+  mapBounds: mapBounds
 }
 
-export function useMapBox({ mapContainer, initialBounds }: mapBoxProp) {
+export function useMapBox({ mapContainer, mapBounds }: mapBoxProp) {
   const map = useRef<mapboxgl.Map | null>(null);
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -17,8 +17,8 @@ export function useMapBox({ mapContainer, initialBounds }: mapBoxProp) {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/outdoors-v12',
-      center: [(initialBounds.east + initialBounds.west) / 2,
-      (initialBounds.north + initialBounds.south) / 2],
+      center: [(mapBounds.east + mapBounds.west) / 2,
+      (mapBounds.north + mapBounds.south) / 2],
       zoom: 10,
     });
 

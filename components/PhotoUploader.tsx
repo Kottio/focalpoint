@@ -1,6 +1,7 @@
 'use client'
 
 import { X, Upload } from 'lucide-react'
+import Image from 'next/image'
 
 interface PhotoUploaderProps {
   photos: File[]
@@ -53,12 +54,14 @@ export function PhotoUploader({ photos, onPhotosChange, maxPhotos = 5 }: PhotoUp
       {photos.length > 0 && (
         <div className="mt-3 grid grid-cols-3 gap-2">
           {photos.map((photo, index) => (
-            <div key={index} className="relative group  ">
-              <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 border  border-gray-200">
-                <img
+            <div key={index} className="relative group">
+              <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                <Image
                   src={URL.createObjectURL(photo)}
                   alt={`Preview ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 33vw, 150px"
+                  className="object-cover"
                 />
               </div>
 

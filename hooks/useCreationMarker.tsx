@@ -34,8 +34,8 @@ export function useCreationMarker({
       <div style="
         width: 20px;
         height:20px;
-        background-color: #10b981;
-        border: 2px solid white;
+        background-color: #77BEF0;
+        border: 3px solid white;
         border-radius: 50%;
         cursor: move;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -46,7 +46,7 @@ export function useCreationMarker({
      
         color: white;
       ">
-    📍
+    
       </div>
     `;
 
