@@ -1,6 +1,6 @@
 'use client'
 
-import { X, Upload, Image as ImageIcon } from 'lucide-react'
+import { X, Upload } from 'lucide-react'
 
 interface PhotoUploaderProps {
   photos: File[]

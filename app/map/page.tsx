@@ -1,6 +1,6 @@
 'use client';
 import { MainDrawer } from '@/components/mainDrawer';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import Map from '@/components/map';
 import Filter from '@/components/filter';
 import SpotList from '@/components/spotList';
@@ -34,7 +34,7 @@ export default function MapPage() {
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
   // Data from custom hooks
-  const { spots, filteredSpots, setFilteredSpots, isLoading, refetchSpots } = useSpots(mapBounds);
+  const { spots, filteredSpots, setFilteredSpots, refetchSpots } = useSpots(mapBounds);
   const { selectedLocation } = useSpotDetails(selectedLocId);
   const isMobile = useIsMobile()
 

@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const para = await params;
   const spotId = parseInt(para.id);
@@ -76,8 +76,8 @@ export async function GET(
     };
 
     return NextResponse.json(spotDetails);
-  } catch (error) {
-    console.error("Could not fetch the Details for the spot", spotId);
+  } catch (err) {
+    console.error("Could not fetch the Details for the spot", spotId, err);
     return NextResponse.json(
       { error: "Failed to fetch spots" },
       { status: 500 }

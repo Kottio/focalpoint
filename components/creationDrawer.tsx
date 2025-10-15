@@ -2,7 +2,7 @@
 import { Drawer } from "vaul"
 import { useState } from "react"
 import { X, ChevronDown, ChevronUp } from "lucide-react"
-import { Spot, Tag } from "@/types/spot"
+import { Spot } from "@/types/spot"
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants"
 import { useCreateSpot } from "@/hooks/useCreateSpot"
 import { PhotoUploader } from "./PhotoUploader"
@@ -18,7 +18,7 @@ interface CreationDrawerProps {
 
 export function CreationDrawer({ location, closeDrawer, spots, onSpotCreated }: CreationDrawerProps) {
   const { createSpot, isLoading } = useCreateSpot()
-  const [showTags, setShowTags] = useState<Boolean>(false)
+  const [showTags, setShowTags] = useState<boolean>(false)
 
   const categories = [... new Set(spots.map(spot => spot.category))]
   const allTags = spots.flatMap(spot => spot.tags);

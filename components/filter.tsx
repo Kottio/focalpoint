@@ -3,7 +3,7 @@ import { Spot, Tag } from "@/types/spot";
 import { useEffect, useState } from "react";
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { Funnel, CircleX } from "lucide-react";
+import { CircleX } from "lucide-react";
 import { BrushCleaning, ChevronDown, ChevronUp } from "lucide-react";
 
 
@@ -32,7 +32,6 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
 
 
   // Mobile filter toggle states
-  const [showCategories, setShowCategories] = useState(false)
   const [showTags, setShowTags] = useState(false)
 
 
@@ -52,7 +51,7 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
     setFilteredSpots(filtered);
 
 
-  }, [selectedCategory, selectedTags, spots]);
+  }, [selectedCategory, selectedTags, spots, setFilteredSpots]);
 
 
 

@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
     const west = searchParams.get("west");
 
     // Build where clause
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const whereClause: any = {
       AND: [],
     };
@@ -78,9 +79,7 @@ export async function GET(request: NextRequest) {
             tag: true,
           },
         },
-        photos: {
-          where: { isPrimary: true },
-        },
+        photos: {},
         user: {
           select: {
             id: true,
@@ -116,6 +115,7 @@ export async function GET(request: NextRequest) {
       thumbnailPhoto: spot.photos[0]
         ? spot.photos[0].thumbnailUrl
         : "/mainPhotos/65030013.jpg",
+
       mediumPhotos: spot.photos[0]
         ? spot.photos.map((p) => {
             return {
@@ -194,6 +194,7 @@ export async function POST(request: NextRequest) {
         photos:
           body.photos && body.photos.length > 0
             ? {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 create: body.photos.map((photo: any, index: number) => ({
                   originalUrl: photo.originalUrl,
                   thumbnailUrl: photo.thumbnailUrl,

@@ -21,10 +21,17 @@ export function SpotDetailsDrawer({
 }: SpotDetailsDrawerProps) {
   const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[0]);
 
+  const handleOpenChange = (open: boolean) => {
+    onOpenChange(open);
+    if (!open) {
+      handleCloseSelection();
+    }
+  };
+
   return (
     <Drawer.NestedRoot
       open={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       modal={false}
       snapPoints={snapPoints}
       activeSnapPoint={snapDetails}
@@ -32,7 +39,7 @@ export function SpotDetailsDrawer({
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-        <Drawer.Content className="z-200 bg-white flex flex-col rounded-t-[10px] fixed bottom-0 left-0 right-0 h-[95%]">
+        <Drawer.Content className="z-200 bg-gray-800 flex text-white flex-col rounded-t-[10px] fixed bottom-0 left-0 right-0 h-[95%]">
           <div aria-hidden className="mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-4" />
           <div className="px-4">
             <Drawer.Title className="text-xl font-bold"></Drawer.Title>

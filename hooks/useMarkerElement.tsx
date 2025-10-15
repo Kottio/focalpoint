@@ -15,7 +15,7 @@ export function createMarkerElement({ selectedLocId, spot, onSpotSelect }: MapMa
   markerEl.innerHTML = `
   <div >
   <img 
-    src="${spot.thumbnailPhoto || '/mainPhotos/65060003.jpg'}"
+    src="${spot.mediumPhotos[0].url || '/mainPhotos/65060003.jpg'}"
     alt="${spot.title}"
     style="
       width: ${isSelected ? '55px' : '35px'};
