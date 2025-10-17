@@ -200,7 +200,7 @@ export default function MapPage() {
           <CreationDrawer
             location={newSpotLocation}
             closeDrawer={handleCancelCreation}
-            spots={spots}
+
             onSpotCreated={refetchSpots}
           />
         }

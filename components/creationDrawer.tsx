@@ -2,29 +2,28 @@
 import { Drawer } from "vaul"
 import { useState } from "react"
 import { X, ChevronDown, ChevronUp } from "lucide-react"
-import { Spot } from "@/types/spot"
+
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants"
 import { useCreateSpot } from "@/hooks/useCreateSpot"
 import { PhotoUploader } from "./PhotoUploader"
-
+import { useCatandTags } from "@/hooks/useCatandTags"
 
 
 interface CreationDrawerProps {
   location: { lat: number; lng: number } | null
   closeDrawer: () => void
-  spots: Spot[]
+
   onSpotCreated: () => void
 }
 
-export function CreationDrawer({ location, closeDrawer, spots, onSpotCreated }: CreationDrawerProps) {
+export function CreationDrawer({ location, closeDrawer, onSpotCreated }: CreationDrawerProps) {
   const { createSpot, isLoading } = useCreateSpot()
   const [showTags, setShowTags] = useState<boolean>(false)
 
-  const categories = [... new Set(spots.map(spot => spot.category))]
-  const allTags = spots.flatMap(spot => spot.tags);
 
-  const uniqueTags = allTags.filter((tag, index, self) =>
-    index === self.findIndex(t => t.id === tag.id))
+  const { categories, tags: uniqueTags } = useCatandTags()
+  console.log(categories, uniqueTags)
+
 
 
   const [formData, setFormData] = useState({
@@ -139,13 +138,7 @@ export function CreationDrawer({ location, closeDrawer, spots, onSpotCreated }: 
 
             {/* Tags Field */}
             <div>
-              {/* <div className="flex items-center justify-between mb-4">
-                <div className="flex gap-2">
 
-                  <h3 className="text-lg font-semibold text-gray-800">Tags</h3>
-                  {!showTags ? <ChevronDown onClick={() => { setShowTags(true) }}></ChevronDown> : <ChevronUp onClick={() => { setShowTags(false) }}></ChevronUp>}
-
-                </div> */}
               <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2" onClick={() => { setShowTags(!showTags) }}>
                 Tags (optional)
                 {!showTags ? <ChevronDown ></ChevronDown> : <ChevronUp></ChevronUp>}

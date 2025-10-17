@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@/app/generated/prisma/index.js";
-
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
@@ -121,7 +120,6 @@ export async function GET(request: NextRequest) {
             return {
               id: p.id,
               url: p.mediumUrl,
-              title: p.title,
               likes: p.likes,
             };
           })
@@ -197,11 +195,10 @@ export async function POST(request: NextRequest) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 create: body.photos.map((photo: any, index: number) => ({
                   originalUrl: photo.originalUrl,
-                  thumbnailUrl: photo.thumbnailUrl,
+
                   mediumUrl: photo.mediumUrl,
                   publicId: photo.publicId,
                   isPrimary: index === 0, // First photo is primary
-                  title: ``,
                   likes: 0,
                   userId: 1,
                 })),
@@ -235,11 +232,6 @@ export async function POST(request: NextRequest) {
         name: st.tag.name,
         color: st.tag.color,
       })),
-      thumbnailPhoto:
-        newSpot.photos.length > 0
-          ? newSpot.photos[0].thumbnailUrl
-          : "/mainPhotos/65030013.jpg",
-      createdAt: newSpot.createdAt,
     };
 
     return NextResponse.json(transformedSpot, { status: 201 });
