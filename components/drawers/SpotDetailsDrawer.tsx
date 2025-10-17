@@ -3,6 +3,7 @@ import { Drawer } from 'vaul';
 import { useState } from 'react';
 import SpotDetails from '../spotDetails';
 import { SpotDetailsType } from '@/types/spot-details';
+// import { X } from 'lucide-react';
 
 interface SpotDetailsDrawerProps {
   isOpen: boolean;
@@ -45,12 +46,16 @@ export function SpotDetailsDrawer({
           <div aria-hidden className="mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-4" />
           <div className="px-4">
             <Drawer.Title className="text-xl font-bold"></Drawer.Title>
+            {/* <button onClick={() => {
+              handleCloseSelection()
+              onOpenChange(false)
+            }}>
+              <X></X>
+            </button> */}
             {selectedLocation && (
-
               <SpotDetails
                 selectedLocation={selectedLocation}
                 handleCloseSelection={handleCloseSelection}
-                handleOpenChange={handleOpenChange}
               />
             )}
           </div>

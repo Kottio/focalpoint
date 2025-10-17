@@ -26,10 +26,6 @@ export default function MapPage() {
   });
 
 
-
-
-
-
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 
@@ -109,14 +105,14 @@ export default function MapPage() {
           </div>
 
           {/* Detail Panel */}
-          {/* {
+          {
             isSelected && selectedLocation && (
               <SpotDetails
                 selectedLocation={selectedLocation}
                 handleCloseSelection={handleCloseSelection}
               />
             )
-          } */}
+          }
         </div >
 
         <Map

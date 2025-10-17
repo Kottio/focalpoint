@@ -1,19 +1,17 @@
 import { SpotDetailsType } from '@/types/spot-details';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { X } from 'lucide-react';
+
 import Image from 'next/image';
 
 interface SpotDetailsProps {
   selectedLocation: SpotDetailsType,
-  handleCloseSelection: () => void,
-  handleOpenChange: (status: boolean) => void
+  handleCloseSelection: () => void
 }
 
 export default function SpotDetails({
   selectedLocation,
-  handleCloseSelection,
-  handleOpenChange }: SpotDetailsProps) {
+  handleCloseSelection }: SpotDetailsProps) {
   const isMobile = useIsMobile()
   if (!isMobile) {
     return (
@@ -119,13 +117,7 @@ export default function SpotDetails({
                     {selectedLocation.category} </span>
                 </div>
               </div>
-              <button onClick={() => {
-                handleCloseSelection()
-                handleOpenChange(false)
 
-              }}>
-                <X></X>
-              </button>
 
             </div>
 
