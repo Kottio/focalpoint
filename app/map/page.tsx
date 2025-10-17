@@ -137,18 +137,18 @@ export default function MapPage() {
 
 
 
-    {isMobile && <>
+    {isMobile && <div className='h-dvh p-2 overflow-hidden bg-gray-800'>
       {/* Creation Mode Controls */}
       {!isCreationMode ? (
-        <div className="absolute z-20 top-0 right-0 m-1 flex items-center">
+        <div className="absolute z-20 top-2 right-2 m-1 flex items-center">
           <button
             onClick={handleStartCreation}
-            className='bg-gray-800  p-2 rounded shadow-lg border-2 flex items-center gap-1 border-neutral-300 hover:bg-emerald-700 transition text-white'>
+            className='bg-gray-800  p-2 rounded-xl shadow-lg border-2 flex items-center gap-1 border-neutral-300 hover:bg-emerald-700 transition text-white'>
             <Plus size={20} />
           </button>
         </div>
       ) : (
-        <div className="absolute z-20 top-2 right-2 flex gap-2">
+        <div className="absolute z-20 top-4 right-4 flex gap-2">
           <button
             onClick={handleCancelCreation}
             className='bg-red-400 text-white px-4 py-2 rounded shadow-lg hover:bg-red-600 transition'>
@@ -217,7 +217,7 @@ export default function MapPage() {
         newSpotLocation={newSpotLocation}
         setNewSpotLocation={setNewSpotLocation}
       ></Map>
-    </>
+    </div>
 
 
     }

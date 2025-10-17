@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 
 export const useIsMobile = () => {
-  // Default to mobile-first (important for SSR)
-  const [isMobile, setIsMobile] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768); // 768px = Tailwind md breakpoint
     };
@@ -19,5 +21,7 @@ export const useIsMobile = () => {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  return isMobile;
+  // During SSR and initial render, return false to match initial state
+  // This prevents hydration mismatch
+  return mounted && isMobile;
 };

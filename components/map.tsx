@@ -97,9 +97,9 @@ export default function Map({
 
     <div
       ref={mapContainer}
-      className="w-full h-screen rounded-lg"
+      className="h-full w-full rounded-lg"
     />
-    {!isCreationMode && <button className='text-black text-sm z-30 absolute top-0 p-2 m-1 rounded bg-white border-1 shadow-lg border-neutral-300' onClick={() => {
+    {!isCreationMode && <button className='text-black text-sm z-30 absolute top-2 left-2 p-2 m-1 rounded-xl bg-white border-1 shadow-lg border-neutral-300' onClick={() => {
       handleUpdateMapBound()
     }}>Refresh Boundaries</button>}
 
