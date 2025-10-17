@@ -22,7 +22,6 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
 
 
   const { categories, tags: uniqueTags } = useCatandTags()
-  console.log(categories, uniqueTags)
 
 
 

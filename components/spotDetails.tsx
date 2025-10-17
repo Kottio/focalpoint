@@ -1,13 +1,19 @@
 import { SpotDetailsType } from '@/types/spot-details';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { X } from 'lucide-react';
 import Image from 'next/image';
+
 interface SpotDetailsProps {
   selectedLocation: SpotDetailsType,
-  handleCloseSelection: () => void
+  handleCloseSelection: () => void,
+  handleOpenChange: (status: boolean) => void
 }
 
-export default function SpotDetails({ selectedLocation, handleCloseSelection }: SpotDetailsProps) {
+export default function SpotDetails({
+  selectedLocation,
+  handleCloseSelection,
+  handleOpenChange }: SpotDetailsProps) {
   const isMobile = useIsMobile()
   if (!isMobile) {
     return (
@@ -99,21 +105,32 @@ export default function SpotDetails({ selectedLocation, handleCloseSelection }: 
   } else {
     return (<div className='w-full h-full bg-gray-800   overflow-hidden'>
       <div className='py-1 ' >
-
         <div className='flex items-start justify-between '>
           <div className='flex flex-col gap-4 text-white w-full'>
-
-            <div className='flex gap-3'>
-              <h2 className='text-xl font-bold  my-1'>
-                {selectedLocation.title}
-              </h2>
-              <div className='flex  gap-1 items-center bg-white  px-2 rounded'>
-                <div className="w-3 h-3 rounded-full flex items-center text-white justify-center"
-                  style={{ backgroundColor: getCategoryColor(selectedLocation.category) }} />
-                <span className='text-sm font-medium' style={{ color: getCategoryColor(selectedLocation.category) }}>
-                  {selectedLocation.category} </span>
+            <div className='flex justify-between items-center'>
+              <div className='flex gap-3'>
+                <h2 className='text-xl font-bold  my-1'>
+                  {selectedLocation.title}
+                </h2>
+                <div className='flex  gap-1 items-center bg-white  px-2 rounded'>
+                  <div className="w-3 h-3 rounded-full flex items-center text-white justify-center"
+                    style={{ backgroundColor: getCategoryColor(selectedLocation.category) }} />
+                  <span className='text-sm font-medium' style={{ color: getCategoryColor(selectedLocation.category) }}>
+                    {selectedLocation.category} </span>
+                </div>
               </div>
+              <button onClick={() => {
+                handleCloseSelection()
+                handleOpenChange(false)
+
+              }}>
+                <X></X>
+              </button>
+
             </div>
+
+
+
             <div className="flex items-center gap-2 rounded text-white text-sm">
               {selectedLocation.tags.map((tag) => {
                 return <div key={tag.id} className={` px-2 py-1 rounded `}

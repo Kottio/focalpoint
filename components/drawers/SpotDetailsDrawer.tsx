@@ -11,7 +11,7 @@ interface SpotDetailsDrawerProps {
   handleCloseSelection: () => void;
 }
 
-const snapPoints = ['300px', 1];
+const snapPoints = ['120px', '300px', 1];
 
 export function SpotDetailsDrawer({
   isOpen,
@@ -19,12 +19,14 @@ export function SpotDetailsDrawer({
   selectedLocation,
   handleCloseSelection
 }: SpotDetailsDrawerProps) {
-  const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[0]);
+
+  const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[1]);
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
     if (!open) {
       handleCloseSelection();
+      setSnapDetails(snapPoints[1])
     }
   };
 
@@ -48,6 +50,7 @@ export function SpotDetailsDrawer({
               <SpotDetails
                 selectedLocation={selectedLocation}
                 handleCloseSelection={handleCloseSelection}
+                handleOpenChange={handleOpenChange}
               />
             )}
           </div>
