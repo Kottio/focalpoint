@@ -109,14 +109,14 @@ export default function MapPage() {
           </div>
 
           {/* Detail Panel */}
-          {
+          {/* {
             isSelected && selectedLocation && (
               <SpotDetails
                 selectedLocation={selectedLocation}
                 handleCloseSelection={handleCloseSelection}
               />
             )
-          }
+          } */}
         </div >
 
         <Map
