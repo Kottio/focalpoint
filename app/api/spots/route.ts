@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
         latitude: body.latitude,
         longitude: body.longitude,
         categoryId: category.id,
-        userId: 1, // For now, no user authentication
+        userId: "1", // For now, no user authentication
         // Create spotTags relations if tags are provided
         spotTags:
           body.tags && body.tags.length > 0
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
                   publicId: photo.publicId,
                   isPrimary: index === 0, // First photo is primary
                   likes: 0,
-                  userId: 1,
+                  userId: "1",
                 })),
               }
             : undefined,

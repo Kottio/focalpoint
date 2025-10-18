@@ -8,18 +8,26 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  username  String   @unique
-  fullName  String?  @map("full_name")
-  bio       String?
-  avatarUrl String?  @map("avatar_url")
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  email         String   @unique
+  emailVerified Boolean  @default(false) @map("email_verified")
+  name          String?
+  image         String?
 
-  // Relations
-  spots         Spot[]
-  photos        Photo[]
-  votes         Vote[]
+  // Your custom fields
+  username  String? @unique
+  fullName  String? @map("full_name")
+  bio       String?
+  avatarUrl String? @map("avatar_url")
+
+  // Your existing relations
+  spots  Spot[]
+  photos Photo[]
+  votes  Vote[]
+
+  // Better Auth relations
   sessions      Session[]
   accounts      Account[]
   verifications Verification[]
@@ -37,8 +45,8 @@ model Spot {
   longitude   Decimal  @db.Decimal(11, 8)
 
   // Foreign Keys
-  userId     Int? @map("user_id")
-  categoryId Int  @map("category_id")
+  userId     String? @map("user_id")
+  categoryId Int     @map("category_id")
 
   // Relations
   user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -100,8 +108,8 @@ model Photo {
   mediumUrl    String?
 
   // Foreign Keys
-  spotId Int @map("spot_id")
-  userId Int @map("user_id")
+  spotId Int    @map("spot_id")
+  userId String @map("user_id")
 
   // Relations
   spot Spot  @relation(fields: [spotId], references: [id], onDelete: Cascade)
@@ -117,8 +125,8 @@ model Vote {
   voteType  VoteType @map("vote_type")
 
   // Foreign Keys
-  spotId Int  @map("spot_id")
-  userId Int? @map("user_id") // Make optional for deleted users
+  spotId Int     @map("spot_id")
+  userId String? @map("user_id")
 
   // Relations
   spot Spot  @relation(fields: [spotId], references: [id], onDelete: Cascade)
@@ -135,74 +143,58 @@ enum VoteType {
 }
 
 model Session {
-  id     String @id @default(cuid())
-  userId Int    @map("user_id")
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  token         String    @unique
-  ipAddress     String?   @map("ip_address")
-  userAgent     String?   @map("user_agent")
-  expiresAt     DateTime  @map("expires_at")
-  idleExpiresAt DateTime? @map("idle_expires_at")
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  token     String   @unique
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([expiresAt])
-  @@index([idleExpiresAt])
   @@map("sessions")
 }
 
 model Account {
-  id     String @id @default(cuid())
-  userId Int    @map("user_id")
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  provider          String
-  providerAccountId String  @map("provider_account_id")
-  accessToken       String? @map("access_token")
-  refreshToken      String? @map("refresh_token")
-  idToken           String? @map("id_token")
-  tokenType         String? @map("token_type")
-  scope             String?
-  sessionState      String? @map("session_state")
-
-  email     String?
-  username  String?
-  name      String?
-  avatarUrl String? @map("avatar_url")
+  id           String    @id @default(cuid())
+  userId       String    @map("user_id")
+  accountId    String    @map("account_id")
+  providerId   String    @map("provider_id")
+  accessToken  String?   @map("access_token")
+  refreshToken String?   @map("refresh_token")
+  idToken      String?   @map("id_token")
+  expiresAt    DateTime? @map("expires_at")
+  password     String?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([provider, providerAccountId])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
   @@index([userId])
   @@map("accounts")
 }
 
 model Verification {
-  id         String @id @default(cuid())
+  id         String   @id @default(cuid())
   identifier String
   value      String
-  type       String
-  userId     Int?   @map("user_id")
-
-  // Relations
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  expiresAt  DateTime  @map("expires_at")
-  consumedAt DateTime? @map("consumed_at")
+  expiresAt  DateTime @map("expires_at")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  userId String? @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([identifier])
-  @@index([type])
+  @@index([userId])
   @@index([expiresAt])
   @@map("verifications")
 }
