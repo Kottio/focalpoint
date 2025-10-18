@@ -17,9 +17,12 @@ model User {
   avatarUrl String?  @map("avatar_url")
 
   // Relations
-  spots  Spot[]
-  photos Photo[]
-  votes  Vote[]
+  spots         Spot[]
+  photos        Photo[]
+  votes         Vote[]
+  sessions      Session[]
+  accounts      Account[]
+  verifications Verification[]
 
   @@map("users")
 }
@@ -129,4 +132,77 @@ model Vote {
 enum VoteType {
   UP
   DOWN
+}
+
+model Session {
+  id     String @id @default(cuid())
+  userId Int    @map("user_id")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  token         String    @unique
+  ipAddress     String?   @map("ip_address")
+  userAgent     String?   @map("user_agent")
+  expiresAt     DateTime  @map("expires_at")
+  idleExpiresAt DateTime? @map("idle_expires_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([idleExpiresAt])
+  @@map("sessions")
+}
+
+model Account {
+  id     String @id @default(cuid())
+  userId Int    @map("user_id")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  accessToken       String? @map("access_token")
+  refreshToken      String? @map("refresh_token")
+  idToken           String? @map("id_token")
+  tokenType         String? @map("token_type")
+  scope             String?
+  sessionState      String? @map("session_state")
+
+  email     String?
+  username  String?
+  name      String?
+  avatarUrl String? @map("avatar_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String @id @default(cuid())
+  identifier String
+  value      String
+  type       String
+  userId     Int?   @map("user_id")
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt  DateTime  @map("expires_at")
+  consumedAt DateTime? @map("consumed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([identifier])
+  @@index([type])
+  @@index([expiresAt])
+  @@map("verifications")
 }
