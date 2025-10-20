@@ -33,7 +33,7 @@ export default function SignInPage() {
       }
       setStep("otp")
     }
-    catch (err) {
+    catch {
       setError("Network error. Please try again.");
     } finally {
       setLoading(false)
@@ -60,14 +60,14 @@ export default function SignInPage() {
       }
       // Success - redirect to home or dashboard
       router.push("/map");
-    } catch (err) {
+    } catch {
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
-  const handleResendOTP = async (e: React.FormEvent) => {
+  const handleResendOTP = async () => {
     setOtp("")
     setError(null)
     setLoading(true)
@@ -80,7 +80,7 @@ export default function SignInPage() {
         setError(sendError.message || "Failed to send Code. Please try again.");
         return;
       }
-    } catch (error) {
+    } catch {
       setError("Network Error. Please Try again")
     } finally {
       setLoading(false)

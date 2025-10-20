@@ -13,18 +13,18 @@ interface DrawerHeaderProps {
 export function DrawerHeader({ title, spotCount, selectedCategory, selectedTags, setShowFilter }: DrawerHeaderProps) {
   return (
     <>
-      <div aria-hidden className="mx-auto mt-4  w-12 h-1.5   flex-shrink-0 rounded-full bg-gray-300 mb-3" />
-      <div className="flex flex-col w-full px-4 gap-1   ">
-        <Drawer.Title className="text-2xl font-medium text-white  flex  items-center justify-between">{title}
+      <div aria-hidden className="mx-auto mt-4  w-12 h-1   flex-shrink-0 rounded-full bg-gray-300 mb-2" />
+      <div className="flex flex-col w-full px-7 gap-1   ">
+        <Drawer.Title className="text-xl  text-white  flex  items-center justify-between">
+          <div className='flex items-center gap-2'>{title}
+            {spotCount !== undefined && (
+              <p className="text-sm mt-1 text-gray-400 ">{spotCount} </p>
+            )}
+          </div>
 
           <ListFilterPlus size={30} strokeWidth={1.5} onClick={() => { setShowFilter(true) }} className='  text-white'></ListFilterPlus>
         </Drawer.Title>
-        <div className='flex justify-between items-start ' >
-          {spotCount !== undefined && (
-            <p className="text-sm mt-1 text-gray-400 ">{spotCount} spots found</p>
-          )}
 
-        </div>
         <div className='flex justify-between items-start my-2 overflow-x-auto'>
           <ul className='flex gap-2 ' >
             {selectedTags.length > 0 && selectedTags.map(tag => {

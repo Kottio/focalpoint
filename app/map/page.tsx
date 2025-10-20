@@ -1,6 +1,6 @@
 'use client';
 import { MainDrawer } from '@/components/mainDrawer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Map from '@/components/map';
 import Filter from '@/components/filter';
 import SpotList from '@/components/spotList';
@@ -9,12 +9,19 @@ import { useSpots } from '@/hooks/useSpots';
 import useSpotDetails from '@/hooks/useSpotDetails';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { Tag } from '@/types/spot';
-import { Plus } from 'lucide-react';
-import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
+// import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 import { CreationDrawer } from '@/components/creationDrawer';
+import { BottomMenu } from '@/components/bottomMenu';
+import { ProfilePage } from '@/components/profile';
+import { useSession } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
 
 export default function MapPage() {
-  // UI State
+  // Auth hooks - TOUJOURS EN PREMIER
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  // State hooks - TOUS AVANT LES CONDITIONS
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -24,23 +31,40 @@ export default function MapPage() {
     east: 2.4,
     west: 2.1
   });
-
-
+  const [tab, setTab] = useState<'discover' | 'profile'>('discover')
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
-
-  // Creation mode state
   const [isCreationMode, setIsCreationMode] = useState<boolean>(false);
   const [newSpotLocation, setNewSpotLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
-  // Data from custom hooks
+  // Data hooks
   const { spots, filteredSpots, setFilteredSpots, refetchSpots } = useSpots(mapBounds);
   const { selectedLocation } = useSpotDetails(selectedLocId);
   const isMobile = useIsMobile()
 
+  // Vérifier la session avant de charger la map
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.push('/auth/signin');
+    }
+  }, [session, isPending, router]);
 
-  // Event handlers
+  if (isPending) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-800">
+        <div className="text-white text-lg">Loading of Session...</div>
+      </div>
+    );
+  }
+
+  // Ne rien afficher si pas de session (va rediriger)
+  if (!session) {
+    return null;
+  }
+
+
+  // Event Selection
   const handleCloseSelection = () => {
     setSelectedLocId(null);
     setIsSelected(false);
@@ -50,7 +74,6 @@ export default function MapPage() {
     setSelectedLocId(spotId);
     setIsSelected(true);
   };
-
 
 
   // Creation mode handlers
@@ -133,18 +156,10 @@ export default function MapPage() {
 
 
 
-    {isMobile && <div className='h-dvh p-2 overflow-hidden bg-gray-800'>
+    {isMobile && <div className='h-dvh  w-dvw  overflow-hidden inset-0 bg-gray-800'>
       {/* Creation Mode Controls */}
-      {!isCreationMode ? (
-        <div className="absolute z-20 top-2 right-2 m-1 flex items-center">
-          <button
-            onClick={handleStartCreation}
-            className='bg-gray-800  p-2 rounded-xl shadow-lg border-2 flex items-center gap-1 border-neutral-300 hover:bg-emerald-700 transition text-white'>
-            <Plus size={20} />
-          </button>
-        </div>
-      ) : (
-        <div className="absolute z-20 top-4 right-4 flex gap-2">
+      {isCreationMode && <>
+        < div className="absolute z-20 top-4 right-4 flex gap-2">
           <button
             onClick={handleCancelCreation}
             className='bg-red-400 text-white px-4 py-2 rounded shadow-lg hover:bg-red-600 transition'>
@@ -156,12 +171,13 @@ export default function MapPage() {
             Confirm
           </button>
         </div>
-      )}
+      </>
+      }
 
-      <div className=" absolute z-20 top-2 left-2  flex items-center   ">
-        {/* <Funnel className="p-2  rounded m-2 bg-white" size={45} color='black' fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel> */}
+      {/* <div className=" absolute z-20 top-2 left-2  flex items-center   "> */}
+      {/* <Funnel className="p-2  rounded m-2 bg-white" size={45} color='black' fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel> */}
 
-        <div className="flex gap-2 h-10  ">
+      {/* <div className="flex gap-2 h-10  ">
           {selectedCategory.map(cat => (
             <div
               key={cat}
@@ -174,15 +190,17 @@ export default function MapPage() {
 
             </div>
           ))}
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
+
+
       {showFilter && <Filter spots={spots} setFilteredSpots={setFilteredSpots} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} selectedTags={selectedTags} setSelectedTags={setSelectedTags} setShowFilter={setShowFilter}></Filter>}
 
 
 
       <div className=" absolute   w-screen bottom-0">
-        {!isCreationMode &&
-          <MainDrawer
+        {!isCreationMode && <div className='flex flex-col'>
+          {tab === 'discover' ? <MainDrawer
             filteredSpots={filteredSpots}
             selectedLocId={selectedLocId}
             handleSpotSelect={handleSpotSelect}
@@ -190,7 +208,13 @@ export default function MapPage() {
             selectedCategory={selectedCategory}
             selectedTags={selectedTags}
             setShowFilter={setShowFilter}
-          />}
+          /> : <ProfilePage />}
+          <BottomMenu
+            handleStartCreation={handleStartCreation}
+            setTab={setTab}
+          ></BottomMenu>
+        </div>
+        }
 
         {showCreateForm && isCreationMode &&
           <CreationDrawer
@@ -202,19 +226,24 @@ export default function MapPage() {
         }
       </div>
 
-      <Map
-        spots={spots}
-        filteredSpots={filteredSpots}
-        selectedLocId={selectedLocId}
-        onSpotSelect={handleSpotSelect}
-        mapBounds={mapBounds}
-        setMapBounds={setMapBounds}
-        isCreationMode={isCreationMode}
-        newSpotLocation={newSpotLocation}
-        setNewSpotLocation={setNewSpotLocation}
-      ></Map>
-    </div>
+      <div className={`fixed inset-2 rounded overflow-hidden ${tab === 'profile' ? 'hidden' : 'block'}`}>
+        <Map
+          spots={spots}
+          filteredSpots={filteredSpots}
+          selectedLocId={selectedLocId}
+          onSpotSelect={handleSpotSelect}
+          mapBounds={mapBounds}
+          setMapBounds={setMapBounds}
+          isCreationMode={isCreationMode}
+          newSpotLocation={newSpotLocation}
+          setNewSpotLocation={setNewSpotLocation}
+        />
+      </div>
 
+
+
+
+    </div >
 
     }
   </>
