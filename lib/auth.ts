@@ -60,7 +60,7 @@ export const auth = betterAuth({
           // Production mode: send via Resend
           await resend.emails.send({
             from: "onboarding@resend.dev",
-            to: "thcottiaux@gmail.com",
+            to: `${email}`,
             subject: "Hello World",
             html: `
             <h2>Your verification code</h2>

@@ -220,10 +220,10 @@ export default function MapPage() {
           <CreationDrawer
             location={newSpotLocation}
             closeDrawer={handleCancelCreation}
-
             onSpotCreated={refetchSpots}
           />
         }
+
       </div>
 
       <div className={`fixed inset-2 rounded overflow-hidden ${tab === 'profile' ? 'hidden' : 'block'}`}>
