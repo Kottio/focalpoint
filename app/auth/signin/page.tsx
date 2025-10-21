@@ -112,7 +112,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-dvh fixed flex items-center justify-center bg-gray-50 px-4">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow">
         {step === "email" ? (
           <form onSubmit={handleSendOTP} className="space-y-6">

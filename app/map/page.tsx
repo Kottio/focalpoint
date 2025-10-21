@@ -15,6 +15,7 @@ import { BottomMenu } from '@/components/bottomMenu';
 import { ProfilePage } from '@/components/profile';
 import { useSession } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
+import { Camera } from 'lucide-react';
 
 export default function MapPage() {
   // Auth hooks - TOUJOURS EN PREMIER
@@ -52,13 +53,20 @@ export default function MapPage() {
 
   if (isPending) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-800">
-        <div className="text-white text-lg">Loading of Session...</div>
+      <div className="h-dvh flex flex-col items-center justify-center bg-gray-950 gap-4">
+        <Camera
+
+
+          size={100}
+          className="animate-pulse   text-white"
+
+        ></Camera>
+        <div className="text-white text-lg">Loading...</div>
       </div>
     );
   }
 
-  // Ne rien afficher si pas de session (va rediriger)
+  // Ne rien afficher si pas de session(va rediriger)
   if (!session) {
     return null;
   }
