@@ -55,7 +55,7 @@ export const auth = betterAuth({
         } else {
           // Production mode: send via Resend
           await resend.emails.send({
-            from: "onboarding@resend.dev",
+            from: "noreply@kottio.dev",
             to: email,
             subject: "MapShot Verification",
             html: `
