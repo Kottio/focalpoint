@@ -114,9 +114,9 @@ export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelec
                 {/* Info utilisateur en haut */}
                 <div className="absolute top-3 right-3 flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-xs font-bold">
-                    {spot.user?.fullName?.[0] || 'U'}
+                    {spot.user?.username[0].toLocaleUpperCase() || 'U'}
                   </div>
-                  <span className="text-white text-sm font-medium">{spot.user?.fullName || 'Anonymous'}</span>
+                  <span className="text-white text-sm font-medium">{spot.user?.username || 'Anonymous'}</span>
                 </div>
 
                 {/* Titre et infos en bas */}

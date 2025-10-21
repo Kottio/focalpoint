@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const images = [
   "/mainPhotos/web-01.jpg",
@@ -76,12 +77,12 @@ export default function MainPage() {
       {/* Center content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
         <motion.h1
-          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 drop-shadow-2xl"
+          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 drop-shadow-2xl"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          MAPSHOT
+          <Image src={'/logo/logo.png'} width={120} height={120} alt="logo" className="bg-white p-1 pl-2 rounded-full" />
         </motion.h1>
         <motion.button
           onClick={handleEnter}
@@ -92,6 +93,6 @@ export default function MainPage() {
           Enter App
         </motion.button>
       </div>
-    </div>
+    </div >
   );
 }

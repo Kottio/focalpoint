@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
@@ -142,6 +145,14 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user) {
+      return Response.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     console.log("Creating spot with data:", body);
 
@@ -176,7 +187,7 @@ export async function POST(request: NextRequest) {
         latitude: body.latitude,
         longitude: body.longitude,
         categoryId: category.id,
-        userId: "1", // For now, no user authentication
+        userId: session.user.id,
         // Create spotTags relations if tags are provided
         spotTags:
           body.tags && body.tags.length > 0
@@ -200,7 +211,7 @@ export async function POST(request: NextRequest) {
                   publicId: photo.publicId,
                   isPrimary: index === 0, // First photo is primary
                   likes: 0,
-                  userId: "1",
+                  userId: session.user.id,
                 })),
               }
             : undefined,

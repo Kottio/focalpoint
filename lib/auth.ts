@@ -13,17 +13,13 @@ export const auth = betterAuth({
   }),
 
   emailAndPassword: {
-    enabled: false, // We're using OTP only, not password
+    enabled: false,
   },
-  // Configure verification model mapping
-  // verification: {
-  //   modelName: "verification", // Match your Prisma model name (lowercase)
-  // },
 
   user: {
-    fields: {
-      name: "fullName",
-    },
+    // fields: {
+    //   name: "fullName",
+    // },
     additionalFields: {
       username: {
         type: "string",
@@ -60,8 +56,8 @@ export const auth = betterAuth({
           // Production mode: send via Resend
           await resend.emails.send({
             from: "onboarding@resend.dev",
-            to: `${email}`,
-            subject: "Hello World",
+            to: email,
+            subject: "MapShot Verification",
             html: `
             <h2>Your verification code</h2>
             <p>Your code is: <strong>${otp}</strong></p>

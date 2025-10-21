@@ -212,6 +212,7 @@ export default function MapPage() {
           <BottomMenu
             handleStartCreation={handleStartCreation}
             setTab={setTab}
+            tab={tab}
           ></BottomMenu>
         </div>
         }
