@@ -97,7 +97,7 @@ export default function Map({
 
     <div
       ref={mapContainer}
-      className="fixed h-full w-full p-2 rounded-lg  "
+      className="fixed h-full  "
     />
     {!isCreationMode && <button className='text-black text-sm z-30 absolute top-2 left-2 p-2 m-1 rounded-xl bg-white border-1 shadow-lg border-neutral-300' onClick={() => {
       handleUpdateMapBound()

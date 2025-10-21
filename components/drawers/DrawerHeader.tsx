@@ -15,10 +15,11 @@ export function DrawerHeader({ title, spotCount, selectedCategory, selectedTags,
     <>
       <div aria-hidden className="mx-auto mt-4  w-12 h-1   flex-shrink-0 rounded-full bg-gray-300 mb-2" />
       <div className="flex flex-col w-full px-7 gap-1   ">
-        <Drawer.Title className="text-xl  text-white  flex  items-center justify-between">
-          <div className='flex items-center gap-2'>{title}
+        <Drawer.Title className="text-lg  text-white  flex  items-center justify-between">
+          <div className='flex items-center  gap-2'>
+            {title}
             {spotCount !== undefined && (
-              <p className="text-sm mt-1 text-gray-400 ">{spotCount} </p>
+              <p className="text-sm text-gray-400 ">({spotCount}) </p>
             )}
           </div>
 

@@ -3,7 +3,7 @@ import { Drawer } from 'vaul';
 import { useState } from 'react';
 import SpotDetails from '../spotDetails';
 import { SpotDetailsType } from '@/types/spot-details';
-// import { X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface SpotDetailsDrawerProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ interface SpotDetailsDrawerProps {
   handleCloseSelection: () => void;
 }
 
-const snapPoints = ['120px', '300px', 1];
+const snapPoints = ['300px', 1];
 
 export function SpotDetailsDrawer({
   isOpen,
@@ -39,19 +39,30 @@ export function SpotDetailsDrawer({
       snapPoints={snapPoints}
       activeSnapPoint={snapDetails}
       setActiveSnapPoint={setSnapDetails}
+      dismissible={false}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-        <Drawer.Content className="z-200 bg-gray-800 flex text-white flex-col rounded-t-[10px] fixed bottom-0 left-0 right-0 h-[95%]">
-          <div aria-hidden className="mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-4" />
-          <div className="px-4">
-            <Drawer.Title className="text-xl font-bold"></Drawer.Title>
-            {/* <button onClick={() => {
+        <Drawer.Content
+          className="z-200 bg-white flex flex-col rounded-t-2xl fixed left-0 right-0 outline-none"
+          style={{ bottom: '80px', height: 'calc(95vh - 80px)' }}
+        >
+          {/* Drag handle */}
+          <div aria-hidden className="mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-2" />
+
+          {/* Close button */}
+          <button
+            onClick={() => {
               handleCloseSelection()
               onOpenChange(false)
-            }}>
-              <X></X>
-            </button> */}
+            }}
+            className='absolute right-4 top-4 z-50 p-2 bg-white border-2 hover:bg-gray-100 shadow-md rounded-full transition-all duration-200 hover:scale-110'
+          >
+            <X size={20} className="text-gray-700" />
+          </button>
+
+          <div className="flex-1 overflow-hidden">
+            <Drawer.Title className="sr-only"></Drawer.Title>
             {selectedLocation && (
               <SpotDetails
                 selectedLocation={selectedLocation}

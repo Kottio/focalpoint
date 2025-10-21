@@ -2,7 +2,6 @@
 import { Drawer } from "vaul"
 import { useState } from "react"
 import { X, ChevronDown, ChevronUp } from "lucide-react"
-
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants"
 import { useCreateSpot } from "@/hooks/useCreateSpot"
 import { PhotoUploader } from "./PhotoUploader"
@@ -54,34 +53,35 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
       dismissible={false}
     >
       <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
         <Drawer.Content
-          className="z-100 fixed flex flex-col bg-white rounded-t-[20px] bottom-0 left-0 right-0 h-[90%] mx-[-1px]"
+          className="z-100 fixed flex flex-col bg-gray-800 text-white rounded-t-2xl bottom-0 left-0 right-0 h-[90vh] mx-[-1px] outline-none"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b">
-            <Drawer.Title className="text-xl font-bold text-black">
+          <div className="flex items-center justify-between p-4 border-b border-gray-700">
+            <Drawer.Title className="text-xl font-bold text-white">
               Create New Spot
             </Drawer.Title>
             <button
               onClick={closeDrawer}
-              className="p-2 hover:bg-gray-100 rounded-full transition"
+              className="p-2 hover:bg-gray-800 rounded-full transition"
             >
-              <X size={20} color="black" />
+              <X size={24} className="text-gray-400" />
             </button>
           </div>
 
           {/* Form Content - scrollable */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-6" data-vaul-no-drag>
             {/* Location Display */}
-            <div className="bg-emerald-50 p-3 rounded-lg">
-              <p className="text-sm text-emerald-700">
+            <div className="bg-emerald-900/30 border border-emerald-700/50 p-3 rounded-lg">
+              <p className="text-sm text-emerald-300">
                 📍 Location: {location?.lat.toFixed(6)}, {location?.lng.toFixed(6)}
               </p>
             </div>
 
             {/* Title Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Title *
               </label>
               <input
@@ -89,13 +89,13 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="e.g., Eiffel Tower Sunset View"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-black"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
 
             {/* Description Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Description
               </label>
               <textarea
@@ -103,13 +103,13 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Describe what makes this spot special..."
                 rows={4}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-black resize-none"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
               />
             </div>
 
             {/* Category Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Category *
               </label>
               <div className="flex flex-wrap gap-2">
@@ -138,9 +138,9 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
             {/* Tags Field */}
             <div>
 
-              <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2" onClick={() => { setShowTags(!showTags) }}>
+              <label className="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2 cursor-pointer" onClick={() => { setShowTags(!showTags) }}>
                 Tags (optional)
-                {!showTags ? <ChevronDown ></ChevronDown> : <ChevronUp></ChevronUp>}
+                {!showTags ? <ChevronDown className="text-gray-400" /> : <ChevronUp className="text-gray-400" />}
               </label>
               {showTags && <div className="flex flex-wrap gap-2">
                 {uniqueTags.map(tag => {
@@ -163,7 +163,7 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
                 })}
               </div>}
               {formData.tags.length > 0 && (
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-gray-400 mt-2">
                   {formData.tags.length} tag(s) selected
                 </p>
               )}
@@ -172,40 +172,37 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
             {/* Photo Upload */}
             <PhotoUploader photos={photos} onPhotosChange={setPhotos} maxPhotos={5} />
 
-          </div>
-
-
-
-
-          {/* Footer with Submit Button */}
-          <div className="p-4 border-t bg-white">
-            <button
-              onClick={async () => {
-                if (location && !isLoading) {
-                  try {
-                    await createSpot({
-                      ...formData,
-                      latitude: location.lat,
-                      longitude: location.lng,
-                      tags: formData.tags,
-                      photos: photos
-                    });
-                    // Refetch spots to show the new one
-                    onSpotCreated();
-                    closeDrawer();
-                  } catch (error) {
-                    console.error('Error creating spot:', error);
+            {/* Extra padding to ensure content isn't hidden behind button */}
+            <div className="h-20"></div>
+            <div className="p-4 border-t border-gray-700 bg-gray-800  left-0 right-0">
+              <button
+                onClick={async () => {
+                  if (location && !isLoading) {
+                    try {
+                      await createSpot({
+                        ...formData,
+                        latitude: location.lat,
+                        longitude: location.lng,
+                        tags: formData.tags,
+                        photos: photos
+                      });
+                      // Refetch spots to show the new one
+                      onSpotCreated();
+                      closeDrawer();
+                    } catch (error) {
+                      console.error('Error creating spot:', error);
+                    }
                   }
-                }
-              }}
-
-
-              disabled={!formData.title || !formData.category || isLoading}
-              className="w-full bg-emerald-600 text-white py-3 rounded-lg font-medium hover:bg-emerald-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-            >
-              Create Spot
-            </button>
+                }}
+                disabled={!formData.title || !formData.category || isLoading}
+                className="w-full bg-emerald-500 text-white py-3 rounded-lg font-medium hover:bg-emerald-700 transition disabled:bg-gray-500 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isLoading ? 'Creating...' : 'Create Spot'}
+              </button>
+            </div>
           </div>
+
+          {/* Footer with Submit Button - Fixed at bottom */}
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root >

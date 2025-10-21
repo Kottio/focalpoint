@@ -1,7 +1,7 @@
 import { SpotDetailsType } from '@/types/spot-details';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 import { useIsMobile } from '@/hooks/useIsMobile';
-
+import { Heart, User } from 'lucide-react';
 import Image from 'next/image';
 
 interface SpotDetailsProps {
@@ -47,7 +47,10 @@ export default function SpotDetails({
             </div>
             <button
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400 hover:text-gray-600"
-              onClick={handleCloseSelection}
+              onClick={
+                handleCloseSelection
+
+              }
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -98,87 +101,131 @@ export default function SpotDetails({
 
           </div>
         </div>
-      </div>
+      </div >
     )
   } else {
-    return (<div className='w-full h-full bg-gray-800   overflow-hidden'>
-      <div className='py-1 ' >
-        <div className='flex items-start justify-between '>
-          <div className='flex flex-col gap-4 text-white w-full'>
-            <div className='flex justify-between items-center'>
-              <div className='flex gap-3'>
-                <h2 className='text-xl font-bold  my-1'>
-                  {selectedLocation.title}
-                </h2>
-                <div className='flex  gap-1 items-center bg-white  px-2 rounded'>
-                  <div className="w-3 h-3 rounded-full flex items-center text-white justify-center"
-                    style={{ backgroundColor: getCategoryColor(selectedLocation.category) }} />
-                  <span className='text-sm font-medium' style={{ color: getCategoryColor(selectedLocation.category) }}>
-                    {selectedLocation.category} </span>
+    return (
+      <div className='w-full h-full bg-white overflow-y-auto scrollbar-hide flex flex-col' data-vaul-no-drag>
+        {/* Hero Photo Carousel - Like Google Maps */}
+        <div className="relative w-full h-64 bg-gray-200 flex-shrink-0">
+          {selectedLocation.fullPhotos.length > 0 ? (
+            <>
+              <div className="flex overflow-x-auto h-full scrollbar-hide">
+                {selectedLocation.fullPhotos.map((p, index) => (
+                  <div key={p.id} className="relative w-full h-full flex-shrink-0 snap-start">
+                    <Image
+                      src={p.originalUrl}
+                      alt={p.title || selectedLocation.title}
+                      fill
+                      sizes="100vw"
+                      className="object-cover"
+                      priority={index === 0}
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* Photo counter badge */}
+              <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                1/{selectedLocation.fullPhotos.length}
+              </div>
+            </>
+          ) : (
+            <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+              <span className="text-gray-500">No photos</span>
+            </div>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1">
+          <div className="p-4 space-y-4">
+            {/* Title and Category */}
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                {selectedLocation.title}
+              </h1>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white"
+                  style={{ backgroundColor: getCategoryColor(selectedLocation.category) }}
+                >
+                  {getCategoryIcon(selectedLocation.category)}
+                </div>
+                <span className="text-sm text-gray-600">{selectedLocation.category}</span>
+              </div>
+            </div>
+
+            {/* Stats Row - Like Google Maps */}
+            <div className="flex items-center gap-4 text-sm border-y border-gray-200 py-3">
+              <div className="flex items-center gap-1.5">
+                <Heart size={16} className="text-red-500" fill="currentColor" />
+                <span className="text-gray-700 font-medium">{selectedLocation.upvotes}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <User size={16} className="text-gray-600" />
+                <span className="text-gray-700">{selectedLocation.user.fullName || 'Anonymous'}</span>
+              </div>
+            </div>
+
+            {/* Tags */}
+            {selectedLocation.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {selectedLocation.tags.map((tag) => (
+                  <span
+                    key={tag.id}
+                    className="px-3 py-1 rounded-full text-xs font-medium border"
+                    style={{
+                      backgroundColor: `${tag.color}15`,
+                      borderColor: `${tag.color}40`,
+                      color: tag.color
+                    }}
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Description */}
+            {selectedLocation.description && (
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">About</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {selectedLocation.description}
+                </p>
+              </div>
+            )}
+
+            {/* Photos Section - Like Google Maps gallery */}
+            {selectedLocation.fullPhotos.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                  Photos ({selectedLocation.fullPhotos.length})
+                </h3>
+                <div className="grid grid-cols-3 gap-2">
+                  {selectedLocation.fullPhotos.map((p) => (
+                    <div
+                      key={p.id}
+                      className="relative aspect-square rounded-lg overflow-hidden bg-gray-200"
+                    >
+                      <Image
+                        src={p.originalUrl}
+                        alt={p.title || 'Photo'}
+                        fill
+                        sizes="(max-width: 768px) 33vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
+            )}
 
-
-            </div>
-
-
-
-            <div className="flex items-center gap-2 rounded text-white text-sm">
-              {selectedLocation.tags.map((tag) => {
-                return <div key={tag.id} className={` px-2 py-1 rounded `}
-                  style={{
-                    backgroundColor: `${tag.color}80`,
-                    color: `white`
-                  }}>
-                  {tag.name} </div>
-
-              })}
-            </div>
-
-
-
-            <div className='flex  justify-between'>
-              <div className='text-md text-neutral-400'> {selectedLocation.upvotes} Likes </div>
-              <div>{selectedLocation.user.fullName}</div>
-            </div>
+            {/* Extra padding at bottom */}
+            <div className="h-4"></div>
           </div>
-        </div>
-
-
-        <div>
-
-
-
-          <ul className="flex gap-3 overflow-x-auto w-full">
-            {selectedLocation.fullPhotos.map(p => (
-              <li key={p.id} className="bg-gray-100/10 relative max-h-70 rounded-lg overflow-hidden  flex-shrink-0 w-80">
-                <Image
-                  src={p.originalUrl}
-                  alt={p.id + ''}
-                  width={400}
-                  height={192}
-                  className="w-full z-1 max-h-70 object-cover">
-                </Image>
-                <div className="p-3  z-20 absolute bottom-0 w-full pt-30 bg-gradient-to-t from-black/80 to-transparent flex justify-between">
-                  <div className='flex items-center justify-between'>
-                    <span className="font-medium">{p.title}</span>
-                    <span className="text-sm text-gray-100">{p.likes} Likes</span>
-                  </div>
-                  <span className="text-sm text-gray-100">{p.user.fullName}</span>
-
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <div>
-            <span>
-              {selectedLocation.description}
-            </span>
-          </div>
-
         </div>
       </div>
-    </div>)
+    )
   }
 }

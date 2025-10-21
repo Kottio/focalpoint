@@ -13,7 +13,7 @@ export function SpotPreviewGrid({ spots, onSpotSelect, maxItems = 15 }: SpotPrev
   const remainingCount = spots.length - maxItems;
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-2">
+    <div className="flex gap-3 overflow-x-auto pb-2 bg-gray-950">
       {displaySpots.map((spot) => (
         <SpotPreviewCard
           key={spot.id}

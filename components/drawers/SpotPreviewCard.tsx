@@ -12,7 +12,7 @@ export function SpotPreviewCard({ spot, onSelect }: SpotPreviewCardProps) {
 
   return (
     <div
-      className="flex-shrink-0 h-35 w-50 cursor-pointer transition-all duration-200"
+      className="flex-shrink-0 h-45 w-60 cursor-pointer transition-all duration-200"
       onClick={() => onSelect(spot.id)}
     >
       <div className="relative w-full h-full rounded border-2" style={{

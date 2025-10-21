@@ -32,23 +32,31 @@ export function useCreationMarker({
     markerEl.className = 'creation-marker';
     markerEl.innerHTML = `
       <div style="
-        width: 20px;
-        height:20px;
-        background-color: #77BEF0;
-        border: 3px solid white;
-        border-radius: 50%;
-        cursor: move;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 34px;
-     
-        color: white;
-      ">
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #0A2342 40%, #4CA9E1 100%);
+    border: 3px solid white;
+    cursor: grab;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 10px rgba(119, 190, 240, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0A2342; /* deep navy blue */
+  
+    animation: creationPulse 1.5s infinite;
+  ">
     
-      </div>
-    `;
+  </div>
+  <style>
+    @keyframes creationPulse {
+      0% { box-shadow: 0 0 0 0 rgba(119, 190, 240, 0.6); }
+      70% { box-shadow: 0 0 0 15px rgba(119, 190, 240, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(119, 190, 240, 0); }
+    }
+  </style>
+`;
 
     // Create marker
     const marker = new Marker({

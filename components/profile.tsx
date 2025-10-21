@@ -1,12 +1,14 @@
-import { useSession } from "@/lib/auth-client"
+import { useSession, signOut } from "@/lib/auth-client"
 import { useState } from 'react';
-import { Bookmark, ChevronRight, MapPinHouse, Pencil } from 'lucide-react';
+import { Bookmark, ChevronRight, MapPinHouse, Pencil, LogOut } from 'lucide-react';
 import { EditProfileDrawer } from './editProfileDrawer';
+import { useRouter } from 'next/navigation';
 
 
 export function ProfilePage() {
   const { data: session } = useSession();
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const router = useRouter();
 
   const handleSaveProfile = async (data: { username: string; bio: string }) => {
     const response = await fetch('/api/user/update-profile', {
@@ -22,6 +24,11 @@ export function ProfilePage() {
 
     // Reload to get fresh session data
     window.location.reload();
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/auth/signin');
   };
 
   if (!session) {
@@ -79,6 +86,17 @@ export function ProfilePage() {
                 <span>Your Spots</span>
               </div>
               <ChevronRight className="text-white"></ChevronRight>
+            </li>
+
+            <li
+              onClick={handleSignOut}
+              className="w-full h-15 bg-red-900/30 rounded-lg flex justify-between items-center px-3 cursor-pointer hover:bg-red-900/40 transition"
+            >
+              <div className="flex items-center gap-3 text-red-400" >
+                <LogOut className="bg-red-400 rounded-full p-1 text-gray-900 " size={35}></LogOut>
+                <span>Sign Out</span>
+              </div>
+              <ChevronRight className="text-red-400"></ChevronRight>
             </li>
 
           </ul>

@@ -79,7 +79,13 @@ export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelec
       // }
 
 
-      <div className="h-screen overflow-y-auto bg-gray-950 px-3 py-3">
+      <div
+        className="h-dvh overflow-y-auto pb-50 bg-gray-950 px-3 py-3"
+        style={{
+          overscrollBehavior: 'contain',
+          WebkitOverflowScrolling: 'touch'
+        }}
+      >
         {filteredSpots.map(spot => (
           <div
             key={spot.id}

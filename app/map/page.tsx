@@ -156,7 +156,7 @@ export default function MapPage() {
 
 
 
-    {isMobile && <div className='h-dvh  w-dvw  overflow-hidden inset-0 bg-gray-800'>
+    {isMobile && <div className='h-dvh  w-dvw  overflow-hidden inset-0'>
       {/* Creation Mode Controls */}
       {isCreationMode && <>
         < div className="absolute z-20 top-4 right-4 flex gap-2">
@@ -227,7 +227,7 @@ export default function MapPage() {
 
       </div>
 
-      <div className={`fixed inset-2 rounded overflow-hidden ${tab === 'profile' ? 'hidden' : 'block'}`}>
+      <div className={`fixed inset-0   rounded overflow-hidden ${tab === 'profile' ? 'hidden' : 'block'}`}>
         <Map
           spots={spots}
           filteredSpots={filteredSpots}

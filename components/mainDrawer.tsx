@@ -53,7 +53,7 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
 
           {/* Medium view - photo grid */}
           {snap === snapPoints[1] && (
-            <div className="px-4 border-none">
+            <div className="px-4  py-3 border-none w-full bg-gray-950">
               <SpotPreviewGrid
                 spots={filteredSpots}
                 onSpotSelect={handleSpotSelect}
@@ -64,7 +64,7 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
 
           {/* Full view - complete list */}
           {snap === snapPoints[2] && (
-            <div className="h-screen w-full ">
+            <div className="h-screen w-full" data-vaul-no-drag>
               <SpotList
                 filteredSpots={filteredSpots}
                 selectedLocId={selectedLocId}
