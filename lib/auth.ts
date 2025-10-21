@@ -12,6 +12,14 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
+  // Safari-compatible settings
+  advanced: {
+    cookiePrefix: "better-auth",
+    crossSubDomainCookies: {
+      enabled: true,
+    },
+  },
+
   emailAndPassword: {
     enabled: false,
   },

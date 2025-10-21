@@ -1,17 +1,41 @@
 "use client"
 
 
-import { useState } from "react"
-import { authClient } from "@/lib/auth-client"
+import { useState, useEffect } from "react"
+import { authClient, useSession } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
+
 
 export default function SignInPage() {
   const router = useRouter()
+  const { data: session, isPending } = useSession();
   const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState<string>("")
   const [otp, setOtp] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!isPending && session) {
+      router.push('/map');
+    }
+  }, [session, isPending, router]);
+
+  // Show nothing while checking session
+  if (isPending) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render sign-in form if already logged in
+  if (session) {
+    return null;
+  }
+
 
 
   const handleSendOTP = async (e: React.FormEvent) => {
