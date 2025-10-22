@@ -1,6 +1,6 @@
 import { useRef, useEffect, RefObject } from "react";
 import { Marker, Map } from 'mapbox-gl'
-import { MapPin } from "lucide-react";
+
 
 interface CreationMarkerProps {
   map: RefObject<Map | null>,

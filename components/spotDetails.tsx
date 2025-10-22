@@ -17,7 +17,7 @@ export default function SpotDetails({
     return (
 
 
-      <div className='w-96 flex flex-col  bg-gray-800 text-neutral-700  shadow-lg border border-gray-200 overflow-hidden'>
+      <div className='w-96 flex flex-col  bg-gray-800 text-neutral-700  rounded-t-3xl **:shadow-lg border border-gray-200 overflow-hidden'>
         <div className='p-6'>
 
           <div className='flex items-start justify-between '>
@@ -104,68 +104,78 @@ export default function SpotDetails({
       </div >
     )
   } else {
+
     return (
-      <div className='w-full h-full bg-white overflow-y-auto scrollbar-hide flex flex-col' data-vaul-no-drag>
+      <div className='w-full h-full   bg-gray-800 overflow-y-auto scrollbar-hide flex flex-col' data-vaul-no-drag>
+
+        <div className="flex items-center gap-4 text-sm  pb-3 px-4 ">
+
+          <div className="flex items-center gap-1.5">
+            <Heart size={18} className="text-red-500" fill="currentColor" />
+            <span className="text-gray-100 font-medium">{selectedLocation.upvotes}</span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <User size={16} className="text-gray-100" />
+            <span className="text-gray-100">{selectedLocation.user.fullName || 'Anonymous'}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center text-white"
+              style={{ backgroundColor: getCategoryColor(selectedLocation.category) }}
+            >
+              {getCategoryIcon(selectedLocation.category)}
+            </div>
+            <span className="text-sm text-gray-100">{selectedLocation.category}</span>
+          </div>
+
+        </div>
+
         {/* Hero Photo Carousel - Like Google Maps */}
-        <div className="relative w-full h-64 bg-gray-200 flex-shrink-0">
+        <div className="relative w-full h-64  flex-shrink-0 pl-3">
           {selectedLocation.fullPhotos.length > 0 ? (
             <>
-              <div className="flex overflow-x-auto h-full scrollbar-hide">
+              <div className="flex overflow-x-auto h-full  gap-1 scrollbar-hide">
                 {selectedLocation.fullPhotos.map((p, index) => (
-                  <div key={p.id} className="relative w-full h-full flex-shrink-0 snap-start">
+                  <div key={p.id} className="relative w-8/10  h-full flex-shrink-0 snap-start">
                     <Image
                       src={p.originalUrl}
                       alt={p.title || selectedLocation.title}
                       fill
                       sizes="100vw"
-                      className="object-cover"
+                      className="object-cover rounded-xl "
                       priority={index === 0}
                     />
                   </div>
                 ))}
               </div>
               {/* Photo counter badge */}
-              <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+              {/* <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
                 1/{selectedLocation.fullPhotos.length}
-              </div>
+              </div> */}
             </>
           ) : (
             <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-              <span className="text-gray-500">No photos</span>
+              <span className="text-gray-100">No photos</span>
             </div>
           )}
         </div>
+
 
         {/* Content */}
         <div className="flex-1">
           <div className="p-4 space-y-4">
             {/* Title and Category */}
-            <div>
+            {/* <div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 {selectedLocation.title}
               </h1>
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-white"
-                  style={{ backgroundColor: getCategoryColor(selectedLocation.category) }}
-                >
-                  {getCategoryIcon(selectedLocation.category)}
-                </div>
-                <span className="text-sm text-gray-600">{selectedLocation.category}</span>
-              </div>
-            </div>
+
+            </div> */}
 
             {/* Stats Row - Like Google Maps */}
-            <div className="flex items-center gap-4 text-sm border-y border-gray-200 py-3">
-              <div className="flex items-center gap-1.5">
-                <Heart size={16} className="text-red-500" fill="currentColor" />
-                <span className="text-gray-700 font-medium">{selectedLocation.upvotes}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <User size={16} className="text-gray-600" />
-                <span className="text-gray-700">{selectedLocation.user.fullName || 'Anonymous'}</span>
-              </div>
-            </div>
+
 
             {/* Tags */}
             {selectedLocation.tags.length > 0 && (
@@ -173,7 +183,7 @@ export default function SpotDetails({
                 {selectedLocation.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="px-3 py-1 rounded-full text-xs font-medium border"
+                    className="px-3 py-1 rounded text-xs font-lg border"
                     style={{
                       backgroundColor: `${tag.color}15`,
                       borderColor: `${tag.color}40`,
@@ -189,8 +199,8 @@ export default function SpotDetails({
             {/* Description */}
             {selectedLocation.description && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-2">About</h3>
-                <p className="text-gray-700 text-sm leading-relaxed">
+                <h3 className="text-s font-semibold text-gray-100 mb-2">About</h3>
+                <p className="text-gray-100 text-sm leading-relaxed">
                   {selectedLocation.description}
                 </p>
               </div>
@@ -199,7 +209,7 @@ export default function SpotDetails({
             {/* Photos Section - Like Google Maps gallery */}
             {selectedLocation.fullPhotos.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                <h3 className="text-sm font-semibold text-gray-100 mb-3">
                   Photos ({selectedLocation.fullPhotos.length})
                 </h3>
                 <div className="grid grid-cols-3 gap-2">

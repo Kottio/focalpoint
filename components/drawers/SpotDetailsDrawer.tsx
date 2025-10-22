@@ -1,9 +1,10 @@
 'use client'
 import { Drawer } from 'vaul';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SpotDetails from '../spotDetails';
 import { SpotDetailsType } from '@/types/spot-details';
 import { X } from 'lucide-react';
+import { getCategoryColor } from '@/utils/map-constants';
 
 interface SpotDetailsDrawerProps {
   isOpen: boolean;
@@ -12,7 +13,7 @@ interface SpotDetailsDrawerProps {
   handleCloseSelection: () => void;
 }
 
-const snapPoints = ['100px', '300px', 0.9];
+const snapPoints = ['200px', '450px', 1];
 
 export function SpotDetailsDrawer({
   isOpen,
@@ -21,15 +22,17 @@ export function SpotDetailsDrawer({
   handleCloseSelection
 }: SpotDetailsDrawerProps) {
 
-  const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[2]);
+  const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[1]);
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
     if (!open) {
       handleCloseSelection();
-      setSnapDetails(snapPoints[2])
+      setSnapDetails(snapPoints[1])
     }
   };
+
+  useEffect(() => { setSnapDetails(snapPoints[1]) }, [selectedLocation])
 
   return (
     <Drawer.NestedRoot
@@ -44,25 +47,32 @@ export function SpotDetailsDrawer({
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
         <Drawer.Content
-          className="z-200 bg-white flex flex-col rounded-t-2xl fixed left-0 right-0 outline-none"
-          style={{ bottom: '100px', height: 'calc(95vh - 120px)' }}
+          className="z-200 bg-gray-800 flex flex-col rounded-t-4xl fixed left-0 right-0 outline-none  border-5"
+          style={{ bottom: '80px', height: 'calc(95vh - 80px)', borderColor: getCategoryColor(selectedLocation?.category || 'Street') }}
+
+
         >
           {/* Drag handle */}
-          <div aria-hidden className="mx-auto mt-4 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-5" />
-
+          {/* <div className='absolute h-10 w-screen z-50'> */}
+          <div aria-hidden className=" z-50 left-50 mx-auto mt-3 w-12 h-1 flex-shrink-0 rounded-full bg-gray-300 mb-1" />
+          {/* </div> */}
           {/* Close button */}
-          <button
-            onClick={() => {
-              handleCloseSelection()
-              onOpenChange(false)
-            }}
-            className='absolute right-2 top-2 z-50 p-1 bg-white border-1 border-gray-300 hover:bg-gray-100 shadow-md rounded-full transition-all duration-200 hover:scale-110'
-          >
-            <X size={20} className="text-gray-700" />
-          </button>
 
+          <div className='flex justify-between items-center mb-0 px-4'>
+            <Drawer.Title className="text-lg text-gray-100" >{selectedLocation?.title}</Drawer.Title>
+            <button
+              onClick={() => {
+                handleCloseSelection()
+                onOpenChange(false)
+              }}
+              className=' p-1 bg-gray-100  hover:bg-gray-100  rounded-full transition-all duration-200 hover:scale-110'
+            >
+              <X size={20} className="text-gray-800" />
+            </button>
+          </div>
           <div className="flex-1 overflow-hidden">
-            <Drawer.Title className="sr-only"></Drawer.Title>
+
+
             {selectedLocation && (
               <SpotDetails
                 selectedLocation={selectedLocation}

@@ -26,12 +26,14 @@ export default function MapPage() {
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [showFilter, setShowFilter] = useState<boolean>(false);
+
   const [mapBounds, setMapBounds] = useState({
     north: 48.9,
     south: 48.8,
     east: 2.4,
     west: 2.1
   });
+
   const [tab, setTab] = useState<'discover' | 'profile'>('discover')
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
@@ -94,6 +96,10 @@ export default function MapPage() {
     const centerLng = (mapBounds.east + mapBounds.west) / 2;
     setNewSpotLocation({ lat: centerLat, lng: centerLng });
   };
+
+
+
+
   const handleCancelCreation = () => {
     setIsCreationMode(false);
     setNewSpotLocation(null);

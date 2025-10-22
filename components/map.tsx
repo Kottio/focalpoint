@@ -39,7 +39,23 @@ export default function Map({
   const mapContainer = useRef<HTMLDivElement>(null);
   const { map } = useMapBox({ mapBounds, mapContainer })
 
-  //show Refresh Boundaries
+
+  //Getting the middle of the map when creating spot
+  useEffect(() => {
+    if (!map.current) return
+    const bounds = map.current.getBounds()
+    if (bounds) {
+      const newBounds = {
+        north: bounds.getNorth(),
+        south: bounds.getSouth(),
+        east: bounds.getEast(),
+        west: bounds.getWest()
+      }
+      const centerLat = (newBounds.north + newBounds.south) / 2;
+      const centerLng = (newBounds.east + newBounds.west) / 2;
+      setNewSpotLocation({ lat: centerLat, lng: centerLng })
+    }
+  }, [isCreationMode, map])
 
 
   // Use appropriate hook based on mode
@@ -73,6 +89,7 @@ export default function Map({
       setMapBounds(newBounds)
     }
   }
+
 
 
   //Fly to selected spot when selectedLocId changes

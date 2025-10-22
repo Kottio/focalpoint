@@ -80,13 +80,17 @@ export default function SignInPage() {
 
       if (verifyError) {
         setError(verifyError.message || "Invalid or expired OTP.");
+        setLoading(false);
         return;
       }
-      // Success - redirect to home or dashboard
-      router.push("/map");
+
+      // Wait a bit for Safari to properly set the session cookie
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Force a full page reload to ensure session is loaded (Safari fix)
+      window.location.href = "/map";
     } catch {
       setError("Network error. Please try again.");
-    } finally {
       setLoading(false);
     }
   }

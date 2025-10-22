@@ -32,9 +32,14 @@ export default function MainPage() {
     return () => clearInterval(interval);
   }, []);
 
+
+
   const handleEnter = () => {
     router.push("/map");
   };
+
+
+
 
   // Left and right image index
   const leftIndex = index;
