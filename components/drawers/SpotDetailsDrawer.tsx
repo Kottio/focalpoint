@@ -15,7 +15,7 @@ interface SpotDetailsDrawerProps {
 
 // Snap points as fractions of available height (95vh - 80px bottom menu)
 // 0.25 = peek view, 0.5 = medium view, 0.9 = almost full screen
-const snapPoints = [0.25, 0.5, 0.95];
+const snapPoints = [0.15, 0.5, 0.9];
 
 export function SpotDetailsDrawer({
   isOpen,
