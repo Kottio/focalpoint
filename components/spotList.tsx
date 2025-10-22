@@ -80,7 +80,7 @@ export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelec
 
 
       <div
-        className="h-dvh overflow-y-auto pb-50 bg-gray-950 px-3 py-3"
+        className="h-dvh overflow-y-auto pb-50 bg-gray-50 px-3 py-3"
         style={{
           overscrollBehavior: 'contain',
           WebkitOverflowScrolling: 'touch'
@@ -89,9 +89,9 @@ export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelec
         {filteredSpots.map(spot => (
           <div
             key={spot.id}
-            className={`relative mb-4 rounded-xl overflow-hidden bg-gray-900 shadow-xl border-2
+            className={`relative mb-4 rounded-xl overflow-hidden bg-white shadow-lg border-2
               transition-all duration-200 cursor-pointer hover:scale-[1.01] hover:shadow-2xl
-              ${selectedLocId === spot.id ? 'ring-2 ring-blue-400 border-blue-400' : 'border-gray-800'}
+              ${selectedLocId === spot.id ? 'ring-2 ring-blue-400 border-blue-400' : 'border-gray-200'}
             `}
             onClick={() => handleSpotSelect(spot.id)}
           >
@@ -171,11 +171,11 @@ export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelec
 
             {/* Carousel de photos supplémentaires */}
             {spot.mediumPhotos && spot.mediumPhotos.length > 1 && (
-              <div className="flex gap-2 p-3 overflow-x-auto bg-gray-800/50 backdrop-blur-sm">
+              <div className="flex gap-2 p-3 overflow-x-auto bg-gray-100 border-t border-gray-200">
                 {spot.mediumPhotos.slice(1).map((photo, index) => (
                   <div
                     key={index}
-                    className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0"
+                    className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200"
                   >
                     <Image
                       src={photo.url}

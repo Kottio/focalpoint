@@ -49,7 +49,7 @@ export function SpotDetailsDrawer({
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
         <Drawer.Content
-          className="z-200 bg-gray-800 flex flex-col rounded-t-4xl fixed left-0 right-0 outline-none  border-5"
+          className="z-200 bg-white flex flex-col rounded-t-4xl fixed left-0 right-0 outline-none border-5"
           style={{ bottom: '80px', height: 'calc(95vh - 80px)', borderColor: getCategoryColor(selectedLocation?.category || 'Street') }}
 
 
@@ -61,13 +61,13 @@ export function SpotDetailsDrawer({
           {/* Close button */}
 
           <div className='flex justify-between items-center mb-0 px-4'>
-            <Drawer.Title className="text-lg text-gray-100" >{selectedLocation?.title}</Drawer.Title>
+            <Drawer.Title className="text-lg text-gray-900" >{selectedLocation?.title}</Drawer.Title>
             <button
               onClick={() => {
                 handleCloseSelection()
                 onOpenChange(false)
               }}
-              className=' p-1 bg-gray-100  hover:bg-gray-100  rounded-full transition-all duration-200 hover:scale-110'
+              className=' p-1 bg-white hover:bg-gray-100 rounded-full transition-all duration-200 hover:scale-110'
             >
               <X size={20} className="text-gray-800" />
             </button>

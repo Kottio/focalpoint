@@ -15,15 +15,15 @@ export function DrawerHeader({ title, spotCount, selectedCategory, selectedTags,
     <>
       <div aria-hidden className="mx-auto mt-4  w-12 h-1   flex-shrink-0 rounded-full bg-gray-300 mb-2" />
       <div className="flex flex-col w-full px-7 gap-1   ">
-        <Drawer.Title className="text-lg  text-white  flex  items-center justify-between">
+        <Drawer.Title className="text-lg  text-gray-900  flex  items-center justify-between">
           <div className='flex items-center  gap-2'>
             {title}
             {spotCount !== undefined && (
-              <p className="text-sm text-gray-400 ">({spotCount}) </p>
+              <p className="text-sm text-gray-500 ">({spotCount}) </p>
             )}
           </div>
 
-          <ListFilterPlus size={30} strokeWidth={1.5} onClick={() => { setShowFilter(true) }} className='  text-white'></ListFilterPlus>
+          <ListFilterPlus size={30} strokeWidth={1.5} onClick={() => { setShowFilter(true) }} className='text-gray-700 hover:text-gray-900 cursor-pointer'></ListFilterPlus>
         </Drawer.Title>
 
         <div className='flex justify-between items-start my-2 overflow-x-auto'>

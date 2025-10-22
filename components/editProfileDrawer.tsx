@@ -45,16 +45,16 @@ export function EditProfileDrawer({
     <Drawer.Root open={isOpen} onOpenChange={onClose}>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
-        <Drawer.Content className="bg-gray-900 flex flex-col rounded-t-2xl h-[85vh] fixed bottom-0 left-0 right-0 z-50 outline-none">
+        <Drawer.Content className="bg-white flex flex-col rounded-t-2xl h-[85vh] fixed bottom-0 left-0 right-0 z-50 outline-none">
           {/* Header */}
           <Drawer.Title></Drawer.Title>
-          <div className="flex items-center justify-between p-4 border-b border-gray-700">
-            <h2 className="text-xl font-bold text-white">Edit Profile</h2>
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <h2 className="text-xl font-bold text-gray-900">Edit Profile</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-800 rounded-full transition"
+              className="p-2 hover:bg-gray-100 rounded-full transition"
             >
-              <X size={24} className="text-gray-400" />
+              <X size={24} className="text-gray-600" />
             </button>
           </div>
 
@@ -62,7 +62,7 @@ export function EditProfileDrawer({
           <div className="flex-1 overflow-y-auto p-4 space-y-6">
             {/* Username */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Username
               </label>
               <input
@@ -73,7 +73,7 @@ export function EditProfileDrawer({
                 }
                 placeholder="your_username"
                 maxLength={30}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Only lowercase letters, numbers, and underscores
@@ -82,7 +82,7 @@ export function EditProfileDrawer({
 
             {/* Bio */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Bio
               </label>
               <textarea
@@ -91,7 +91,7 @@ export function EditProfileDrawer({
                 placeholder="Tell us about yourself..."
                 maxLength={200}
                 rows={4}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               />
               <p className="text-xs text-gray-500 mt-1">
                 {bio.length}/200 characters
@@ -99,14 +99,14 @@ export function EditProfileDrawer({
             </div>
 
             {error && (
-              <div className="text-red-400 text-sm bg-red-900/20 p-3 rounded-lg">
+              <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
                 {error}
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-gray-700 space-y-2">
+          <div className="p-4 border-t border-gray-200 space-y-2">
             <button
               onClick={handleSave}
               disabled={loading || !username.trim()}
@@ -117,7 +117,7 @@ export function EditProfileDrawer({
             <button
               onClick={onClose}
               disabled={loading}
-              className="w-full py-3 bg-gray-800 text-gray-300 rounded-lg font-medium hover:bg-gray-700 transition"
+              className="w-full py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition"
             >
               Cancel
             </button>

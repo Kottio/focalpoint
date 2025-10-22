@@ -17,18 +17,18 @@ export default function SpotDetails({
     return (
 
 
-      <div className='w-96 flex flex-col  bg-gray-800 text-neutral-700  rounded-t-3xl **:shadow-lg border border-gray-200 overflow-hidden'>
+      <div className='w-96 flex flex-col  bg-white text-neutral-700  rounded-t-3xl shadow-lg border border-gray-200 overflow-hidden'>
         <div className='p-6'>
 
           <div className='flex items-start justify-between '>
             <div className='flex flex-col '>
-              <h2 className='text-xl font-bold text-neutral-900 my-1'>
+              <h2 className='text-xl font-bold text-gray-900 my-1'>
                 {selectedLocation.title}
               </h2>
 
 
 
-              <div> {selectedLocation.upvotes} 👍 </div>
+              <div className="text-gray-700"> {selectedLocation.upvotes} 👍 </div>
 
               <div className='flex items-center gap-2 mb-4'>
 
@@ -42,7 +42,7 @@ export default function SpotDetails({
                 </span>
               </div>
 
-              <div>{selectedLocation.user.fullName}</div>
+              <div className="text-gray-600">{selectedLocation.user.fullName}</div>
 
             </div>
             <button
@@ -55,7 +55,6 @@ export default function SpotDetails({
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-              hey
             </button>
           </div>
 
@@ -75,14 +74,14 @@ export default function SpotDetails({
               })}
             </div>
             <div>
-              <span>
+              <span className="text-gray-700">
                 {selectedLocation.description}
 
               </span>
             </div>
             <ul className="grid grid-cols-1 gap-4 mt-4 rounded-2xl">
               {selectedLocation.fullPhotos.map(p => (
-                <li key={p.id} className="bg-gray-50 rounded-lg overflow-hidden">
+                <li key={p.id} className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
                   <Image
                     src={p.originalUrl}
                     alt={p.id + ''}
@@ -91,7 +90,7 @@ export default function SpotDetails({
                     className="w-full h-48 object-cover">
                   </Image>
                   <div className="p-3">
-                    <span className="font-medium">{p.title}</span>
+                    <span className="font-medium text-gray-900">{p.title}</span>
                     <span className="text-sm text-gray-600">{p.user.fullName}</span>
                     <span className="text-sm text-gray-500">❤️ {p.likes}</span>
                   </div>
@@ -106,18 +105,18 @@ export default function SpotDetails({
   } else {
 
     return (
-      <div className='w-full h-full   bg-gray-800 overflow-y-auto scrollbar-hide flex flex-col' data-vaul-no-drag>
+      <div className='w-full h-full bg-white overflow-y-auto scrollbar-hide flex flex-col' data-vaul-no-drag>
 
-        <div className="flex items-center gap-4 text-sm  pb-3 px-4 ">
+        <div className="flex items-center gap-4 text-sm pb-3 px-4 ">
 
           <div className="flex items-center gap-1.5">
             <Heart size={18} className="text-red-500" fill="currentColor" />
-            <span className="text-gray-100 font-medium">{selectedLocation.upvotes}</span>
+            <span className="text-gray-700 font-medium">{selectedLocation.upvotes}</span>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <User size={16} className="text-gray-100" />
-            <span className="text-gray-100">{selectedLocation.user.fullName || 'Anonymous'}</span>
+            <User size={16} className="text-gray-600" />
+            <span className="text-gray-700">{selectedLocation.user.fullName || 'Anonymous'}</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -127,7 +126,7 @@ export default function SpotDetails({
             >
               {getCategoryIcon(selectedLocation.category)}
             </div>
-            <span className="text-sm text-gray-100">{selectedLocation.category}</span>
+            <span className="text-sm text-gray-700">{selectedLocation.category}</span>
           </div>
 
         </div>
@@ -156,15 +155,15 @@ export default function SpotDetails({
               </div> */}
             </>
           ) : (
-            <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-              <span className="text-gray-100">No photos</span>
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-500">No photos</span>
             </div>
           )}
         </div>
 
 
         {/* Content */}
-        <div className="flex-1">
+        <div className="flex-1 bg-white">
           <div className="p-4 space-y-4">
             {/* Title and Category */}
             {/* <div>
@@ -199,37 +198,15 @@ export default function SpotDetails({
             {/* Description */}
             {selectedLocation.description && (
               <div>
-                <h3 className="text-s font-semibold text-gray-100 mb-2">About</h3>
-                <p className="text-gray-100 text-sm leading-relaxed">
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">About</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">
                   {selectedLocation.description}
                 </p>
               </div>
             )}
 
             {/* Photos Section - Like Google Maps gallery */}
-            {selectedLocation.fullPhotos.length > 0 && (
-              <div>
-                <h3 className="text-sm font-semibold text-gray-100 mb-3">
-                  Photos ({selectedLocation.fullPhotos.length})
-                </h3>
-                <div className="grid grid-cols-3 gap-2">
-                  {selectedLocation.fullPhotos.map((p) => (
-                    <div
-                      key={p.id}
-                      className="relative aspect-square rounded-lg overflow-hidden bg-gray-200"
-                    >
-                      <Image
-                        src={p.originalUrl}
-                        alt={p.title || 'Photo'}
-                        fill
-                        sizes="(max-width: 768px) 33vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+
 
             {/* Extra padding at bottom */}
             <div className="h-4"></div>

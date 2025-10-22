@@ -35,9 +35,9 @@ export function PhotoUploader({ photos, onPhotosChange, maxPhotos = 5 }: PhotoUp
       </label>
 
       {/* Upload Button */}
-      <label className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition">
-        <Upload size={20} className="text-gray-400" />
-        <span className="text-sm text-gray-600">
+      <label className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition bg-white">
+        <Upload size={20} className="text-gray-500" />
+        <span className="text-sm text-gray-700">
           {photos.length === 0 ? 'Click to upload photos' : `Add more photos (${photos.length}/${maxPhotos})`}
         </span>
         <input
