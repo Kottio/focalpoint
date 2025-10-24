@@ -33,6 +33,7 @@ export async function GET(
             },
           },
         },
+
         user: {
           select: {
             id: true,
@@ -42,6 +43,18 @@ export async function GET(
         },
         votes: {
           where: { voteType: "UP" },
+        },
+        SpotDetails: true,
+        SpotComment: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                id: true,
+                fullName: true,
+              },
+            },
+          },
         },
       },
     });
@@ -73,6 +86,8 @@ export async function GET(
       user: spot.user,
       upvotes: spot.votes.length,
       createdAt: spot.createdAt,
+      SpotDetails: spot.SpotDetails[0],
+      SpotComment: spot.SpotComment,
     };
 
     return NextResponse.json(spotDetails);

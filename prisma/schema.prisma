@@ -31,6 +31,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   verifications Verification[]
+  SpotComment   SpotComment[]
 
   @@map("users")
 }
@@ -49,13 +50,45 @@ model Spot {
   categoryId Int     @map("category_id")
 
   // Relations
-  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  category Category  @relation(fields: [categoryId], references: [id])
-  spotTags SpotTag[]
-  photos   Photo[]
-  votes    Vote[]
+  user        User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  category    Category      @relation(fields: [categoryId], references: [id])
+  spotTags    SpotTag[]
+  photos      Photo[]
+  votes       Vote[]
+  SpotDetails SpotDetails[]
+  SpotComment SpotComment[]
 
   @@map("spots")
+}
+
+model SpotComment {
+  id        Int      @id @default(autoincrement())
+  spotId    Int      @map("spot_id")
+  comment   String   @db.Text
+  userId    String?  @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  likes     Int      @default(0)
+
+  spot Spot  @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([spotId])
+  @@index([userId])
+  @@map("spot_comments")
+}
+
+model SpotDetails {
+  id             Int     @id @default(autoincrement())
+  spotId         Int     @map("spot_id")
+  idealTime      Int[]
+  idealWeather   String?
+  friendlyIndice Int?
+  metadata       Json?
+
+  spot Spot @relation(fields: spotId, references: [id], onDelete: Cascade)
+
+  @@map("spot_details")
 }
 
 model Category {
@@ -170,9 +203,8 @@ model Account {
   idToken      String?   @map("id_token")
   expiresAt    DateTime? @map("expires_at")
   password     String?
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

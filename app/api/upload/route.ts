@@ -46,17 +46,6 @@ export async function POST(request: NextRequest) {
       overwrite: false,
     });
 
-    // Generate thumbnail (40x40 for map markers)
-    // const thumbnailUpload = await cloudinary.uploader.upload(base64Image, {
-    //   public_id: `${publicId}_thumb`,
-    //   folder: 'focal-point/spots/thumbnails',
-    //   transformation: [
-    //     { width: 40, height: 40, crop: 'fill', gravity: 'center' }
-    //   ],
-    //   resource_type: 'image',
-    //   overwrite: false
-    // });
-
     // Generate medium size (300x200 for cards)
     const mediumUpload = await cloudinary.uploader.upload(base64Image, {
       public_id: `${publicId}_medium`,

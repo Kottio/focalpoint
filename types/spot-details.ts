@@ -10,6 +10,26 @@ export interface FullPhoto {
   createdAt: string;
 }
 
+export interface SpotComment {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string | null;
+  spotId: number;
+  likes: number;
+  comment: string;
+  user: User;
+}
+
+interface spotDetailsInfo {
+  metadata: JSON | null;
+  id: number;
+  spotId: number;
+  idealTime: number[];
+  idealWeather: string | null;
+  friendlyIndice: number | null;
+}
+
 export interface SpotDetailsType {
   id: number;
   title: string;
@@ -21,6 +41,8 @@ export interface SpotDetailsType {
   user: User;
   upvotes: number;
   createdAt: string;
+  SpotDetails: spotDetailsInfo;
+  SpotComment: SpotComment[];
 }
 
 // For API responses

@@ -1,11 +1,12 @@
 'use client'
 import { Drawer } from "vaul"
 import { useState } from "react"
-import { X, ChevronDown, ChevronUp } from "lucide-react"
+import { X, ChevronDown, ChevronUp, Smile, Angry, Sunrise, Sunset } from "lucide-react"
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants"
 import { useCreateSpot } from "@/hooks/useCreateSpot"
 import { PhotoUploader } from "./PhotoUploader"
 import { useCatandTags } from "@/hooks/useCatandTags"
+import { Slider } from "./ui/slider"
 
 
 interface CreationDrawerProps {
@@ -29,11 +30,16 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
     description: '',
     category: '',
     tags: [] as number[],
+    idealTime: 12 as number,
+    idealWeather: '',
+    friendlyIndice: 3 as number
   })
 
   const [photos, setPhotos] = useState<File[]>([])
 
-  const handleInputChange = (field: string, value: string) => {
+  const weatherOptions = ['Sunny', 'Cloudy', 'Rainy', 'Foggy', 'Snowy', 'Golden Hour']
+
+  const handleInputChange = (field: string, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -44,6 +50,13 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
         ? prev.tags.filter(id => id !== tagId)
         : [...prev.tags, tagId]
     }))
+  }
+
+  const formatTime = (hour: number) => {
+    if (hour === 0) return '12 AM'
+    if (hour < 12) return `${hour} AM`
+    if (hour === 12) return '12 PM'
+    return `${hour - 12} PM`
   }
 
   return (
@@ -71,7 +84,7 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
           </div>
 
           {/* Form Content - scrollable */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-6" data-vaul-no-drag>
+          <div className="flex flex-col overflow-y-auto p-4 gap-4" data-vaul-no-drag>
             {/* Location Display */}
             <div className="bg-emerald-50 border border-emerald-300 p-3 rounded-lg">
               <p className="text-sm text-emerald-700">
@@ -95,8 +108,8 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
 
             {/* Description Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
+              <label className="block text-sm font-medium text-gray-700 ">
+
               </label>
               <textarea
                 value={formData.description}
@@ -148,7 +161,7 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
                   return (
                     <div
                       key={tag.id}
-                      className={`px-3 py-2 rounded-full cursor-pointer text-sm font-medium transition-all duration-200 transform hover:scale-105 border-2 ${isSelected ? 'shadow-md scale-105' : 'bg-white'
+                      className={`px-2 py-1 rounded-lg cursor-pointer text-sm font-medium transition-all duration-200 transform hover:scale-105 border-2 ${isSelected ? 'shadow-md scale-105' : 'bg-white'
                         }`}
                       style={{
                         color: isSelected ? 'white' : tag.color,
@@ -169,11 +182,90 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
               )}
             </div>
 
+
+            {/* Spot Details Section */}
+            <div className="">
+              {/* Ideal Time */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-3 ">
+                  Best Time
+                </label>
+                <div className="flex gap-3 items-center">
+                  <Sunrise className="text-orange-300"></Sunrise>
+                  <Slider
+                    min={6}
+                    max={22}
+                    step={1}
+                    value={[formData.idealTime]}
+                    onValueChange={(value) => handleInputChange('idealTime', value[0])}
+                    className="mb-2"
+                  />
+                  <Sunset className="text-orange-600"></Sunset>
+                </div>
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>Sunrise</span>
+                  <span className="font-medium text-gray-500">{formatTime(formData.idealTime)}</span>
+                  <span>Sunset</span>
+                </div>
+              </div>
+
+              {/* Friendly Indice */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Friendly Indice
+                </label>
+                <div className="flex gap-3 items-center">
+                  <Angry className="text-red-400 flex-shrink-0" size={20} />
+                  <Slider
+                    min={0}
+                    max={5}
+                    step={1}
+                    value={[formData.friendlyIndice]}
+                    onValueChange={(value) => handleInputChange('friendlyIndice', value[0])}
+                    className="flex-1"
+                  />
+                  <Smile className="text-emerald-400 flex-shrink-0" size={20} />
+                </div>
+                <div className="flex justify-between text-xs text-gray-500 mt-2">
+                  <span>Dangerous</span>
+                  <span className="font-medium text-gray-500">{formData.friendlyIndice}/5</span>
+                  <span>Peacefull</span>
+                </div>
+              </div>
+
+              {/* Ideal Weather */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Best Weather
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {weatherOptions.map(weather => {
+                    const isSelected = formData.idealWeather === weather;
+                    return (
+                      <button
+                        key={weather}
+                        type="button"
+                        onClick={() => handleInputChange('idealWeather', isSelected ? '' : weather)}
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all border-2 ${isSelected
+                          ? 'bg-cyan-500 text-white border-cyan-500'
+                          : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                          }`}
+                      >
+                        {weather}
+                      </button>
+                    );
+                  })}
+                </div>
+
+              </div>
+            </div>
+
             {/* Photo Upload */}
             <PhotoUploader photos={photos} onPhotosChange={setPhotos} maxPhotos={5} />
 
-            {/* Extra padding to ensure content isn't hidden behind button */}
-            <div className="h-20"></div>
+
+
+
             <div className="p-4 border-t border-gray-200 bg-white left-0 right-0">
               <button
                 onClick={async () => {

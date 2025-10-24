@@ -1,7 +1,8 @@
 'use client'
 import { Drawer } from 'vaul';
 import { useEffect, useState } from 'react';
-import SpotDetails from '../spotDetails';
+// import SpotDetails from '../spotDetails';
+import SpotDetails2 from '../spotDetails2';
 import { SpotDetailsType } from '@/types/spot-details';
 import { X } from 'lucide-react';
 import { getCategoryColor } from '@/utils/map-constants';
@@ -15,7 +16,7 @@ interface SpotDetailsDrawerProps {
 
 // Snap points as fractions of available height (95vh - 80px bottom menu)
 // 0.25 = peek view, 0.5 = medium view, 0.9 = almost full screen
-const snapPoints = [0.15, 0.5, 0.9];
+const snapPoints = [0.15, 0.5, 1];
 
 export function SpotDetailsDrawer({
   isOpen,
@@ -24,17 +25,17 @@ export function SpotDetailsDrawer({
   handleCloseSelection
 }: SpotDetailsDrawerProps) {
 
-  const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[1]);
+  const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[2]);
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
     if (!open) {
       handleCloseSelection();
-      setSnapDetails(snapPoints[1])
+      setSnapDetails(snapPoints[2])
     }
   };
 
-  useEffect(() => { setSnapDetails(snapPoints[1]) }, [selectedLocation])
+  useEffect(() => { setSnapDetails(snapPoints[2]) }, [selectedLocation])
 
   return (
     <Drawer.NestedRoot
@@ -49,8 +50,8 @@ export function SpotDetailsDrawer({
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
         <Drawer.Content
-          className="z-200 bg-white flex flex-col rounded-t-4xl fixed left-0 right-0 outline-none border-5"
-          style={{ bottom: '80px', height: 'calc(95vh - 80px)', borderColor: getCategoryColor(selectedLocation?.category || 'Street') }}
+          className="z-500 bottom-0 h-dvh bg-white flex flex-col rounded-t-4xl fixed left-0 right-0 outline-none border-0"
+
 
 
         >
@@ -61,7 +62,7 @@ export function SpotDetailsDrawer({
           {/* Close button */}
 
           <div className='flex justify-between items-center mb-0 px-4'>
-            <Drawer.Title className="text-lg text-gray-900" >{selectedLocation?.title}</Drawer.Title>
+            <Drawer.Title className="text-lg text-gray-900" ></Drawer.Title>
             <button
               onClick={() => {
                 handleCloseSelection()
@@ -72,11 +73,11 @@ export function SpotDetailsDrawer({
               <X size={20} className="text-gray-800" />
             </button>
           </div>
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-y-auto">
 
 
             {selectedLocation && (
-              <SpotDetails
+              <SpotDetails2
                 selectedLocation={selectedLocation}
                 handleCloseSelection={handleCloseSelection}
               />

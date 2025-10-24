@@ -82,6 +82,7 @@ export async function GET(request: NextRequest) {
           },
         },
         photos: {},
+        SpotDetails: true,
         user: {
           select: {
             id: true,
@@ -114,10 +115,6 @@ export async function GET(request: NextRequest) {
         color: st.tag.color,
       })),
 
-      thumbnailPhoto: spot.photos[0]
-        ? spot.photos[0].thumbnailUrl
-        : "/mainPhotos/65030013.jpg",
-
       mediumPhotos: spot.photos[0]
         ? spot.photos.map((p) => {
             return {
@@ -131,8 +128,10 @@ export async function GET(request: NextRequest) {
       user: spot.user,
       upvotes: spot.votes.length,
       createdAt: spot.createdAt,
+      SpotDetails: spot.SpotDetails,
     }));
 
+    console.log(transformedSpots);
     return NextResponse.json(transformedSpots);
   } catch (error) {
     console.error("Error fetching spots:", error);
@@ -188,6 +187,15 @@ export async function POST(request: NextRequest) {
         longitude: body.longitude,
         categoryId: category.id,
         userId: session.user.id,
+
+        SpotDetails: {
+          create: {
+            idealTime: [body.idealTime],
+            idealWeather: body.idealWeather || null,
+            friendlyIndice: body.friendlyIndice || 3,
+          },
+        },
+
         // Create spotTags relations if tags are provided
         spotTags:
           body.tags && body.tags.length > 0
@@ -199,6 +207,7 @@ export async function POST(request: NextRequest) {
                 })),
               }
             : undefined,
+
         // Create photos if provided
         photos:
           body.photos && body.photos.length > 0
@@ -216,7 +225,9 @@ export async function POST(request: NextRequest) {
               }
             : undefined,
       },
+
       include: {
+        SpotDetails: true,
         category: true,
         photos: true,
         spotTags: {
@@ -227,25 +238,25 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log("Spot created successfully:", newSpot.id);
+    console.log("Spot created successfully:", newSpot);
 
     // Transform response to match frontend format
-    const transformedSpot = {
-      id: newSpot.id,
-      title: newSpot.title,
-      description: newSpot.description,
-      latitude: parseFloat(newSpot.latitude.toString()),
-      longitude: parseFloat(newSpot.longitude.toString()),
-      category: newSpot.category.name,
-      categoryId: newSpot.categoryId,
-      tags: newSpot.spotTags.map((st) => ({
-        id: st.tag.id,
-        name: st.tag.name,
-        color: st.tag.color,
-      })),
-    };
+    // const transformedSpot = {
+    //   id: newSpot.id,
+    //   title: newSpot.title,
+    //   description: newSpot.description,
+    //   latitude: parseFloat(newSpot.latitude.toString()),
+    //   longitude: parseFloat(newSpot.longitude.toString()),
+    //   category: newSpot.category.name,
+    //   categoryId: newSpot.categoryId,
+    //   tags: newSpot.spotTags.map((st) => ({
+    //     id: st.tag.id,
+    //     name: st.tag.name,
+    //     color: st.tag.color,
+    //   })),
+    // };
 
-    return NextResponse.json(transformedSpot, { status: 201 });
+    return NextResponse.json({ status: 201 });
   } catch (error) {
     console.error("Error creating spot:", error);
     return NextResponse.json(
