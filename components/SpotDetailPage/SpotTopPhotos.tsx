@@ -1,7 +1,7 @@
 'use client'
 
 import { FullPhoto } from "@/types/spot-details";
-import { Heart, User } from "lucide-react";
+import { Heart, User, Trophy } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -63,19 +63,28 @@ export function SpotTopPhoto({ FullPhoto, setFullScreen, setSelectedPhoto }: Spo
                 priority={index === 0}
               />
             </div>
-
+            {/* Winner Badge */}
+            {index === 0 && (
+              <div className="absolute top-3 right-3 z-10">
+                <div className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-yellow-500 px-3 py-1.5 rounded-full shadow-lg">
+                  <Trophy size={16} className="text-white" />
+                  <span className="text-white text-xs font-bold">TOP PHOTO</span>
+                </div>
+              </div>
+            )}
             {/* Gradient overlay for better text readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 pointer-events-none" />
             {/* Photo Info at Bottom */}
 
             <div className="absolute bottom-0 left-0 right-0 p-3 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-white">
-                <User size={16} />
-                <span className="text-sm font-medium">
+              <div className={`flex items-center gap-2 text-white ${index === 0 ? 'bg-gradient-to-r from-amber-500/90 to-yellow-500/90 px-3 py-1.5 rounded backdrop-blur-sm' : ''}`}>
+                <User size={16} className={index === 0 ? 'text-yellow-100' : ''} />
+                <span className={`text-sm font-medium ${index === 0 ? 'font-bold' : ''}`}>
                   {photo.user.username || "Anonymous"}
                 </span>
-
-
+                {index === 0 && (
+                  <Trophy size={14} className="text-yellow-100" />
+                )}
               </div>
 
 

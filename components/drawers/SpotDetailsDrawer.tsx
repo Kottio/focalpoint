@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import SpotDetails2 from '../spotDetails2';
 import { SpotDetailsType } from '@/types/spot-details';
 import { X } from 'lucide-react';
+import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants"
+
 
 
 interface SpotDetailsDrawerProps {
@@ -50,8 +52,7 @@ export function SpotDetailsDrawer({
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
         <Drawer.Content
-          className="z-500 bottom-0 h-dvh bg-white flex flex-col rounded-t-4xl fixed left-0 right-0 outline-none border-0"
-
+          className="z-500 bottom-0 h-dvh bg-white flex flex-col rounded-t-4xl fixed left-0 right-0 outline-none border-t-4"
 
 
         >
@@ -61,14 +62,27 @@ export function SpotDetailsDrawer({
           {/* </div> */}
           {/* Close button */}
 
-          <div className='flex justify-between items-center mb-0 px-4'>
+          <div className='flex justify-between items-center border-b-5 px-4'
+            style={{ borderBottomColor: getCategoryColor(selectedLocation?.category || '') }}
+          >
+
+            <div
+              className="w-auto h-auto rounded-t  p-1 flex items-center gap-2 px-5 text-white justify-center"
+              style={{ backgroundColor: getCategoryColor(selectedLocation?.category || '') }}
+            > {getCategoryIcon(selectedLocation?.category || '')}
+              {selectedLocation?.category || ''}
+
+            </div>
+
+
+
             <Drawer.Title className="text-lg text-gray-900" ></Drawer.Title>
             <button
               onClick={() => {
                 handleCloseSelection()
                 onOpenChange(false)
               }}
-              className=' p-1 bg-white hover:bg-gray-100 rounded-full transition-all duration-200 hover:scale-110'
+              className=' p-1 bg-white hover:bg-gray-100 shadow-xl border-1 rounded-full transition-all duration-200 hover:scale-110 -mt-2'
             >
               <X size={20} className="text-gray-800" />
             </button>
