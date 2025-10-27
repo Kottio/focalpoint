@@ -53,7 +53,7 @@ export function SpotComments({ comments: initialComments, spotId }: SpotComments
       setNewComment('')
 
     } catch (error) {
-      console.error('Failed to post comment:')
+      console.error('Failed to post comment:', error)
     } finally {
       setIsSubmitting(false)
     }
@@ -150,11 +150,10 @@ export function SpotComments({ comments: initialComments, spotId }: SpotComments
                     <button
                       onClick={() => handleLike(comment.id)}
                       disabled={likingCommentId !== null}
-                      className={`flex items-center gap-1.5 text-sm transition ${
-                        likingCommentId !== null
-                          ? 'text-gray-300 cursor-not-allowed'
-                          : 'text-gray-500 hover:text-red-500'
-                      }`}
+                      className={`flex items-center gap-1.5 text-sm transition ${likingCommentId !== null
+                        ? 'text-gray-300 cursor-not-allowed'
+                        : 'text-gray-500 hover:text-red-500'
+                        }`}
                     >
                       <Heart size={20} />
                       {comment.likes > 0 && <span>{comment.likes}</span>}

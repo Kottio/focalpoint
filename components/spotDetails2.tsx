@@ -13,13 +13,13 @@ import { SpotDetailsType } from '@/types/spot-details';
 
 
 interface SpotDetailsProps {
-  selectedLocation: SpotDetailsType,
-  handleCloseSelection: () => void
+  selectedLocation: SpotDetailsType
+
 }
 
 export default function SpotDetails2({
   selectedLocation,
-  handleCloseSelection }: SpotDetailsProps) {
+}: SpotDetailsProps) {
   const [fullScreen, setFullScreen] = useState<boolean>(false)
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null)
   const [activeTab, setActiveTab] = useState<'photos' | 'comments' | 'details'>('details')

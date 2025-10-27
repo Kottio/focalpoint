@@ -55,7 +55,7 @@ export default function Map({
       const centerLng = (newBounds.east + newBounds.west) / 2;
       setNewSpotLocation({ lat: centerLat, lng: centerLng })
     }
-  }, [isCreationMode, map])
+  }, [isCreationMode, map, setNewSpotLocation])
 
 
   // Use appropriate hook based on mode

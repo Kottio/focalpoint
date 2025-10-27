@@ -46,7 +46,7 @@ export function FullScreenPhoto({ FullPhoto, selectedPhoto, setFullScreen }: Ful
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentIndex])
+  }, [currentIndex, goToNext, goToPrevious, setFullScreen])
 
   if (!currentPhoto) return null
 

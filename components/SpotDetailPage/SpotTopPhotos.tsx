@@ -3,7 +3,7 @@
 import { FullPhoto } from "@/types/spot-details";
 import { Heart, User } from "lucide-react";
 import Image from "next/image";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 
 interface SpotTopPhotoProps {
   FullPhoto: FullPhoto[]

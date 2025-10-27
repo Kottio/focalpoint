@@ -1,5 +1,5 @@
 import { SpotDetailsType } from "@/types/spot-details"
-import { Clock, Cloud, Smile, MapPin } from "lucide-react"
+import { Clock, Cloud, Smile } from "lucide-react"
 
 interface SpotDetailInfo {
   selectedLocation: SpotDetailsType

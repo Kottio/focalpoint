@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import SpotDetails2 from '../spotDetails2';
 import { SpotDetailsType } from '@/types/spot-details';
 import { X } from 'lucide-react';
-import { getCategoryColor } from '@/utils/map-constants';
+
 
 interface SpotDetailsDrawerProps {
   isOpen: boolean;
@@ -79,7 +79,6 @@ export function SpotDetailsDrawer({
             {selectedLocation && (
               <SpotDetails2
                 selectedLocation={selectedLocation}
-                handleCloseSelection={handleCloseSelection}
               />
             )}
           </div>
