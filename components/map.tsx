@@ -30,7 +30,7 @@ export default function Map({
   selectedLocId,
   onSpotSelect,
   mapBounds,
-  setMapBounds,
+  // setMapBounds,
   isCreationMode,
   newSpotLocation,
   setNewSpotLocation
@@ -75,20 +75,19 @@ export default function Map({
 
 
 
-  //TODO: if too zoomed out, block or focus? 
-  const handleUpdateMapBound = () => {
-    if (!map.current) return
-    const bounds = map.current.getBounds()
-    if (bounds) {
-      const newBounds = {
-        north: bounds.getNorth(),
-        south: bounds.getSouth(),
-        east: bounds.getEast(),
-        west: bounds.getWest()
-      }
-      setMapBounds(newBounds)
-    }
-  }
+  // const handleUpdateMapBound = () => {
+  //   if (!map.current) return
+  //   const bounds = map.current.getBounds()
+  //   if (bounds) {
+  //     const newBounds = {
+  //       north: bounds.getNorth(),
+  //       south: bounds.getSouth(),
+  //       east: bounds.getEast(),
+  //       west: bounds.getWest()
+  //     }
+  //     setMapBounds(newBounds)
+  //   }
+  // }
 
 
 
@@ -107,6 +106,18 @@ export default function Map({
     // - 0.025
   }, [selectedLocId, map, spots]);
 
+  useEffect(() => {
+    if (map.current) {
+      map.current.flyTo({
+        center: [(mapBounds.east + mapBounds.west) / 2,
+        (mapBounds.north + mapBounds.south) / 2],
+        zoom: 10,
+        duration: 1200
+      });
+    }
+
+  }, [mapBounds, map]);
+
 
   return (<>
 
@@ -116,9 +127,9 @@ export default function Map({
       ref={mapContainer}
       className="fixed h-full  "
     />
-    {!isCreationMode && <button className='text-black text-sm z-30 absolute top-2 left-2 p-2 m-1 rounded-xl bg-white border-1 shadow-lg border-neutral-300' onClick={() => {
+    {/* {!isCreationMode && <button className='text-black text-sm z-30 absolute top-20 left-2 p-2 m-1 rounded-xl bg-white border-1 shadow-lg border-neutral-300' onClick={() => {
       handleUpdateMapBound()
-    }}>Refresh Boundaries</button>}
+    }}>Refresh Boundaries</button>} */}
 
   </>
   );

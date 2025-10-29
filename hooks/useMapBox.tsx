@@ -22,16 +22,16 @@ export function useMapBox({ mapContainer, mapBounds }: mapBoxProp) {
       zoom: 10,
     });
 
-    map.current.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        trackUserLocation: true,
-        showUserHeading: true
-      }),
-      'top-right'
-    );
+    // map.current.addControl(
+    //   new mapboxgl.GeolocateControl({
+    //     positionOptions: {
+    //       enableHighAccuracy: true
+    //     },
+    //     trackUserLocation: true,
+    //     showUserHeading: true
+    //   }),
+    //   'top-right'
+    // );
 
     return () => {
       if (map.current) {

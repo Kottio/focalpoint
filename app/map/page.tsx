@@ -9,13 +9,14 @@ import { useSpots } from '@/hooks/useSpots';
 import useSpotDetails from '@/hooks/useSpotDetails';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { Tag } from '@/types/spot';
-// import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 import { CreationDrawer } from '@/components/creationDrawer';
 import { BottomMenu } from '@/components/bottomMenu';
 import { ProfilePage } from '@/components/profile';
 import { useSession } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
-import { Camera } from 'lucide-react';
+import { Camera, Funnel } from 'lucide-react';
+import { LocationSearchInput } from '@/components/LocationSearchInput';
+import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
 
 export default function MapPage() {
   // Auth hooks - TOUJOURS EN PREMIER
@@ -41,10 +42,15 @@ export default function MapPage() {
   const [newSpotLocation, setNewSpotLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
+
   // Data hooks
-  const { spots, filteredSpots, setFilteredSpots, refetchSpots } = useSpots(mapBounds);
+  const { spots, filteredSpots, setFilteredSpots, refetchSpots } = useSpots({ mapBounds, selectedCategory, selectedTags });
+
+
+
   const { selectedLocation } = useSpotDetails(selectedLocId);
   const isMobile = useIsMobile()
+
 
   // Vérifier la session avant de charger la map
   useEffect(() => {
@@ -98,8 +104,6 @@ export default function MapPage() {
   };
 
 
-
-
   const handleCancelCreation = () => {
     setIsCreationMode(false);
     setNewSpotLocation(null);
@@ -109,17 +113,30 @@ export default function MapPage() {
     setShowCreateForm(true);
   };
 
+  const handleLocationSearch = (longitude: number, latitude: number) => {
+    // Update map bounds to center on searched location
+    const offset = 0.20; // Adjust zoom level by changing offset
+    setMapBounds({
+      north: latitude + offset,
+      south: latitude - offset,
+      east: longitude + offset,
+      west: longitude - offset
+    });
+  };
+
+
   return (<>
-
-
     {!isMobile &&
       <div className="bg-white h-screen text-white">
+        {/* Desktop Search Bar */}
+        <div className="absolute z-20 top-4 left-1/2 transform -translate-x-1/2 w-96">
+        </div>
+
         < div className="absolute z-10 flex h-screen gap-4 text-white bg-white" >
           <div className="flex flex-col max-w-100">
             <div className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400 ${showFilter ? 'max-h-100 p-5' : 'overflow-hidden max-h-0 p-0'
               }`}>
 
-              {/* <Filter spots={spots} setFilteredSpots={setFilteredSpots} /> */}
 
               <span>Spots({filteredSpots.length})</span>
             </div>
@@ -170,28 +187,44 @@ export default function MapPage() {
 
 
 
-    {isMobile && <div className='h-dvh  w-dvw  overflow-hidden inset-0'>
-      {/* Creation Mode Controls */}
-      {isCreationMode && <>
-        < div className="absolute z-20 top-4 right-4 flex gap-2">
-          <button
-            onClick={handleCancelCreation}
-            className='bg-red-400 text-white px-4 py-2 rounded shadow-lg hover:bg-red-600 transition'>
-            Cancel
-          </button>
-          <button
-            onClick={handleConfirmLocation}
-            className='bg-emerald-600 text-white px-4 py-2 rounded shadow-lg hover:bg-emerald-700 transition'>
-            Confirm
-          </button>
-        </div>
-      </>
-      }
+    {isMobile && <>
 
-      {/* <div className=" absolute z-20 top-2 left-2  flex items-center   "> */}
-      {/* <Funnel className="p-2  rounded m-2 bg-white" size={45} color='black' fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel> */}
+      <div className="absolute z-10 top-3 w-full px-3 gap-1 flex items-center">
 
-      {/* <div className="flex gap-2 h-10  ">
+        <LocationSearchInput onLocationSelect={handleLocationSearch} />
+        <Funnel className="p-2 rounded-lg  bg-white text-neutral-800" size={40} strokeWidth={2} fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel>
+      </div>
+      <div className="absolute z-10 top-14 w-full px-3 gap-1 flex items-center" >    <ul className='flex gap-1' >
+        {selectedCategory.length > 0 && selectedCategory.map(cat => { return <div className='text-white p-1 flex items-center text-sm gap-2 px-2 rounded-full' style={{ backgroundColor: getCategoryColor(cat) }} key={cat}>{getCategoryIcon(cat)}{cat}</div> })}
+      </ul></div>
+
+      <div className='h-dvh  w-dvw   inset-0'>
+        {/* Mobile Search Bar */}
+
+        {/* Creation Mode Controls */}
+        {isCreationMode && <>
+          < div className="absolute z-20 top-4 right-4 flex gap-2">
+            <button
+              onClick={handleCancelCreation}
+              className='bg-red-400 text-white px-4 py-2 rounded shadow-lg hover:bg-red-600 transition'>
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirmLocation}
+              className='bg-emerald-600 text-white px-4 py-2 rounded shadow-lg hover:bg-emerald-700 transition'>
+              Confirm
+            </button>
+          </div>
+        </>
+        }
+
+
+
+
+        {/* <div className=" absolute z-20 top-2 left-2  flex items-center   "> */}
+
+
+        {/* <div className="flex gap-2 h-10  ">
           {selectedCategory.map(cat => (
             <div
               key={cat}
@@ -205,62 +238,63 @@ export default function MapPage() {
             </div>
           ))}
         </div> */}
-      {/* </div> */}
+        {/* </div> */}
 
 
-      {showFilter && <Filter spots={spots} setFilteredSpots={setFilteredSpots} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} selectedTags={selectedTags} setSelectedTags={setSelectedTags} setShowFilter={setShowFilter}></Filter>}
+        {showFilter && <Filter spots={spots} setFilteredSpots={setFilteredSpots} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} selectedTags={selectedTags} setSelectedTags={setSelectedTags} setShowFilter={setShowFilter}></Filter>}
 
 
 
-      <div className=" absolute   w-screen bottom-0">
-        {!isCreationMode && <div className='flex flex-col'>
-          {tab === 'discover' ? <MainDrawer
+        <div className=" absolute   w-screen bottom-0">
+          {!isCreationMode && <div className='flex flex-col'>
+            {tab === 'discover' ? <MainDrawer
+              filteredSpots={filteredSpots}
+              selectedLocId={selectedLocId}
+              handleSpotSelect={handleSpotSelect}
+              handleCloseSelection={handleCloseSelection}
+              selectedCategory={selectedCategory}
+              selectedTags={selectedTags}
+            // setShowFilter={setShowFilter}
+            /> : <ProfilePage />}
+            <BottomMenu
+              handleStartCreation={handleStartCreation}
+              setTab={setTab}
+              tab={tab}
+            ></BottomMenu>
+          </div>
+          }
+
+          {showCreateForm && isCreationMode &&
+            <CreationDrawer
+              location={newSpotLocation}
+              closeDrawer={handleCancelCreation}
+              onSpotCreated={refetchSpots}
+            />
+          }
+
+        </div>
+
+        <div className={`fixed inset-0   rounded overflow-hidden ${tab === 'profile' ? 'hidden' : 'block'}`}>
+          <Map
+            spots={spots}
             filteredSpots={filteredSpots}
             selectedLocId={selectedLocId}
-            handleSpotSelect={handleSpotSelect}
-            handleCloseSelection={handleCloseSelection}
-            selectedCategory={selectedCategory}
-            selectedTags={selectedTags}
-            setShowFilter={setShowFilter}
-          /> : <ProfilePage />}
-          <BottomMenu
-            handleStartCreation={handleStartCreation}
-            setTab={setTab}
-            tab={tab}
-          ></BottomMenu>
-        </div>
-        }
-
-        {showCreateForm && isCreationMode &&
-          <CreationDrawer
-            location={newSpotLocation}
-            closeDrawer={handleCancelCreation}
-            onSpotCreated={refetchSpots}
+            onSpotSelect={handleSpotSelect}
+            mapBounds={mapBounds}
+            setMapBounds={setMapBounds}
+            isCreationMode={isCreationMode}
+            newSpotLocation={newSpotLocation}
+            setNewSpotLocation={setNewSpotLocation}
           />
-        }
-
-      </div>
-
-      <div className={`fixed inset-0   rounded overflow-hidden ${tab === 'profile' ? 'hidden' : 'block'}`}>
-        <Map
-          spots={spots}
-          filteredSpots={filteredSpots}
-          selectedLocId={selectedLocId}
-          onSpotSelect={handleSpotSelect}
-          mapBounds={mapBounds}
-          setMapBounds={setMapBounds}
-          isCreationMode={isCreationMode}
-          newSpotLocation={newSpotLocation}
-          setNewSpotLocation={setNewSpotLocation}
-        />
-      </div>
+        </div>
 
 
 
 
-    </div >
-
+      </div >
+    </>
     }
+
   </>
   )
 }

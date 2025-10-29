@@ -70,6 +70,9 @@ export function CreationDrawer({ location, closeDrawer, onSpotCreated }: Creatio
         <Drawer.Content
           className="z-100 fixed flex flex-col bg-white text-gray-900 rounded-t-2xl bottom-0 left-0 right-0 h-[85vh] mx-[-1px] outline-none"
         >
+          <Drawer.Description className="sr-only">
+            Create a new spot by providing details, photos, and location information
+          </Drawer.Description>
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <Drawer.Title className="text-xl font-bold text-gray-900">

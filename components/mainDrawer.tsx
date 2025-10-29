@@ -16,10 +16,10 @@ interface MainDrawerProps {
   handleCloseSelection: () => void;
   selectedCategory: string[],
   selectedTags: Tag[],
-  setShowFilter: (version: boolean) => void
+  // setShowFilter: (version: boolean) => void
 }
 
-export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedCategory, selectedTags, setShowFilter }: MainDrawerProps) {
+export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedCategory, selectedTags }: MainDrawerProps) {
   const { selectedLocation } = useSpotDetails(selectedLocId);
 
   const { snap, setSnap, nestedOpen, handleNestedChange, currentSnapPoints, snapPoints } = useDrawerState(selectedLocId);
@@ -35,21 +35,24 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
     >
       <Drawer.Portal>
         <Drawer.Content
-          className={`${nestedOpen ? 'h-0' : 'h-full'} z-10 fixed flex flex-col bg-white rounded-t-4xl bottom-20 left-0 right-0 max-h-[95%] mx-[-1px] outline-none focus:outline-none`}
+          className={`${nestedOpen ? 'h-0' : 'h-full'} z-10 fixed flex flex-col bg-white rounded-t-4xl bottom-18 left-0 right-0 max-h-[95%] mx-[-1px] outline-none focus:outline-none`}
         >
+          <Drawer.Description className="sr-only">
+            Browse and explore available spots with filtering options
+          </Drawer.Description>
           <DrawerHeader
             title="Explore Spots"
             spotCount={filteredSpots.length}
             selectedCategory={selectedCategory}
             selectedTags={selectedTags}
-            setShowFilter={setShowFilter}
+          // setShowFilter={setShowFilter}
           />
 
           {/* Peek view - empty for now */}
-          {snap === snapPoints[0] && (
+          {/* {snap === snapPoints[0] && (
             <div className="px-4">
             </div>
-          )}
+          )} */}
 
           {/* Medium view - photo grid */}
           {snap === snapPoints[1] && (

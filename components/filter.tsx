@@ -80,7 +80,7 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
 
 
 
-      <div className="fixed inset-0 bg-black/20 z-300 flex items-start justify-center pt-2">
+      <div className="fixed inset-0 bg-black/20  backdrop-blur z-300 flex items-start justify-center pt-2">
 
         <div className="bg-white rounded-2xl shadow-2xl w-[95vw] max-w-md max-h-[80vh] overflow-hidden">
           {/* Header */}
@@ -210,6 +210,9 @@ export default function Filter({ spots, setFilteredSpots, selectedCategory, setS
                 </div>
 
               </div>}
+              <div className="w-full flex mt-5 justify-center">
+                <button onClick={() => { setShowFilter(false) }} className="bg-emerald-500 text-white px-5 py-2 rounded-lg">Apply</button>
+              </div>
             </div>
           </div>
         </div>

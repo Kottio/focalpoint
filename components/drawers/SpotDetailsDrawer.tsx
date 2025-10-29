@@ -56,6 +56,9 @@ export function SpotDetailsDrawer({
 
 
         >
+          <Drawer.Description className="sr-only">
+            View detailed information about the selected spot
+          </Drawer.Description>
           {/* Drag handle */}
           {/* <div className='absolute h-10 w-screen z-50'> */}
           <div aria-hidden className=" z-50 left-50 mx-auto mt-3 w-12 h-1 flex-shrink-0 rounded-full bg-gray-300 mb-1" />

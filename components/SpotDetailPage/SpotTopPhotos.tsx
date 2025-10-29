@@ -77,14 +77,12 @@ export function SpotTopPhoto({ FullPhoto, setFullScreen, setSelectedPhoto }: Spo
             {/* Photo Info at Bottom */}
 
             <div className="absolute bottom-0 left-0 right-0 p-3 flex items-center justify-between">
-              <div className={`flex items-center gap-2 text-white ${index === 0 ? 'bg-gradient-to-r from-amber-500/90 to-yellow-500/90 px-3 py-1.5 rounded backdrop-blur-sm' : ''}`}>
+              <div className={`flex items-center gap-2 text-white `}>
                 <User size={16} className={index === 0 ? 'text-yellow-100' : ''} />
                 <span className={`text-sm font-medium ${index === 0 ? 'font-bold' : ''}`}>
                   {photo.user.username || "Anonymous"}
                 </span>
-                {index === 0 && (
-                  <Trophy size={14} className="text-yellow-100" />
-                )}
+
               </div>
 
 

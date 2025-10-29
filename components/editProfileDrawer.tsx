@@ -46,6 +46,9 @@ export function EditProfileDrawer({
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
         <Drawer.Content className="bg-white flex flex-col rounded-t-2xl h-[85vh] fixed bottom-0 left-0 right-0 z-50 outline-none">
+          <Drawer.Description className="sr-only">
+            Edit your profile information including username and bio
+          </Drawer.Description>
           {/* Header */}
           <Drawer.Title></Drawer.Title>
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
