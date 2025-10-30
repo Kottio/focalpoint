@@ -131,8 +131,9 @@ model Photo {
 
   title       String?
   description String?
-  isPrimary   Boolean @default(false) @map("is_primary")
-  likes       Int     @default(0)
+  isPrimary   Boolean  @default(false) @map("is_primary")
+  likes       Int      @default(0)
+  userIdLiked String[] @default([])
 
   // Urls
   originalUrl  String

@@ -27,18 +27,17 @@ export default function MapPage() {
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [isSelected, setIsSelected] = useState(false);
   const [showFilter, setShowFilter] = useState<boolean>(false);
-
   const [mapBounds, setMapBounds] = useState({
     north: 48.9,
     south: 48.8,
     east: 2.4,
     west: 2.1
   });
-
   const [tab, setTab] = useState<'discover' | 'profile'>('discover')
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
   const [isCreationMode, setIsCreationMode] = useState<boolean>(false);
+  const [isResearchMode, setIsResearchMode] = useState<boolean>(false)
   const [newSpotLocation, setNewSpotLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
@@ -189,10 +188,29 @@ export default function MapPage() {
 
     {isMobile && <>
 
-      <div className="absolute z-10 top-3 w-full px-3 gap-1 flex items-center">
+      <div className="absolute z-10 top-3 w-full px-3 gap-2 flex items-center">
+        {!isResearchMode ? (
+          <>
+            <button
+              className='flex-1 bg-white shadow-md rounded-lg px-4 py-2.5 flex items-center gap-2 text-gray-600 hover:shadow-lg transition-shadow'
+              onClick={() => { setIsResearchMode(true) }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span className="text-sm font-medium">Rechercher un lieu...</span>
+            </button>
 
-        <LocationSearchInput onLocationSelect={handleLocationSearch} />
-        <Funnel className="p-2 rounded-lg  bg-white text-neutral-800" size={40} strokeWidth={2} fill='white' onClick={() => { setShowFilter(!showFilter) }}></Funnel>
+            <button
+              className="p-2.5 rounded-lg shadow-md bg-white text-neutral-800 hover:shadow-lg transition-shadow"
+              onClick={() => { setShowFilter(!showFilter) }}
+            >
+              <Funnel size={24} strokeWidth={2} />
+            </button>
+          </>
+        ) : (
+          <LocationSearchInput onLocationSelect={handleLocationSearch} setIsResearchMode={setIsResearchMode} />
+        )}
       </div>
       <div className="absolute z-10 top-14 w-full px-3 gap-1 flex items-center" >    <ul className='flex gap-1' >
         {selectedCategory.length > 0 && selectedCategory.map(cat => { return <div className='text-white p-1 flex items-center text-sm gap-2 px-2 rounded-full' style={{ backgroundColor: getCategoryColor(cat) }} key={cat}>{getCategoryIcon(cat)}{cat}</div> })}
@@ -246,7 +264,7 @@ export default function MapPage() {
 
 
         <div className=" absolute   w-screen bottom-0">
-          {!isCreationMode && <div className='flex flex-col'>
+          {!isCreationMode && !isResearchMode && <div className='flex flex-col'>
             {tab === 'discover' ? <MainDrawer
               filteredSpots={filteredSpots}
               selectedLocId={selectedLocId}

@@ -9,7 +9,7 @@ interface BottomMenuProps {
 export function BottomMenu({ handleStartCreation, setTab, tab }: BottomMenuProps) {
 
   return (
-    <div className="fixed z-300 bottom-0 left-0 right-0 h-20 bg-white border-t border-gray-200 w-full text-gray-700">
+    <div className="fixed z-300 bottom-0 left-0 right-0 h-20 bg-neutral-200 border-t border-gray-200 w-full text-gray-700">
 
       <div className="w-full h-full flex justify-around px-3 ">
         <div className="flex flex-col justify-center w-15 items-center gap-1 cursor-pointer" onClick={() => setTab('discover')}>

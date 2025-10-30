@@ -1,13 +1,14 @@
 'use client'
 import { useState, useEffect, useRef } from 'react';
 import { useGeocoding, GeocodingResult } from '@/hooks/useGeocoding';
-import { Search, X, MapPin } from 'lucide-react';
+import { Search, MapPin } from 'lucide-react';
 
 interface LocationSearchInputProps {
   onLocationSelect: (longitude: number, latitude: number) => void;
+  setIsResearchMode: (mode: boolean) => void
 }
 
-export function LocationSearchInput({ onLocationSelect }: LocationSearchInputProps) {
+export function LocationSearchInput({ onLocationSelect, setIsResearchMode }: LocationSearchInputProps) {
   const [query, setQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
   const { results, isLoading, searchLocation, clearResults } = useGeocoding();
@@ -35,7 +36,7 @@ export function LocationSearchInput({ onLocationSelect }: LocationSearchInputPro
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [query, clearResults, searchLocation]);
+  }, [query, searchLocation, clearResults]);
 
   // No global event listeners - using backdrop instead
 
@@ -72,11 +73,11 @@ export function LocationSearchInput({ onLocationSelect }: LocationSearchInputPro
   };
 
   return (
-    <div ref={searchRef} className="relative w-full ">
+    <div ref={searchRef} className="relative w-full">
       {/* Search Input */}
-      <div className="relative flex items-center ">
+      <div className="relative flex items-center shadow-md">
         <Search
-          size={18}
+          size={20}
           className="absolute left-3 text-gray-400 pointer-events-none"
         />
         <input
@@ -84,53 +85,57 @@ export function LocationSearchInput({ onLocationSelect }: LocationSearchInputPro
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher une ville, rue, région..."
-          className="w-full pl-10 pr-10 py-2 text-sm border bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full pl-10 pr-20 py-2.5 text-md border-none bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
           aria-hidden="false"
+          autoFocus
         />
-        {query && (
-          <button
-            onClick={handleClear}
-            className="absolute right-3 text-gray-400 hover:text-gray-600"
-          >
-            <X size={18} />
-          </button>
-        )}
+        <button
+          onClick={() => {
+            handleClear();
+            setIsResearchMode(false);
+          }}
+          className="absolute right-3 text-gray-500 hover:text-gray-700 px-2 py-1 text-sm font-medium"
+        >
+          Annuler
+        </button>
       </div>
 
       {/* Loading indicator */}
       {isLoading && (
-        <div className="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50">
-          <p className="text-sm text-gray-500">Recherche en cours...</p>
+        <div className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-xl p-4 z-50 border border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+            <p className="text-sm text-gray-600">Recherche en cours...</p>
+          </div>
         </div>
       )}
 
       {/* Search Results */}
       {showResults && !isLoading && results.length > 0 && (
-        <div className="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto z-50">
-          {/* Close button */}
-          <button
-            onClick={() => setShowResults(false)}
-            className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 bg-white rounded-full p-1"
-          >
-            <X size={20} />
-          </button>
-          <ul className="py-1">
+        <div className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-xl max-h-96 overflow-y-auto z-50 border border-gray-100">
+          <ul className="py-2">
             {results.map((result) => (
               <li
                 key={result.id}
-                onClick={() => handleSelectLocation(result)}
-                className="px-4 py-3 hover:bg-gray-100 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
+                onClick={() => {
+                  handleSelectLocation(result)
+                  setIsResearchMode(false)
+                }
+                }
+                className="px-4 py-3 hover:bg-blue-50 cursor-pointer transition-all duration-150 border-b border-gray-50 last:border-b-0 active:bg-blue-100"
               >
                 <div className="flex items-start gap-3">
-                  <MapPin size={16} className="text-blue-500 mt-1 flex-shrink-0" />
+                  <div className="p-1.5 bg-blue-50 rounded-full mt-0.5">
+                    <MapPin size={16} className="text-blue-600 flex-shrink-0" />
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-semibold text-gray-900 truncate mb-0.5">
                       {result.text}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">
+                    <p className="text-xs text-gray-500 truncate mb-1.5">
                       {result.place_name}
                     </p>
-                    <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded">
+                    <span className="inline-block px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full font-medium">
                       {getPlaceTypeLabel(result.place_type)}
                     </span>
                   </div>
@@ -139,14 +144,20 @@ export function LocationSearchInput({ onLocationSelect }: LocationSearchInputPro
             ))}
           </ul>
         </div>
-      )}
+      )
+      }
 
       {/* No results */}
-      {showResults && !isLoading && results.length === 0 && query.trim().length > 2 && (
-        <div className="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50">
-          <p className="text-sm text-gray-500">Aucun résultat trouvé</p>
-        </div>
-      )}
-    </div>
+      {
+        showResults && !isLoading && results.length === 0 && query.trim().length > 2 && (
+          <div className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-xl p-4 z-50 border border-gray-100">
+            <div className="flex items-center gap-3 text-gray-500">
+              <MapPin size={20} className="text-gray-400" />
+              <p className="text-sm">Aucun résultat trouvé pour {query}</p>
+            </div>
+          </div>
+        )
+      }
+    </div >
   );
 }

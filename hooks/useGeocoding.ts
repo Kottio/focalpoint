@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export interface GeocodingResult {
   id: string;
@@ -22,7 +22,7 @@ export const useGeocoding = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const searchLocation = async (query: string) => {
+  const searchLocation = useCallback(async (query: string) => {
     if (!query.trim()) {
       setResults([]);
       return;
@@ -62,12 +62,12 @@ export const useGeocoding = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const clearResults = () => {
+  const clearResults = useCallback(() => {
     setResults([]);
     setError(null);
-  };
+  }, []);
 
   return {
     results,

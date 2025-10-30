@@ -4,6 +4,8 @@ import { FullPhoto } from "@/types/spot-details";
 import { Heart, User, Trophy } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { useSession } from "@/lib/auth-client";
+import { LikePhoto } from "@/hooks/photoLike";
 
 interface SpotTopPhotoProps {
   FullPhoto: FullPhoto[]
@@ -12,6 +14,7 @@ interface SpotTopPhotoProps {
 }
 
 export function SpotTopPhoto({ FullPhoto, setFullScreen, setSelectedPhoto }: SpotTopPhotoProps) {
+  const { data: session } = useSession()
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -87,7 +90,12 @@ export function SpotTopPhoto({ FullPhoto, setFullScreen, setSelectedPhoto }: Spo
 
 
 
-              <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+              <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full"
+                onClick={() => {
+                  if (session) {
+                    LikePhoto({ photoId: photo.id, userIdLiked: session.user.id })
+                  }
+                }}>
                 <Heart size={16} className="text-red-400" fill="currentColor" />
                 <span className="text-white text-sm font-medium">{photo.likes}</span>
               </div>

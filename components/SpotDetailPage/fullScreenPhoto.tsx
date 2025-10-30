@@ -3,7 +3,9 @@
 import { FullPhoto } from "@/types/spot-details"
 import Image from "next/image"
 import { X, Heart, User, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
+import { LikePhoto } from "@/hooks/photoLike"
+import { useSession } from '@/lib/auth-client';
 
 interface FullScreenPhotoProps {
   FullPhoto: FullPhoto[]
@@ -11,7 +13,10 @@ interface FullScreenPhotoProps {
   setFullScreen: (status: boolean) => void
 }
 
+
 export function FullScreenPhoto({ FullPhoto, selectedPhoto, setFullScreen }: FullScreenPhotoProps) {
+  const { data: session } = useSession();
+
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // Find the index of the selected photo
@@ -24,17 +29,17 @@ export function FullScreenPhoto({ FullPhoto, selectedPhoto, setFullScreen }: Ful
 
   const currentPhoto = FullPhoto[currentIndex]
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     if (currentIndex < FullPhoto.length - 1) {
       setCurrentIndex(currentIndex + 1)
     }
-  }
+  }, [currentIndex, FullPhoto.length])
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1)
     }
-  }
+  }, [currentIndex])
 
   // Keyboard navigation
   useEffect(() => {
@@ -111,7 +116,11 @@ export function FullScreenPhoto({ FullPhoto, selectedPhoto, setFullScreen }: Ful
               <span className="font-medium">{currentPhoto.user.username || 'Anonymous'}</span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-white/80 text-sm">
+            <div className="flex items-center gap-1.5 text-white/80 text-sm" onClick={() => {
+              if (session) {
+                LikePhoto({ photoId: currentPhoto.id, userIdLiked: session.user.id })
+              }
+            }}>
               <Heart size={16} className="text-red-400" fill="currentColor" />
               <span>{currentPhoto.likes} likes</span>
             </div>
