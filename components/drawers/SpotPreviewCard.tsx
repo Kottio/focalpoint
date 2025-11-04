@@ -28,7 +28,7 @@ export function SpotPreviewCard({ spot, onSelect }: SpotPreviewCardProps) {
         </div>
 
         <Image
-          src={spot.mediumPhotos?.sort((a, b) => b.likes - a.likes)[0]?.url || '/placeholder.jpg'}
+          src={spot.photos?.sort((a, b) => b.likes - a.likes)[0]?.originalUrl || '/placeholder.jpg'}
           alt={spot.title}
           fill
           sizes='200px'
@@ -40,11 +40,11 @@ export function SpotPreviewCard({ spot, onSelect }: SpotPreviewCardProps) {
 
         <div className="absolute bottom-1 left-2 right-2 flex  items-end justify-between">
 
-          <p className=" text-white text-xs font-medium truncate" >{spot.title}</p>
+          {/* <p className=" text-white text-xs font-medium truncate" >{spot.title}</p> */}
 
           <div className='flex-col'>
             <div className='text-white flex gap-1 items-center'>
-              {spot.mediumPhotos.length}
+              {spot.photos.length}
               <Camera strokeWidth={1} size={20}></Camera> </div>
             <div className='text-white flex gap-1'>
               {spot.upvotes}

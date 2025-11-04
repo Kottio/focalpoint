@@ -17,7 +17,6 @@ import { useRouter } from 'next/navigation';
 import { Camera, Funnel } from 'lucide-react';
 import { LocationSearchInput } from '@/components/LocationSearchInput';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
-import { mapBounds } from '@/components/map';
 
 export default function MapPage() {
   // Auth hooks - TOUJOURS EN PREMIER
@@ -57,31 +56,31 @@ export default function MapPage() {
 
 
   // Vérifier la session avant de charger la map
-  useEffect(() => {
-    if (!isPending && !session) {
-      router.push('/auth/signin');
-    }
-  }, [session, isPending, router]);
+  // useEffect(() => {
+  //   if (!isPending && !session) {
+  //     router.push('/auth/signin');
+  //   }
+  // }, [session, isPending, router]);
 
-  if (isPending) {
-    return (
-      <div className="h-dvh flex flex-col items-center justify-center bg-gray-950 gap-4">
-        <Camera
+  // if (isPending) {
+  //   return (
+  //     <div className="h-dvh flex flex-col items-center justify-center bg-gray-950 gap-4">
+  //       <Camera
 
 
-          size={100}
-          className="animate-pulse   text-white"
+  //         size={100}
+  //         className="animate-pulse   text-white"
 
-        ></Camera>
-        <div className="text-white text-lg">Loading...</div>
-      </div>
-    );
-  }
+  //       ></Camera>
+  //       <div className="text-white text-lg">Loading...</div>
+  //     </div>
+  //   );
+  // }
 
   // Ne rien afficher si pas de session(va rediriger)
-  if (!session) {
-    return null;
-  }
+  // if (!session) {
+  //   return null;
+  // }
 
 
   // Event Selection
@@ -225,6 +224,7 @@ export default function MapPage() {
           <LocationSearchInput onLocationSelect={handleLocationSearch} setIsResearchMode={setIsResearchMode} />
         )}
       </div>
+
       <div className="absolute z-10 top-14 w-full px-3 gap-1 flex items-center" >    <ul className='flex gap-1' >
         {selectedCategory.length > 0 && selectedCategory.map(cat => { return <div className='text-white p-1 flex items-center text-sm gap-2 px-2 rounded-full' style={{ backgroundColor: getCategoryColor(cat) }} key={cat}>{getCategoryIcon(cat)}{cat}</div> })}
       </ul></div>

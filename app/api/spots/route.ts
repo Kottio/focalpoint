@@ -81,7 +81,9 @@ export async function GET(request: NextRequest) {
             tag: true,
           },
         },
-        photos: {},
+        photos: {
+          include: { user: true },
+        },
         SpotDetails: true,
         user: {
           select: {
@@ -129,9 +131,9 @@ export async function GET(request: NextRequest) {
       upvotes: spot.votes.length,
       createdAt: spot.createdAt,
       SpotDetails: spot.SpotDetails,
+      photos: spot.photos,
     }));
 
-    console.log(transformedSpots);
     return NextResponse.json(transformedSpots);
   } catch (error) {
     console.error("Error fetching spots:", error);

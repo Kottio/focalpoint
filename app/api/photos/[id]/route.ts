@@ -9,7 +9,6 @@ export async function PUT(
 ) {
   const para = await params;
   const photoId = parseInt(para.id);
-  console.log("This is the photoID from sever", photoId);
 
   const body = await request.json();
   const { userIdLiked } = body;

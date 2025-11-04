@@ -1,3 +1,4 @@
+import { FullPhoto } from "./spot-details";
 export interface Tag {
   id: number;
   name: string;
@@ -30,4 +31,5 @@ export interface Spot {
   user: User;
   upvotes: number;
   createdAt: string;
+  photos: FullPhoto[];
 }

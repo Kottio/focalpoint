@@ -16,9 +16,7 @@ export default function TestPage() {
   const [activeTab, setActiveTab] = useState<'photos' | 'comments' | 'details'>('details')
 
   const { selectedLocation } = useSpotDetails(9)
-  if (selectedLocation) {
-    console.log(selectedLocation)
-  }
+
 
   if (selectedLocation) {
     return <>

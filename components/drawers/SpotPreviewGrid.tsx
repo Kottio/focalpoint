@@ -8,9 +8,9 @@ interface SpotPreviewGridProps {
   maxItems?: number;
 }
 
-export function SpotPreviewGrid({ spots, onSpotSelect, maxItems = 15 }: SpotPreviewGridProps) {
+export function SpotPreviewGrid({ spots, onSpotSelect, maxItems = 5 }: SpotPreviewGridProps) {
   // TODO: Rank by max photo like or Saved spots
-  const displaySpots = spots.slice(0, maxItems);
+  const displaySpots = spots.sort((a, b) => b.photos?.length - a.photos?.length).filter(spot => spot.photos?.length >= 1).slice(0, maxItems);
   const remainingCount = spots.length - maxItems;
 
   return (
