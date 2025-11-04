@@ -7,9 +7,11 @@ import { RefObject } from "react";
 interface mapBoxProp {
   mapContainer: RefObject<HTMLDivElement | null>
   mapBounds: mapBounds
+  setMovedMapBounds: (mapBounds: mapBounds) => (void)
+
 }
 
-export function useMapBox({ mapContainer, mapBounds }: mapBoxProp) {
+export function useMapBox({ mapContainer, mapBounds, setMovedMapBounds }: mapBoxProp) {
   const map = useRef<mapboxgl.Map | null>(null);
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -22,6 +24,22 @@ export function useMapBox({ mapContainer, mapBounds }: mapBoxProp) {
       zoom: 10,
     });
 
+
+    map.current.on('moveend', () => {
+      if (!map.current) return;
+      const bounds = map.current.getBounds();
+      if (bounds) {
+        const newBounds = {
+          north: bounds.getNorth(),
+          south: bounds.getSouth(),
+          east: bounds.getEast(),
+          west: bounds.getWest()
+        };
+        console.log('Map moved!', newBounds);
+        setMovedMapBounds(newBounds)
+      }
+    });
+
     // map.current.addControl(
     //   new mapboxgl.GeolocateControl({
     //     positionOptions: {
@@ -32,6 +50,8 @@ export function useMapBox({ mapContainer, mapBounds }: mapBoxProp) {
     //   }),
     //   'top-right'
     // );
+
+
 
     return () => {
       if (map.current) {

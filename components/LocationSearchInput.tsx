@@ -85,7 +85,7 @@ export function LocationSearchInput({ onLocationSelect, setIsResearchMode }: Loc
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher une ville, rue, région..."
-          className="w-full pl-10 pr-20 py-2.5 text-lg border-none bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+          className="w-full pl-10 pr-20 py-2.5 text-md border-none bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
           aria-hidden="false"
           autoFocus
         />

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Tag } from "@/types/spot";
 import { Spot } from "@/types/spot";
+import { mapBounds } from "@/components/map";
 
 interface MapBounds {
-  mapBounds: { north: number; south: number; east: number; west: number };
+  mapBounds: mapBounds;
   selectedTags: Tag[];
   selectedCategory: string[];
 }
@@ -16,6 +17,7 @@ export function useSpots({
   const [spots, setSpots] = useState<Spot[]>([]);
   const [filteredSpots, setFilteredSpots] = useState<Spot[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
   async function fetchSpots() {
     setIsLoading(true);
     try {
@@ -60,6 +62,7 @@ export function useSpots({
 
   useEffect(() => {
     fetchSpots();
+    console.log("Spot Fetched");
   }, [mapBounds]);
 
   return {

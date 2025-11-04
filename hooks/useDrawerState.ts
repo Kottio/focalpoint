@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const SNAP_POINTS = ["110px", "320px", 0.9];
+const SNAP_POINTS = ["90px", "320px", 0.95];
 
 export function useDrawerState(selectedLocId: number | null) {
   const [snap, setSnap] = useState<number | string | null>(SNAP_POINTS[0]);

@@ -17,10 +17,10 @@ export function DrawerHeader({ title, spotCount, selectedTags }: DrawerHeaderPro
       <div className="flex flex-col w-full px-7 gap-1   ">
         <Drawer.Title className="text-gray-900  flex  mb-2 items-center justify-between">
           <div className='flex items-center  gap-2'>
-            <div className='hidden'>{title}</div>
-            {spotCount !== undefined && (
+            {/* <div className='hidden'>{title}</div> */}
+            {/* {spotCount !== undefined && (
               <p className="text-sm text-gray-500 ">({spotCount}) Spots </p>
-            )}
+            )} */}
 
             <div className='flex items-center gap-2  overflow-x-auto'>
               {/* <ul className='flex gap-1' >

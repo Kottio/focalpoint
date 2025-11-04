@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { Camera, Funnel } from 'lucide-react';
 import { LocationSearchInput } from '@/components/LocationSearchInput';
 import { getCategoryColor, getCategoryIcon } from '@/utils/map-constants';
+import { mapBounds } from '@/components/map';
 
 export default function MapPage() {
   // Auth hooks - TOUJOURS EN PREMIER
@@ -33,6 +34,8 @@ export default function MapPage() {
     east: 2.4,
     west: 2.1
   });
+
+
   const [tab, setTab] = useState<'discover' | 'profile'>('discover')
   const [selectedCategory, setSelectedCategory] = useState<string[]>([])
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
@@ -41,8 +44,10 @@ export default function MapPage() {
   const [newSpotLocation, setNewSpotLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
+  const [shouldAnimate, setShouldAnimate] = useState(false);
 
   // Data hooks
+  //Get the spot when map bound is updated, mapbouds get upddated when Search location or map. move end.
   const { spots, filteredSpots, setFilteredSpots, refetchSpots } = useSpots({ mapBounds, selectedCategory, selectedTags });
 
 
@@ -112,6 +117,8 @@ export default function MapPage() {
     setShowCreateForm(true);
   };
 
+
+
   const handleLocationSearch = (longitude: number, latitude: number) => {
     // Update map bounds to center on searched location
     const offset = 0.20; // Adjust zoom level by changing offset
@@ -121,7 +128,11 @@ export default function MapPage() {
       east: longitude + offset,
       west: longitude - offset
     });
+    setShouldAnimate(true)
   };
+
+
+
 
 
   return (<>
@@ -178,16 +189,17 @@ export default function MapPage() {
           isCreationMode={isCreationMode}
           newSpotLocation={newSpotLocation}
           setNewSpotLocation={setNewSpotLocation}
+          shouldAnimate={shouldAnimate}
+          setShouldAnimate={setShouldAnimate}
+
+
         />
 
 
       </div >
     }
 
-
-
     {isMobile && <>
-
       <div className="absolute z-10 top-3 w-full px-3 gap-2 flex items-center">
         {!isResearchMode ? (
           <>
@@ -303,6 +315,9 @@ export default function MapPage() {
             isCreationMode={isCreationMode}
             newSpotLocation={newSpotLocation}
             setNewSpotLocation={setNewSpotLocation}
+            shouldAnimate={shouldAnimate}
+            setShouldAnimate={setShouldAnimate}
+
           />
         </div>
 
