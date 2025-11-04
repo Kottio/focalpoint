@@ -163,6 +163,7 @@ export default function MapPage() {
                 filteredSpots={filteredSpots}
                 selectedLocId={selectedLocId}
                 handleSpotSelect={handleSpotSelect}
+                setShowFilter={setShowFilter}
               />
 
             </div>
@@ -284,7 +285,7 @@ export default function MapPage() {
               handleCloseSelection={handleCloseSelection}
               selectedCategory={selectedCategory}
               selectedTags={selectedTags}
-            // setShowFilter={setShowFilter}
+              setShowFilter={setShowFilter}
             /> : <ProfilePage />}
             <BottomMenu
               handleStartCreation={handleStartCreation}

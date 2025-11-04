@@ -2,14 +2,18 @@ import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants"
 import { Spot } from "@/types/spot"
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Image from "next/image";
+import { Funnel } from "lucide-react";
+
 
 interface SpotsListProps {
   filteredSpots: Spot[];
   selectedLocId: number | null;
   handleSpotSelect: (spotId: number) => void
+  setShowFilter: (status: boolean) => void
+
 }
 
-export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelect }: SpotsListProps) {
+export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelect, setShowFilter }: SpotsListProps) {
   const isMobile = useIsMobile()
 
   if (!isMobile) {
@@ -73,19 +77,27 @@ export default function SpotList({ filteredSpots, selectedLocId, handleSpotSelec
     )))
   } else {
     return (
-      // { selectedLocId === spot.id
-      //   ? 'border-blue-500 bg-blue-50'
-      //   : 'border-gray-200 hover:border-gray-300'
-      // }
 
 
       <div
-        className="h-dvh overflow-y-auto pb-50 bg-gray-50 px-3 py-3"
+        className="h-dvh overflow-y-auto pb-50 bg-gray-50 px-3 py-2"
         style={{
           overscrollBehavior: 'contain',
           WebkitOverflowScrolling: 'touch'
         }}
       >
+        <div className="w-full flex justify-end mb-2">
+          <button
+            className="p-2.5 rounded-lg shadow-md bg-white text-neutral-800 hover:shadow-lg transition-shadow"
+            onClick={() => { setShowFilter(true) }}
+          >
+            <Funnel size={24} strokeWidth={2} />
+          </button>
+
+        </div>
+
+
+
         {filteredSpots.map(spot => (
           <div
             key={spot.id}

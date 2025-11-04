@@ -16,10 +16,10 @@ interface MainDrawerProps {
   handleCloseSelection: () => void;
   selectedCategory: string[],
   selectedTags: Tag[],
-  // setShowFilter: (version: boolean) => void
+  setShowFilter: (version: boolean) => void
 }
 
-export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedCategory, selectedTags }: MainDrawerProps) {
+export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedCategory, selectedTags, setShowFilter }: MainDrawerProps) {
   const { selectedLocation } = useSpotDetails(selectedLocId);
 
   const { snap, setSnap, nestedOpen, handleNestedChange, currentSnapPoints, snapPoints } = useDrawerState(selectedLocId);
@@ -45,7 +45,6 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
             spotCount={filteredSpots.length}
             selectedCategory={selectedCategory}
             selectedTags={selectedTags}
-          // setShowFilter={setShowFilter}
           />
 
           {/* Peek view - empty for now */}
@@ -72,6 +71,8 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
                 filteredSpots={filteredSpots}
                 selectedLocId={selectedLocId}
                 handleSpotSelect={handleSpotSelect}
+                setShowFilter={setShowFilter}
+
               />
             </div>
           )}
