@@ -14,6 +14,7 @@ interface SpotDetailsDrawerProps {
   onOpenChange: (open: boolean) => void;
   selectedLocation: SpotDetailsType | null;
   handleCloseSelection: () => void;
+  isLoading: boolean
 }
 
 // Snap points as fractions of available height (95vh - 80px bottom menu)
@@ -24,9 +25,11 @@ export function SpotDetailsDrawer({
   isOpen,
   onOpenChange,
   selectedLocation,
-  handleCloseSelection
+  handleCloseSelection,
+  isLoading
 }: SpotDetailsDrawerProps) {
 
+  console.log("Loading", isLoading)
   const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[2]);
 
   const handleOpenChange = (open: boolean) => {
@@ -91,12 +94,21 @@ export function SpotDetailsDrawer({
             </button>
           </div>
           <div className="flex-1 overflow-y-auto">
-
-
-            {selectedLocation && (
+            {isLoading ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+                  <p className="text-gray-500 text-sm">Loading spot details...</p>
+                </div>
+              </div>
+            ) : selectedLocation ? (
               <SpotDetails2
                 selectedLocation={selectedLocation}
               />
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-gray-500">No spot selected</p>
+              </div>
             )}
           </div>
         </Drawer.Content>

@@ -14,12 +14,13 @@ interface MainDrawerProps {
   selectedLocId: number | null;
   handleSpotSelect: (spotId: number) => void;
   handleCloseSelection: () => void;
+  isLoading: boolean
 
   selectedTags: Tag[],
   setShowFilter: (version: boolean) => void
 }
 
-export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedTags, setShowFilter }: MainDrawerProps) {
+export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedTags, setShowFilter, isLoading }: MainDrawerProps) {
   const { selectedLocation } = useSpotDetails(selectedLocId);
 
   const { snap, setSnap, nestedOpen, handleNestedChange, currentSnapPoints, snapPoints } = useDrawerState(selectedLocId);
@@ -83,6 +84,7 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
             onOpenChange={handleNestedChange}
             selectedLocation={selectedLocation}
             handleCloseSelection={handleCloseSelection}
+            isLoading={isLoading}
           />
         </Drawer.Content>
       </Drawer.Portal>

@@ -55,7 +55,7 @@ export default function MapPage() {
     selectedTags,
   });
 
-  const { selectedLocation } = useSpotDetails(selectedLocId);
+  const { selectedLocation, isLoading: isLoadingSelectedLoc } = useSpotDetails(selectedLocId);
   const isMobile = useIsMobile();
 
   // Vérifier la session avant de charger la map
@@ -309,6 +309,7 @@ export default function MapPage() {
                       handleCloseSelection={handleCloseSelection}
                       selectedTags={selectedTags}
                       setShowFilter={setShowFilter}
+                      isLoading={isLoadingSelectedLoc}
                     />
                   ) : (
                     <ProfilePage />

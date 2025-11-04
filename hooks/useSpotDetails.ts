@@ -7,7 +7,7 @@ export default function useSpotDetails(selectedLocId: number | null) {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  async function useSpotDetails(id: number | null) {
+  async function fetchSpotDetails(id: number) {
     setIsLoading(true);
     try {
       const response = await fetch(`api/spots/${id}`);
@@ -22,9 +22,10 @@ export default function useSpotDetails(selectedLocId: number | null) {
       setIsLoading(false);
     }
   }
+
   useEffect(() => {
     if (selectedLocId) {
-      useSpotDetails(selectedLocId);
+      fetchSpotDetails(selectedLocId);
     }
   }, [selectedLocId]);
 
