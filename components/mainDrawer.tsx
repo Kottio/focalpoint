@@ -14,12 +14,12 @@ interface MainDrawerProps {
   selectedLocId: number | null;
   handleSpotSelect: (spotId: number) => void;
   handleCloseSelection: () => void;
-  selectedCategory: string[],
+
   selectedTags: Tag[],
   setShowFilter: (version: boolean) => void
 }
 
-export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedCategory, selectedTags, setShowFilter }: MainDrawerProps) {
+export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedTags, setShowFilter }: MainDrawerProps) {
   const { selectedLocation } = useSpotDetails(selectedLocId);
 
   const { snap, setSnap, nestedOpen, handleNestedChange, currentSnapPoints, snapPoints } = useDrawerState(selectedLocId);
@@ -41,9 +41,9 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
             Browse and explore available spots with filtering options
           </Drawer.Description>
           <DrawerHeader
-            title="Explore Spots"
-            spotCount={filteredSpots.length}
-            selectedCategory={selectedCategory}
+
+
+
             selectedTags={selectedTags}
           />
 

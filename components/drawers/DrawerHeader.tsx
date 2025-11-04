@@ -5,12 +5,11 @@ import { Tag } from '@/types/spot';
 // import { ListFilterPlus } from 'lucide-react';
 
 interface DrawerHeaderProps {
-  title: string;
-  spotCount?: number; selectedCategory: string[], selectedTags: Tag[],
+  selectedTags: Tag[],
   // setShowFilter: (version: boolean) => void
 }
 
-export function DrawerHeader({ title, spotCount, selectedTags }: DrawerHeaderProps) {
+export function DrawerHeader({ selectedTags }: DrawerHeaderProps) {
   return (
     <>
       <div aria-hidden className="mx-auto mt-4  w-12 h-1   flex-shrink-0 rounded-full bg-gray-300 mb-2" />
