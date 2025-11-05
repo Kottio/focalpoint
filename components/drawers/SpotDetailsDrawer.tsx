@@ -29,7 +29,7 @@ export function SpotDetailsDrawer({
   isLoading
 }: SpotDetailsDrawerProps) {
 
-  console.log("Loading", isLoading)
+
   const [snapDetails, setSnapDetails] = useState<number | string | null>(snapPoints[2]);
 
   const handleOpenChange = (open: boolean) => {

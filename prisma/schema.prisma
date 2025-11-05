@@ -32,8 +32,23 @@ model User {
   accounts      Account[]
   verifications Verification[]
   SpotComment   SpotComment[]
+  SavedSpots    SavedSpot[]
 
   @@map("users")
+}
+
+model SavedSpot {
+  id      Int      @id @default(autoincrement())
+  userId  String
+  spotId  Int
+  savedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  spot Spot @relation(fields: [spotId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, spotId])
+  @@index([userId])
+  @@index([spotId])
 }
 
 model Spot {
@@ -57,6 +72,7 @@ model Spot {
   votes       Vote[]
   SpotDetails SpotDetails[]
   SpotComment SpotComment[]
+  SavedSpot   SavedSpot[]
 
   @@map("spots")
 }

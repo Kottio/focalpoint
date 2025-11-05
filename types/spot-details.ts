@@ -43,6 +43,8 @@ export interface SpotDetailsType {
   createdAt: string;
   SpotDetails: spotDetailsInfo;
   SpotComment: SpotComment[];
+  SpotSavesCount: number;
+  isSaved: boolean;
 }
 
 // For API responses

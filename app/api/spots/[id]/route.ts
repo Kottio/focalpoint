@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const prisma = new PrismaClient();
 
@@ -9,6 +11,10 @@ export async function GET(
 ) {
   const para = await params;
   const spotId = parseInt(para.id);
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   try {
     const spot = await prisma.spot.findUnique({
@@ -56,11 +62,16 @@ export async function GET(
             },
           },
         },
+        SavedSpot: true,
       },
     });
     if (!spot) {
       return NextResponse.json({ error: "Spot not found" }, { status: 404 });
     }
+
+    const isSaved = session?.user?.id
+      ? spot.SavedSpot.some((save) => save.userId === session.user.id)
+      : false;
 
     const spotDetails = {
       id: spot.id,
@@ -88,6 +99,8 @@ export async function GET(
       createdAt: spot.createdAt,
       SpotDetails: spot.SpotDetails[0],
       SpotComment: spot.SpotComment,
+      SpotSavesCount: spot.SavedSpot.length,
+      isSaved: isSaved,
     };
 
     return NextResponse.json(spotDetails);

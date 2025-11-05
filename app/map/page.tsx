@@ -182,7 +182,7 @@ export default function MapPage() {
 
       {isMobile && (
         <>
-          <div className="absolute z-10 top-3 w-full px-3 gap-2 flex items-center">
+          {!isCreationMode && <div className="absolute z-10 top-3 w-full px-3 gap-2 flex items-center">
             {!isResearchMode ? (
               <>
                 <button
@@ -224,7 +224,7 @@ export default function MapPage() {
                 setIsResearchMode={setIsResearchMode}
               />
             )}
-          </div>
+          </div>}
 
           <div className="absolute z-10 top-14 w-full px-3 gap-1 flex items-center">
             {" "}

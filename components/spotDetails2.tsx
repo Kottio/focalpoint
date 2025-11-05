@@ -11,7 +11,6 @@ import { FullScreenPhoto } from "@/components/SpotDetailPage/fullScreenPhoto"
 import { SpotDetailsType } from '@/types/spot-details';
 
 
-
 interface SpotDetailsProps {
   selectedLocation: SpotDetailsType
 
@@ -24,10 +23,9 @@ export default function SpotDetails2({
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null)
   const [activeTab, setActiveTab] = useState<'photos' | 'comments' | 'details'>('details')
 
-  // const { selectedLocation } = useSpotDetails(9)
-  if (selectedLocation) {
-    console.log(selectedLocation)
-  }
+
+
+
 
   if (selectedLocation) {
     return <>

@@ -35,7 +35,7 @@ export function useMapBox({ mapContainer, mapBounds, setMovedMapBounds }: mapBox
           east: bounds.getEast(),
           west: bounds.getWest()
         };
-        console.log('Map moved!', newBounds);
+
         setMovedMapBounds(newBounds)
       }
     });
