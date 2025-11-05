@@ -10,9 +10,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // Parse query parameters
-    const categoryId = searchParams.get("category");
-    const tags = searchParams.get("tags")?.split(",").filter(Boolean);
-    const search = searchParams.get("search");
 
     // Parse map bounds
     const north = searchParams.get("north");
@@ -26,33 +23,6 @@ export async function GET(request: NextRequest) {
       AND: [],
     };
 
-    // Filter by category
-    if (categoryId) {
-      whereClause.AND.push({ categoryId: parseInt(categoryId) });
-    }
-
-    // Filter by tags
-    if (tags && tags.length > 0) {
-      whereClause.AND.push({
-        spotTags: {
-          some: {
-            tagId: { in: tags.map((id) => parseInt(id)) },
-          },
-        },
-      });
-    }
-
-    // Filter by search term
-    if (search) {
-      whereClause.AND.push({
-        OR: [
-          { title: { contains: search, mode: "insensitive" } },
-          { description: { contains: search, mode: "insensitive" } },
-        ],
-      });
-    }
-
-    // Filter by map bounds
     if (north && south && east && west) {
       whereClause.AND.push({
         latitude: {
@@ -95,6 +65,7 @@ export async function GET(request: NextRequest) {
         votes: {
           where: { voteType: "UP" },
         },
+        SavedSpot: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -132,8 +103,9 @@ export async function GET(request: NextRequest) {
       createdAt: spot.createdAt,
       SpotDetails: spot.SpotDetails,
       photos: spot.photos,
+      SavedSpotCount: spot.SavedSpot?.length || 0,
     }));
-
+    console.log(transformedSpots);
     return NextResponse.json(transformedSpots);
   } catch (error) {
     console.error("Error fetching spots:", error);
@@ -241,22 +213,6 @@ export async function POST(request: NextRequest) {
     });
 
     console.log("Spot created successfully:", newSpot);
-
-    // Transform response to match frontend format
-    // const transformedSpot = {
-    //   id: newSpot.id,
-    //   title: newSpot.title,
-    //   description: newSpot.description,
-    //   latitude: parseFloat(newSpot.latitude.toString()),
-    //   longitude: parseFloat(newSpot.longitude.toString()),
-    //   category: newSpot.category.name,
-    //   categoryId: newSpot.categoryId,
-    //   tags: newSpot.spotTags.map((st) => ({
-    //     id: st.tag.id,
-    //     name: st.tag.name,
-    //     color: st.tag.color,
-    //   })),
-    // };
 
     return NextResponse.json({ status: 201 });
   } catch (error) {

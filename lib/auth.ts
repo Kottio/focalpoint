@@ -25,9 +25,6 @@ export const auth = betterAuth({
   },
 
   user: {
-    // fields: {
-    //   name: "fullName",
-    // },
     additionalFields: {
       username: {
         type: "string",

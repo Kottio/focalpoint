@@ -25,11 +25,11 @@ export interface Spot {
   category: string;
   categoryId: number;
   tags: Tag[];
-  // primaryPhoto: string | null;
   thumbnailPhoto: string;
   mediumPhotos: mediumPhotos[];
   user: User;
   upvotes: number;
   createdAt: string;
   photos: FullPhoto[];
+  SavedSpotCount: number;
 }

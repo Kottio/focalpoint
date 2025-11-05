@@ -11,12 +11,13 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 import { Tag } from "@/types/spot";
 import { CreationDrawer } from "@/components/creationDrawer";
 import { BottomMenu } from "@/components/bottomMenu";
-import { ProfilePage } from "@/components/profile";
+import { ProfilePage } from "@/components/profile/Profile2";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Camera, Funnel } from "lucide-react";
 import { LocationSearchInput } from "@/components/LocationSearchInput";
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
+import { useGetUserData } from "@/hooks/useGetUser";
 
 export default function MapPage() {
   // Auth hooks - TOUJOURS EN PREMIER
@@ -44,19 +45,17 @@ export default function MapPage() {
     lng: number;
   } | null>(null);
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
-
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
   // Data hooks
-  //Get the spot when map bound is updated, mapbouds get upddated when Search location or map. move end.
   const { spots, filteredSpots, setFilteredSpots, refetchSpots } = useSpots({
     mapBounds,
     selectedCategory,
     selectedTags,
   });
-
   const { selectedLocation, isLoading: isLoadingSelectedLoc } = useSpotDetails(selectedLocId);
   const isMobile = useIsMobile();
+  const { userData, loading } = useGetUserData()
 
   // Vérifier la session avant de charger la map
   useEffect(() => {
@@ -88,6 +87,7 @@ export default function MapPage() {
   const handleSpotSelect = (spotId: number) => {
     setSelectedLocId(spotId);
     setIsSelected(true);
+    setTab("discover")
   };
 
   // Creation mode handlers
@@ -299,7 +299,7 @@ export default function MapPage() {
             )}
 
             <div className=" absolute   w-screen bottom-0">
-              {!isCreationMode && !isResearchMode && (
+              {!isCreationMode && (
                 <div className="flex flex-col">
                   {tab === "discover" ? (
                     <MainDrawer
@@ -311,9 +311,11 @@ export default function MapPage() {
                       setShowFilter={setShowFilter}
                       isLoading={isLoadingSelectedLoc}
                     />
-                  ) : (
-                    <ProfilePage />
+                  ) : (<>
+                    <ProfilePage userData={userData} handleSpotSelect={handleSpotSelect} />
+                  </>
                   )}
+
                   <BottomMenu
                     handleStartCreation={handleStartCreation}
                     setTab={setTab}
