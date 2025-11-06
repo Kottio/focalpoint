@@ -1,15 +1,23 @@
-import { SpotDetailsType } from "@/types/spot-details"
-import { Bookmark, Camera, ThumbsUp, User, Footprints } from "lucide-react"
-import { useSaveSpot } from "@/hooks/useSaveSpot"
+import { SpotDetailsType } from "@/types/spot-details";
+import { Bookmark, Camera, ThumbsUp, User, Footprints } from "lucide-react";
+import { useSaveSpot } from "@/hooks/useSaveSpot";
 
 interface SpotMainInfo {
-  selectedLocation: SpotDetailsType
+  selectedLocation: SpotDetailsType;
+  setAddPhoto: (status: boolean) => void;
+  setOtherProfileId: (userId: string) => void;
 }
 
-export function SpotMainInfo({ selectedLocation }: SpotMainInfo) {
-  let topComment
+export function SpotMainInfo({
+  selectedLocation,
+  setAddPhoto,
+  setOtherProfileId,
+}: SpotMainInfo) {
+  let topComment;
   if (selectedLocation.SpotComment.length > 0) {
-    topComment = selectedLocation.SpotComment.sort((a, b) => (b.likes - a.likes))[0]
+    topComment = selectedLocation.SpotComment.sort(
+      (a, b) => b.likes - a.likes
+    )[0];
   }
 
   const { isSaved, isLoading, toggleSave } = useSaveSpot(
@@ -22,12 +30,10 @@ export function SpotMainInfo({ selectedLocation }: SpotMainInfo) {
       {/* Header Section */}
       <div className="flex items-center justify-between px-4 pt-4">
         <div className="flex items-center gap-1">
-
           <h1 className="text-xl font-semibold text-gray-900 flex-1 pr-4">
             {selectedLocation.title}
           </h1>
         </div>
-
 
         <div className="flex items-center gap-2">
           <button
@@ -38,10 +44,11 @@ export function SpotMainInfo({ selectedLocation }: SpotMainInfo) {
           </button>
 
           <button
-            className={`w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200 ${isSaved
-              ? "border-gray-800 bg-gray-100 hover:bg-gray-200"
-              : "border-gray-300 bg-white hover:bg-gray-50"
-              }`}
+            className={`w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200 ${
+              isSaved
+                ? "border-gray-800 bg-gray-100 hover:bg-gray-200"
+                : "border-gray-300 bg-white hover:bg-gray-50"
+            }`}
             aria-label={isSaved ? "Remove bookmark" : "Bookmark"}
             onClick={toggleSave}
           >
@@ -53,10 +60,12 @@ export function SpotMainInfo({ selectedLocation }: SpotMainInfo) {
             />
           </button>
 
-
           <button
             className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition"
             aria-label="Add photo"
+            onClick={() => {
+              setAddPhoto(true);
+            }}
           >
             <Camera size={18} className="text-gray-600" />
           </button>
@@ -77,7 +86,12 @@ export function SpotMainInfo({ selectedLocation }: SpotMainInfo) {
       </div>
 
       {/* User Section */}
-      <div className="flex items-center gap-3 px-4 py-1  border-gray-200">
+      <div
+        className="flex items-center gap-3 px-4 py-1  border-gray-200"
+        onClick={() => {
+          setOtherProfileId(selectedLocation.user.id);
+        }}
+      >
         <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 border border-gray-300">
           <User size={20} className="text-gray-600" fill="currentColor" />
         </div>
@@ -89,47 +103,44 @@ export function SpotMainInfo({ selectedLocation }: SpotMainInfo) {
         </button> */}
       </div>
 
-
-
       <div className="flex items-center  pt-2 px-4 gap-2 text-black text-sm">
         {selectedLocation.tags.map((tag) => {
-          return <div key={tag.id} className={` px-2 py-1 rounded `}
-            style={{
-              backgroundColor: `${tag.color}20`,
-              color: `${tag.color}`
-            }}>
-            {tag.name} </div>
-
+          return (
+            <div
+              key={tag.id}
+              className={` px-2 py-1 rounded `}
+              style={{
+                backgroundColor: `${tag.color}20`,
+                color: `${tag.color}`,
+              }}
+            >
+              {tag.name}{" "}
+            </div>
+          );
         })}
       </div>
 
       {/* Top Comment Section */}
-      {
-        topComment && (
-          <div className="mx-4 mt-3 mb-2 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-blue-100">
-            <div className="flex items-start gap-2">
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-semibold text-gray-600">
-                    {topComment.user?.username || 'Anonymous'}
-                  </span>
-                  <span className="text-xs text-gray-400">•</span>
-                  <span className="text-xs text-gray-500">{topComment.likes} likes</span>
-                </div>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  {topComment.comment}
-                </p>
+      {topComment && (
+        <div className="mx-4 mt-3 mb-2 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-blue-100">
+          <div className="flex items-start gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-semibold text-gray-600">
+                  {topComment.user?.username || "Anonymous"}
+                </span>
+                <span className="text-xs text-gray-400">•</span>
+                <span className="text-xs text-gray-500">
+                  {topComment.likes} likes
+                </span>
               </div>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                {topComment.comment}
+              </p>
             </div>
           </div>
-        )
-      }
-
-
-
-
-
-    </div >
-  )
+        </div>
+      )}
+    </div>
+  );
 }

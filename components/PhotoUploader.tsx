@@ -9,7 +9,7 @@ interface PhotoUploaderProps {
   maxPhotos?: number
 }
 
-export function PhotoUploader({ photos, onPhotosChange, maxPhotos = 5 }: PhotoUploaderProps) {
+export function PhotoUploader({ photos, onPhotosChange, maxPhotos = 3 }: PhotoUploaderProps) {
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files)

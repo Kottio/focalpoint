@@ -1,29 +1,45 @@
-'use client'
-import { Drawer } from 'vaul';
-import { Spot } from '@/types/spot';
-import { Tag } from '@/types/spot';
-import useSpotDetails from '@/hooks/useSpotDetails';
-import SpotList from './spotList';
-import { useDrawerState } from '@/hooks/useDrawerState';
-import { DrawerHeader } from './drawers/DrawerHeader';
-import { SpotPreviewGrid } from './drawers/SpotPreviewGrid';
-import { SpotDetailsDrawer } from './drawers/SpotDetailsDrawer';
+"use client";
+import { Drawer } from "vaul";
+import { Spot } from "@/types/spot";
+import { Tag } from "@/types/spot";
+import useSpotDetails from "@/hooks/useSpotDetails";
+import SpotList from "./spotList";
+import { useDrawerState } from "@/hooks/useDrawerState";
+import { DrawerHeader } from "./drawers/DrawerHeader";
+import { SpotPreviewGrid } from "./drawers/SpotPreviewGrid";
+import { SpotDetailsDrawer } from "./drawers/SpotDetailsDrawer";
 
 interface MainDrawerProps {
   filteredSpots: Spot[];
   selectedLocId: number | null;
   handleSpotSelect: (spotId: number) => void;
   handleCloseSelection: () => void;
-  isLoading: boolean
-
-  selectedTags: Tag[],
-  setShowFilter: (version: boolean) => void
+  isLoading: boolean;
+  selectedTags: Tag[];
+  setShowFilter: (version: boolean) => void;
+  setOtherProfileId: (userId: string) => void;
 }
 
-export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, handleCloseSelection, selectedTags, setShowFilter, isLoading }: MainDrawerProps) {
+export function MainDrawer({
+  filteredSpots,
+  selectedLocId,
+  handleSpotSelect,
+  handleCloseSelection,
+  selectedTags,
+  setShowFilter,
+  isLoading,
+  setOtherProfileId,
+}: MainDrawerProps) {
   const { selectedLocation } = useSpotDetails(selectedLocId);
 
-  const { snap, setSnap, nestedOpen, handleNestedChange, currentSnapPoints, snapPoints } = useDrawerState(selectedLocId);
+  const {
+    snap,
+    setSnap,
+    nestedOpen,
+    handleNestedChange,
+    currentSnapPoints,
+    snapPoints,
+  } = useDrawerState(selectedLocId);
 
   return (
     <Drawer.Root
@@ -36,23 +52,12 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
     >
       <Drawer.Portal>
         <Drawer.Content
-          className={`${nestedOpen ? 'h-0' : 'h-full'} z-10 fixed flex flex-col bg-white rounded-t-4xl bottom-18 left-0 right-0 max-h-[95%] mx-[-1px] outline-none focus:outline-none`}
+          className={`${nestedOpen ? "h-0" : "h-full"} z-10 fixed flex flex-col bg-white rounded-t-4xl bottom-18 left-0 right-0 max-h-[95%] mx-[-1px] outline-none focus:outline-none`}
         >
           <Drawer.Description className="sr-only">
             Browse and explore available spots with filtering options
           </Drawer.Description>
-          <DrawerHeader
-
-
-
-            selectedTags={selectedTags}
-          />
-
-          {/* Peek view - empty for now */}
-          {/* {snap === snapPoints[0] && (
-            <div className="px-4">
-            </div>
-          )} */}
+          <DrawerHeader selectedTags={selectedTags} />
 
           {/* Medium view - photo grid */}
           {snap === snapPoints[1] && (
@@ -73,7 +78,6 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
                 selectedLocId={selectedLocId}
                 handleSpotSelect={handleSpotSelect}
                 setShowFilter={setShowFilter}
-
               />
             </div>
           )}
@@ -85,9 +89,10 @@ export function MainDrawer({ filteredSpots, selectedLocId, handleSpotSelect, han
             selectedLocation={selectedLocation}
             handleCloseSelection={handleCloseSelection}
             isLoading={isLoading}
+            setOtherProfileId={setOtherProfileId}
           />
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
-  )
+  );
 }

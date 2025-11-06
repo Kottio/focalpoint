@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
 
     // Validate file size (max 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
+    // TODO: Convert all photos
     if (file.size > maxSize) {
       return NextResponse.json(
         { error: "File too large (max 10MB)" },
@@ -74,11 +75,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// Optional: Handle other methods
-export async function GET() {
-  return NextResponse.json({
-    message: "Upload endpoint - use POST to upload photos",
-  });
 }

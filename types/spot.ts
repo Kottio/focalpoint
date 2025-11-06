@@ -5,7 +5,7 @@ export interface Tag {
   color: string;
 }
 export interface User {
-  id: number;
+  id: string;
   username: string;
   fullName: string;
 }

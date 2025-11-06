@@ -25,11 +25,10 @@ export function useCreateSpot() {
       if (newSpot.photos && newSpot.photos.length > 0) {
         const uploadPromises = newSpot.photos.map(async (photo) => {
           const formData = new FormData();
-          formData.append('photo', photo);
-          formData.append('spotId', 'temp'); // Temporary ID, will be replaced
+          formData.append("photo", photo);
 
-          const uploadResponse = await fetch('/api/upload', {
-            method: 'POST',
+          const uploadResponse = await fetch("/api/upload", {
+            method: "POST",
             body: formData,
           });
 
@@ -53,7 +52,7 @@ export function useCreateSpot() {
         },
         body: JSON.stringify({
           ...spotDataWithoutPhotos,
-          photos: uploadedPhotos, // Send array of {originalUrl, thumbnailUrl, mediumUrl, publicId}
+          photos: uploadedPhotos,
         }),
       });
 
@@ -66,7 +65,7 @@ export function useCreateSpot() {
       return spotCreated;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      // setError(errorMessage);
+      console.log(errorMessage);
       setIsLoading(false);
       throw err;
     }

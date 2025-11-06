@@ -8,6 +8,7 @@ export interface FullPhoto {
   likes: number;
   user: User;
   createdAt: string;
+  bacthId: number | null;
 }
 
 export interface SpotComment {

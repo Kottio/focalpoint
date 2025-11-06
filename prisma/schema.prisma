@@ -33,6 +33,7 @@ model User {
   verifications Verification[]
   SpotComment   SpotComment[]
   SavedSpots    SavedSpot[]
+  PhotoBatch    PhotoBatch[]
 
   @@map("users")
 }
@@ -73,6 +74,7 @@ model Spot {
   SpotDetails SpotDetails[]
   SpotComment SpotComment[]
   SavedSpot   SavedSpot[]
+  PhotoBatch  PhotoBatch[]
 
   @@map("spots")
 }
@@ -158,14 +160,35 @@ model Photo {
   mediumUrl    String?
 
   // Foreign Keys
+  spotId  Int    @map("spot_id")
+  userId  String @map("user_id")
+  batchId Int?   @map("batch_id")
+
+  // Relations
+  spot       Spot        @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  user       User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photoBatch PhotoBatch? @relation(fields: [batchId], references: [id], onDelete: SetNull)
+
+  @@map("photos")
+}
+
+model PhotoBatch {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  title       String?
+  description String?
+
+  // Foreign Keys
   spotId Int    @map("spot_id")
   userId String @map("user_id")
 
   // Relations
-  spot Spot  @relation(fields: [spotId], references: [id], onDelete: Cascade)
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos Photo[]
+  spot   Spot    @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("photos")
+  @@map("photo_batches")
 }
 
 // For future community features (upvotes/downvotes)

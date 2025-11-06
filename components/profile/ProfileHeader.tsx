@@ -1,8 +1,8 @@
-import { Pencil } from 'lucide-react';
+import { Pencil } from "lucide-react";
 
 interface ProfileHeaderProps {
-  username: string;
-  avatarUrl?: string | null;
+  username: String;
+  avatarUrl?: String | null;
   isOwnProfile: boolean;
   onEditClick: () => void;
 }
@@ -20,8 +20,7 @@ export function ProfileHeader({
         <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
           {avatarUrl ? (
             <img
-              src={avatarUrl}
-              alt={username}
+              src={avatarUrl.toString()}
               className="w-full h-full rounded-full object-cover"
             />
           ) : (
@@ -32,7 +31,9 @@ export function ProfileHeader({
         </div>
 
         {/* Username */}
-        <div className={`flex  items-center justify-center gap-3 ${isOwnProfile ? "ml-14" : ""}`}>
+        <div
+          className={`flex  items-center justify-center gap-3 ${isOwnProfile ? "ml-14" : ""}`}
+        >
           <h1 className="text-xl font-bold text-gray-900">{username}</h1>
 
           {isOwnProfile && (
@@ -43,14 +44,10 @@ export function ProfileHeader({
               <Pencil size={13} className="text-gray-700" />
             </button>
           )}
-
         </div>
-
-
       </div>
 
       {/* Edit Button - Only show for own profile */}
-
     </div>
   );
 }
