@@ -7,16 +7,18 @@ import { Camera, Funnel } from "lucide-react";
 import { MainDrawer } from "@/components/mainDrawer";
 import Map from "@/components/map";
 import Filter from "@/components/filter";
-import SpotList from "@/components/spotList";
+// import SpotList from "@/components/spotList";
 import { CreationDrawer } from "@/components/drawers/creationDrawer";
 import { BottomMenu } from "@/components/bottomMenu";
 import { ProfilePage } from "@/components/profile/Profile";
 import { LocationSearchInput } from "@/components/LocationSearchInput";
+import { CreationControls } from "@/components/SpotCreation/CreationControls";
 import { useSpots } from "@/hooks/useSpots";
 import useSpotDetails from "@/hooks/useSpotDetails";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useGetUserData } from "@/hooks/useGetUser";
 import { useGetOtherUserData } from "@/hooks/useGetOtherUserData";
+import { useSpotCreation } from "@/hooks/useSpotCreation";
 import { Tag } from "@/types/spot";
 import { getCategoryColor, getCategoryIcon } from "@/utils/map-constants";
 
@@ -24,12 +26,12 @@ export default function MapPage() {
   // Auth
   const { data: session, isPending } = useSession();
   const router = useRouter();
+
+  //TODO: Set Context with setSelectedLocID
   const [selectedLocId, setSelectedLocId] = useState<number | null>(null);
   const [showFilter, setShowFilter] = useState(false);
   const [tab, setTab] = useState<"discover" | "profile">("discover");
-  const [isCreationMode, setIsCreationMode] = useState(false);
   const [isResearchMode, setIsResearchMode] = useState(false);
-  const [showCreateForm, setShowCreateForm] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [otherProfileId, setOtherProfileId] = useState<string | null>(null);
 
@@ -38,28 +40,44 @@ export default function MapPage() {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   // Map State
+  //TODO: Set map bounds based on user prefered loc Also context?
   const [mapBounds, setMapBounds] = useState({
     north: 48.9,
     south: 48.8,
     east: 2.4,
     west: 2.1,
   });
-  const [newSpotLocation, setNewSpotLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
 
   // Data Hooks
+  //Get All the Spots fetch based on map. bound and filter
   const { spots, filteredSpots, setFilteredSpots, refetchSpots } = useSpots({
     mapBounds,
     selectedCategory,
     selectedTags,
   });
-  const { isLoading: isLoadingSelectedLoc } = useSpotDetails(selectedLocId);
-  const isMobile = useIsMobile();
-  const { userData } = useGetUserData();
 
+  //Fetch Data about specific spot whem selectedLocI changes
+  const { isLoading: isLoadingSelectedLoc } = useSpotDetails(selectedLocId);
+  // const isMobile = useIsMobile();
+
+  //Fetch own user data direclty
+  const { userData } = useGetUserData();
+  //Fetch Other User data when otherProfile Id changes
   const { otherUserData } = useGetOtherUserData(otherProfileId);
+
+  // Spot Creation Hook
+  const {
+    isCreationMode,
+    showCreateForm,
+    newSpotLocation,
+    setNewSpotLocation,
+    handleStartCreation,
+    handleCancelCreation,
+    handleConfirmLocation,
+  } = useSpotCreation({
+    mapBounds,
+    onCreationStart: () => setSelectedLocId(null),
+  });
 
   // Auth Check
   useEffect(() => {
@@ -91,25 +109,6 @@ export default function MapPage() {
     setTab("discover");
   };
 
-  const handleStartCreation = () => {
-    setIsCreationMode(true);
-    // setIsSelected(false);
-    setSelectedLocId(null);
-    const centerLat = (mapBounds.north + mapBounds.south) / 2;
-    const centerLng = (mapBounds.east + mapBounds.west) / 2;
-    setNewSpotLocation({ lat: centerLat, lng: centerLng });
-  };
-
-  const handleCancelCreation = () => {
-    setIsCreationMode(false);
-    setNewSpotLocation(null);
-    setShowCreateForm(false);
-  };
-
-  const handleConfirmLocation = () => {
-    setShowCreateForm(true);
-  };
-
   // Loading State
   if (isPending) {
     return (
@@ -123,53 +122,53 @@ export default function MapPage() {
   if (!session) return null;
 
   // Desktop View
-  if (!isMobile) {
-    return (
-      <div className="bg-white h-screen text-white">
-        <div className="absolute z-10 flex h-screen gap-4 text-white bg-white">
-          <div className="flex flex-col max-w-100">
-            <div
-              className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400 ${
-                showFilter ? "max-h-100 p-5" : "overflow-hidden max-h-0 p-0"
-              }`}
-            >
-              <span>Spots({filteredSpots.length})</span>
-            </div>
+  // if (!isMobile) {
+  //   return (
+  //     <div className="bg-white h-screen text-white">
+  //       <div className="absolute z-10 flex h-screen gap-4 text-white bg-white">
+  //         <div className="flex flex-col max-w-100">
+  //           <div
+  //             className={`transition-all duration-700 ease-in-out border-b-2 border-dotted flex flex-col justify-baseline gap-2 text-neutral-400 ${
+  //               showFilter ? "max-h-100 p-5" : "overflow-hidden max-h-0 p-0"
+  //             }`}
+  //           >
+  //             <span>Spots({filteredSpots.length})</span>
+  //           </div>
 
-            <button
-              className="text-neutral-500 border px-10 py-1 border-neutral-200 hover:bg-neutral-300"
-              onClick={() => setShowFilter(!showFilter)}
-            >
-              Filters
-            </button>
+  //           <button
+  //             className="text-neutral-500 border px-10 py-1 border-neutral-200 hover:bg-neutral-300"
+  //             onClick={() => setShowFilter(!showFilter)}
+  //           >
+  //             Filters
+  //           </button>
 
-            <div className="overflow-y-auto">
-              <SpotList
-                filteredSpots={filteredSpots}
-                selectedLocId={selectedLocId}
-                handleSpotSelect={handleSpotSelect}
-                setShowFilter={setShowFilter}
-              />
-            </div>
-          </div>
-        </div>
+  //           <div className="overflow-y-auto">
+  //             <SpotList
+  //               filteredSpots={filteredSpots}
+  //               selectedLocId={selectedLocId}
+  //               handleSpotSelect={handleSpotSelect}
+  //               setShowFilter={setShowFilter}
+  //             />
+  //           </div>
+  //         </div>
+  //       </div>
 
-        <Map
-          spots={spots}
-          filteredSpots={filteredSpots}
-          selectedLocId={selectedLocId}
-          onSpotSelect={handleSpotSelect}
-          mapBounds={mapBounds}
-          setMapBounds={setMapBounds}
-          isCreationMode={isCreationMode}
-          newSpotLocation={newSpotLocation}
-          setNewSpotLocation={setNewSpotLocation}
-          shouldAnimate={shouldAnimate}
-          setShouldAnimate={setShouldAnimate}
-        />
-      </div>
-    );
-  }
+  //       <Map
+  //         spots={spots}
+  //         filteredSpots={filteredSpots}
+  //         selectedLocId={selectedLocId}
+  //         onSpotSelect={handleSpotSelect}
+  //         mapBounds={mapBounds}
+  //         setMapBounds={setMapBounds}
+  //         isCreationMode={isCreationMode}
+  //         newSpotLocation={newSpotLocation}
+  //         setNewSpotLocation={setNewSpotLocation}
+  //         shouldAnimate={shouldAnimate}
+  //         setShouldAnimate={setShouldAnimate}
+  //       />
+  //     </div>
+  //   );
+  // }
 
   // Mobile View
   return (
@@ -235,20 +234,11 @@ export default function MapPage() {
       <div className="h-dvh w-dvw inset-0">
         {/* Creation Mode Controls */}
         {isCreationMode && (
-          <div className="absolute z-20 top-4 right-4 flex gap-2">
-            <button
-              onClick={handleCancelCreation}
-              className="bg-red-400 text-white px-4 py-2 rounded shadow-lg hover:bg-red-600 transition"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleConfirmLocation}
-              className="bg-emerald-600 text-white px-4 py-2 rounded shadow-lg hover:bg-emerald-700 transition"
-            >
-              Confirm
-            </button>
-          </div>
+          <CreationControls
+            onCancel={handleCancelCreation}
+            onConfirm={handleConfirmLocation}
+            onLocationSelect={handleLocationSearch}
+          />
         )}
 
         {/* Filter */}
