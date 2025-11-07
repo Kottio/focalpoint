@@ -33,7 +33,11 @@ export function ProfilePage({
   if (!session) {
     return <div>Not logged in</div>;
   }
-  const handleSaveProfile = async (data: { username: string; bio: string }) => {
+  const handleSaveProfile = async (data: {
+    username: string;
+    bio: string;
+    socialLinks: { instagram?: string; tiktok?: string };
+  }) => {
     const response = await fetch("/api/user/update-profile", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -86,8 +90,8 @@ export function ProfilePage({
       {/* Header Section */}
       <div className="px-4 pt-6 pb-4">
         <ProfileHeader
-          username={userData?.username || "Anonymous"}
-          avatarUrl={userData?.avatarUrl}
+          username={userData?.username.toString() || "Anonymous"}
+          avatarUrl={userData?.avatarUrl.toString()}
           isOwnProfile={isOwnProfile}
           onEditClick={handleEditClick}
         />
@@ -102,10 +106,10 @@ export function ProfilePage({
           }
         />
 
-        {/* <ProfileBio
-          bio={session.user.bio}
-          socialLinks={mockProfile.socialLinks}
-        /> */}
+        <ProfileBio
+          bio={userData?.bio?.toString()}
+          socialLinks={userData?.socialLinks || {}}
+        />
       </div>
       {/* Tabs */}
       <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
@@ -135,8 +139,9 @@ export function ProfilePage({
       <EditProfileDrawer
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
-        currentUsername={session?.user.username}
-        currentBio={session?.user.bio}
+        currentUsername={userData?.username?.toString()}
+        currentBio={userData?.bio?.toString()}
+        currentSocialLinks={userData?.socialLinks}
         onSave={handleSaveProfile}
       />
     </section>

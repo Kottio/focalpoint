@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Camera, Funnel } from "lucide-react";
@@ -15,7 +15,7 @@ import { LocationSearchInput } from "@/components/LocationSearchInput";
 import { CreationControls } from "@/components/SpotCreation/CreationControls";
 import { useSpots } from "@/hooks/useSpots";
 import useSpotDetails from "@/hooks/useSpotDetails";
-import { useIsMobile } from "@/hooks/useIsMobile";
+// import { useIsMobile } from "@/hooks/useIsMobile";
 import { useGetUserData } from "@/hooks/useGetUser";
 import { useGetOtherUserData } from "@/hooks/useGetOtherUserData";
 import { useSpotCreation } from "@/hooks/useSpotCreation";

@@ -1,32 +1,36 @@
-'use client'
+"use client";
 
-import { X, Upload } from 'lucide-react'
-import Image from 'next/image'
+import { X, Upload } from "lucide-react";
+import Image from "next/image";
 
 interface PhotoUploaderProps {
-  photos: File[]
-  onPhotosChange: (photos: File[]) => void
-  maxPhotos?: number
+  photos: File[];
+  onPhotosChange: (photos: File[]) => void;
+  maxPhotos?: number;
 }
 
-export function PhotoUploader({ photos, onPhotosChange, maxPhotos = 3 }: PhotoUploaderProps) {
+export function PhotoUploader({
+  photos,
+  onPhotosChange,
+  maxPhotos = 3,
+}: PhotoUploaderProps) {
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files)
-      const totalPhotos = photos.length + newFiles.length
+      const newFiles = Array.from(e.target.files);
+      const totalPhotos = photos.length + newFiles.length;
 
       if (totalPhotos > maxPhotos) {
-        alert(`You can only upload up to ${maxPhotos} photos`)
-        return
+        alert(`You can only upload up to ${maxPhotos} photos`);
+        return;
       }
 
-      onPhotosChange([...photos, ...newFiles])
+      onPhotosChange([...photos, ...newFiles]);
     }
-  }
+  };
 
   const handleRemovePhoto = (index: number) => {
-    onPhotosChange(photos.filter((_, i) => i !== index))
-  }
+    onPhotosChange(photos.filter((_, i) => i !== index));
+  };
 
   return (
     <div>
@@ -38,7 +42,9 @@ export function PhotoUploader({ photos, onPhotosChange, maxPhotos = 3 }: PhotoUp
       <label className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition bg-white">
         <Upload size={20} className="text-gray-500" />
         <span className="text-sm text-gray-700">
-          {photos.length === 0 ? 'Click to upload photos' : `Add more photos (${photos.length}/${maxPhotos})`}
+          {photos.length === 0
+            ? "Click to upload photos"
+            : `Add more photos (${photos.length}/${maxPhotos})`}
         </span>
         <input
           type="file"
@@ -83,12 +89,6 @@ export function PhotoUploader({ photos, onPhotosChange, maxPhotos = 3 }: PhotoUp
           ))}
         </div>
       )}
-
-      {photos.length > 0 && (
-        <p className="text-xs text-gray-500 mt-2">
-          First photo will be the primary thumbnail
-        </p>
-      )}
     </div>
-  )
+  );
 }

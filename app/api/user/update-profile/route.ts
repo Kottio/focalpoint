@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { username, bio } = body;
+    const { username, bio, socialLinks } = body;
 
     // Validate username is unique if provided
     if (username) {
@@ -38,6 +38,7 @@ export async function POST(request: Request) {
       data: {
         username: username || null,
         bio: bio || null,
+        socialLinks: socialLinks || null,
       },
     });
 

@@ -73,9 +73,19 @@ export function LocationSearchInput({ onLocationSelect, setIsResearchMode }: Loc
   };
 
   return (
-    <div ref={searchRef} className="relative w-full">
-      {/* Search Input */}
-      <div className="relative flex items-center shadow-md">
+    <>
+      {/* Transparent Overlay - Clicking closes search */}
+      <div
+        className="fixed inset-0 z-10"
+        onClick={() => {
+          handleClear();
+          setIsResearchMode(false);
+        }}
+      />
+
+      <div ref={searchRef} className="relative w-full z-20">
+        {/* Search Input */}
+        <div className="relative flex items-center shadow-md">
         <Search
           size={20}
           className="absolute left-3 text-gray-400 pointer-events-none"
@@ -158,6 +168,7 @@ export function LocationSearchInput({ onLocationSelect, setIsResearchMode }: Loc
           </div>
         )
       }
-    </div >
+      </div>
+    </>
   );
 }

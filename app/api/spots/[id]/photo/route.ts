@@ -4,6 +4,14 @@ import { headers } from "next/headers";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+interface photoPrisma {
+  originalUrl: string;
+  publicId: string;
+  mediumUrl: string;
+  spotId: number;
+  userId: string;
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -31,11 +39,10 @@ export async function POST(
         spotId: spotId,
         userId: userId,
         photos: {
-          create: body.photos.map((photo: any) => ({
+          create: body.photos.map((photo: photoPrisma) => ({
             originalUrl: photo.originalUrl,
             publicId: photo.publicId,
             mediumUrl: photo.mediumUrl,
-            thumbnailUrl: photo.thumbnailUrl,
             spotId: spotId,
             userId: userId,
           })),

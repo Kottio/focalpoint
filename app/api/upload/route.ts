@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       originalUrl: originalUpload.secure_url,
-      // thumbnailUrl: thumbnailUpload.secure_url,
+
       mediumUrl: mediumUpload.secure_url,
       publicId: publicId,
     });

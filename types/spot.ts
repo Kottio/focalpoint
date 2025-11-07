@@ -9,6 +9,7 @@ export interface User {
   username: string;
   fullName: string;
 }
+
 export interface mediumPhotos {
   id: number;
   url: string;
@@ -25,7 +26,6 @@ export interface Spot {
   category: string;
   categoryId: number;
   tags: Tag[];
-  thumbnailPhoto: string;
   mediumPhotos: mediumPhotos[];
   user: User;
   upvotes: number;

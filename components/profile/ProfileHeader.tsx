@@ -1,8 +1,9 @@
 import { Pencil } from "lucide-react";
+import Image from "next/image";
 
 interface ProfileHeaderProps {
-  username: String;
-  avatarUrl?: String | null;
+  username: string;
+  avatarUrl?: string | null;
   isOwnProfile: boolean;
   onEditClick: () => void;
 }
@@ -17,10 +18,13 @@ export function ProfileHeader({
     <div className="flex items-center justify-center mb-4">
       <div className="flex  flex-col justify-center items-center gap-2">
         {/* Avatar */}
-        <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+        <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg overflow-hidden">
           {avatarUrl ? (
-            <img
-              src={avatarUrl.toString()}
+            <Image
+              src={avatarUrl}
+              alt={`${username}'s avatar`}
+              width={96}
+              height={96}
               className="w-full h-full rounded-full object-cover"
             />
           ) : (

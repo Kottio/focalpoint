@@ -2,14 +2,25 @@
 
 import { useState } from 'react';
 import { Drawer } from 'vaul';
-import { X } from 'lucide-react';
+import { X, Instagram } from 'lucide-react';
 
 interface EditProfileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   currentUsername?: string | null;
   currentBio?: string | null;
-  onSave: (data: { username: string; bio: string }) => Promise<void>;
+  currentSocialLinks?: {
+    instagram?: string;
+    tiktok?: string;
+  } | null;
+  onSave: (data: {
+    username: string;
+    bio: string;
+    socialLinks: {
+      instagram?: string;
+      tiktok?: string;
+    };
+  }) => Promise<void>;
 }
 
 export function EditProfileDrawer({
@@ -17,10 +28,13 @@ export function EditProfileDrawer({
   onClose,
   currentUsername,
   currentBio,
+  currentSocialLinks,
   onSave
 }: EditProfileDrawerProps) {
   const [username, setUsername] = useState(currentUsername || '');
   const [bio, setBio] = useState(currentBio || '');
+  const [instagram, setInstagram] = useState(currentSocialLinks?.instagram || '');
+  const [tiktok, setTiktok] = useState(currentSocialLinks?.tiktok || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,6 +46,10 @@ export function EditProfileDrawer({
       await onSave({
         username: username.trim(),
         bio: bio.trim(),
+        socialLinks: {
+          instagram: instagram.trim() || undefined,
+          tiktok: tiktok.trim() || undefined,
+        },
       });
       onClose();
     } catch (err) {
@@ -99,6 +117,53 @@ export function EditProfileDrawer({
               <p className="text-xs text-gray-500 mt-1">
                 {bio.length}/200 characters
               </p>
+            </div>
+
+            {/* Social Links Section */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-gray-900">Social Links</h3>
+
+              {/* Instagram */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="flex items-center gap-2">
+                    <Instagram size={16} className="text-pink-600" />
+                    <span>Instagram</span>
+                  </div>
+                </label>
+                <input
+                  type="text"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value.replace(/[^a-zA-Z0-9._]/g, ''))}
+                  placeholder="username"
+                  maxLength={30}
+                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Without @ symbol
+                </p>
+              </div>
+
+              {/* TikTok */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎵</span>
+                    <span>TikTok</span>
+                  </div>
+                </label>
+                <input
+                  type="text"
+                  value={tiktok}
+                  onChange={(e) => setTiktok(e.target.value.replace(/[^a-zA-Z0-9._]/g, ''))}
+                  placeholder="username"
+                  maxLength={30}
+                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Without @ symbol
+                </p>
+              </div>
             </div>
 
             {error && (

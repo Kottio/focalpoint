@@ -20,6 +20,7 @@ export async function GET(
         username: true,
         bio: true,
         avatarUrl: true,
+        socialLinks: true,
         // User's created spots
         spots: {
           orderBy: { createdAt: "desc" },
@@ -60,7 +61,7 @@ export async function GET(
               select: {
                 id: true,
                 originalUrl: true,
-                thumbnailUrl: true,
+
                 mediumUrl: true,
                 publicId: true,
                 title: true,
@@ -84,7 +85,7 @@ export async function GET(
           select: {
             id: true,
             originalUrl: true,
-            thumbnailUrl: true,
+
             mediumUrl: true,
             publicId: true,
             title: true,
@@ -137,7 +138,7 @@ export async function GET(
                   select: {
                     id: true,
                     originalUrl: true,
-                    thumbnailUrl: true,
+
                     mediumUrl: true,
                     publicId: true,
                     title: true,
@@ -171,6 +172,9 @@ export async function GET(
       username: userData.username,
       bio: userData.bio,
       avatarUrl: userData.avatarUrl,
+      socialLinks: userData.socialLinks as
+        | { instagram?: string; tiktok?: string }
+        | undefined,
       spots: userData.spots.map((spot) => ({
         id: spot.id,
         title: spot.title,

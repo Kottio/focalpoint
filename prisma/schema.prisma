@@ -15,6 +15,7 @@ model User {
   emailVerified Boolean  @default(false) @map("email_verified")
   name          String?
   image         String?
+  socialLinks   Json?
 
   // Your custom fields
   username  String? @unique

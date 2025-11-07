@@ -11,6 +11,10 @@ export interface UserData {
   spots: UserSpots[];
   photos: FullPhoto[];
   SavedSpots: UserSpots[];
+  socialLinks?: {
+    instagram?: string;
+    tiktok?: string;
+  };
 }
 
 export interface UserSpots {

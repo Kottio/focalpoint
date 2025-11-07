@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
 const prisma = new PrismaClient();
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
         username: true,
         bio: true,
         avatarUrl: true,
+        socialLinks: true,
         // User's created spots
         spots: {
           orderBy: { createdAt: "desc" },
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest) {
               select: {
                 id: true,
                 originalUrl: true,
-                thumbnailUrl: true,
+
                 mediumUrl: true,
                 publicId: true,
                 title: true,
@@ -93,7 +94,7 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             originalUrl: true,
-            thumbnailUrl: true,
+
             mediumUrl: true,
             publicId: true,
             title: true,
@@ -146,7 +147,7 @@ export async function GET(request: NextRequest) {
                   select: {
                     id: true,
                     originalUrl: true,
-                    thumbnailUrl: true,
+
                     mediumUrl: true,
                     publicId: true,
                     title: true,
@@ -172,6 +173,7 @@ export async function GET(request: NextRequest) {
     if (!userData) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
+    console.log(userData);
 
     // Format the response to match UserData interface
     const formattedData = {
@@ -180,6 +182,9 @@ export async function GET(request: NextRequest) {
       username: userData.username,
       bio: userData.bio,
       avatarUrl: userData.avatarUrl,
+      socialLinks: userData.socialLinks as
+        | { instagram?: string; tiktok?: string }
+        | undefined,
       spots: userData.spots.map((spot) => ({
         id: spot.id,
         title: spot.title,

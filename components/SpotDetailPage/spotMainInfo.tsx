@@ -20,7 +20,7 @@ export function SpotMainInfo({
     )[0];
   }
 
-  const { isSaved, isLoading, toggleSave } = useSaveSpot(
+  const { isSaved, toggleSave } = useSaveSpot(
     selectedLocation.id,
     selectedLocation.isSaved
   );
