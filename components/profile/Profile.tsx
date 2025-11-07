@@ -91,7 +91,7 @@ export function ProfilePage({
       <div className="px-4 pt-6 pb-4">
         <ProfileHeader
           username={userData?.username.toString() || "Anonymous"}
-          avatarUrl={userData?.avatarUrl.toString()}
+          avatarUrl={userData?.avatarUrl?.toString()}
           isOwnProfile={isOwnProfile}
           onEditClick={handleEditClick}
         />
